@@ -1,9 +1,12 @@
 import React from 'react';
+import { useRouter } from "expo-router";
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { images } from '../constants';
 import CustomButton from '../src/components/CustomBtn'; // 경로는 실제 위치에 맞게 수정하세요.
 
 const LoginScreen = () => {
+    const router = useRouter();
+    
     return (
       <View style={styles.container}>
         <View style={styles.imageContainer}>
@@ -20,7 +23,7 @@ const LoginScreen = () => {
         </View>
         <CustomButton 
           title="가입으로 계속하기" 
-          //onPress={() => router.push('/InformationScreen')}
+          onPress={() => router.push('/InfoInput')}
         />
       </View>
     );
