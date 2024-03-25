@@ -23,7 +23,7 @@ const InfoInput = () => {
 
     const handleNextPress = () => {
         console.log('완료 버튼 눌림'); // 다음 화면으로 이동하는 로직
-        //router.push('/') //화면 이동
+        router.push('/characterGAN') //화면 이동
     };
 
   return (
