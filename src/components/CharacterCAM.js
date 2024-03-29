@@ -103,7 +103,7 @@ const CharacterCAM = () => {
             marginBottom:100,
             width: '60%', // 이미지 컨테이너의 너비
             height: '80%', // 이미지 컨테이너의 높이, 스크린 비율에 따라 조절 가능
-            backgroundColor: '#E8E8E8',
+            backgroundColor: '#99aff8',
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
@@ -124,22 +124,22 @@ const CharacterCAM = () => {
             justifyContent: 'flex-end',
             alignItems: 'center',
         },
-          cameraView: {
+        cameraView: {
             flex: 0,
             flexDirection: 'row',
             justifyContent: 'center',
             marginBottom: 36,
         },
-          takePictureButton: {
+        takePictureButton: {
             alignSelf: 'center',
             alignItems: 'center',
             backgroundColor: 'transparent',
         },
-          takePictureText: {
+        takePictureText: {
             fontSize: 30,
             color: 'white',
         },
-          characterImageContainer: {
+        characterImageContainer: {
             marginTop: 20, // 이미지 컨테이너의 상단 여백
             width: '100%', // 너비 90%
             aspectRatio: 1, // 너비와 높이의 비율을 1:1로 설정

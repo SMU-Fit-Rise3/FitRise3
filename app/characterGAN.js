@@ -8,7 +8,7 @@ const characterGAN = () => {
     const router = useRouter();
     const handleNextPress = () => {
         console.log('다음 버튼 눌림'); // 다음 화면으로 이동하는 로직
-        router.push('/InfoInput') //화면 이동
+        router.push('/mainScreen') //화면 이동
     };
     // 카메라로부터 사진을 받는 함수
     const handleTakePicture = (photo) => {
@@ -21,7 +21,8 @@ const characterGAN = () => {
             <CharacterCAM 
                 onTakePicture={handleTakePicture} 
                 onNextPress={handleNextPress} />
-            <CustomButton 
+            <CustomButton
+                buttonStyle={styles.Btn} 
                 title="다음"
                 onPress={handleNextPress}
             />
@@ -36,7 +37,9 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#FFFFFF', // 여기서 배경색을 원하는 색상으로 설정하세요.
     },
-
+    Btn:{
+        backgroundColor: '#99aff8',
+    },
 });
 
 export default characterGAN;
