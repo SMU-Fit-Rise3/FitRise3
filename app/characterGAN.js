@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from "expo-router";
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import CharacterCAM from '../src/components/CharacterCAM';
 import CustomButton from '../src/components/CustomBtn'; 
 
@@ -18,6 +18,7 @@ const characterGAN = () => {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.title}>나만의 캐릭터를 생성하세요🏃🏻</Text>
             <CharacterCAM 
                 onTakePicture={handleTakePicture} 
                 onNextPress={handleNextPress} />
@@ -39,6 +40,12 @@ const styles = StyleSheet.create({
     },
     Btn:{
         backgroundColor: '#99aff8',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 20,
     },
 });
 

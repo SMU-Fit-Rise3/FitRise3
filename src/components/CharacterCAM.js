@@ -52,7 +52,6 @@ const CharacterCAM = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>나만의 캐릭터를 생성하세요🏃🏻</Text>
             {/* 캐릭터 이미지 표시 */}
             <View style={[styles.imageContainer, characterImageUri && styles.imageContainerFilled]}>
                 {!characterImageUri && (
@@ -91,12 +90,6 @@ const CharacterCAM = () => {
             justifyContent: 'space-around',
             padding: 20,
             backgroundColor: 'white',
-        },
-        title: {
-            fontSize: 24,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            marginBottom: 20,
         },
         imageContainer: {
             marginTop: 20,
