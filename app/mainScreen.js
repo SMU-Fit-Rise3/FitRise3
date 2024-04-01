@@ -21,9 +21,9 @@ const MainScreen = () => {
         </View>
         <ChatbotButton 
             imageSource={images.robot} 
-            onPress={() => console.log('챗봇 오픈')}
+            onPress={() => router.push('/StressScreen')}
         />
-        <TabBar/>        
+        <TabBar router={router}/>        
     </View>
   );
 };

@@ -10,8 +10,6 @@ const exercises = [
   { id: '3', title: '스쿼트', count: '5 세트, 5회' },
   { id: '4', title: '숄더 프레스', count: '4 세트, 10회' },
   { id: '5', title: '데드리프트', count: '3 세트, 6회' },
-  { id: '6', title: '스쿼트', count: '5 세트, 5회' },
-  { id: '7', title: '숄더 프레스', count: '4 세트, 10회' }
 ];
 
 const ExerciseList = () => {
@@ -63,7 +61,8 @@ const styles = StyleSheet.create({
   item: {
     backgroundColor: 'white',
     padding: 20,
-    marginVertical: 8,
+    marginVertical: 10,
+    marginHorizontal:50,
     borderRadius: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
