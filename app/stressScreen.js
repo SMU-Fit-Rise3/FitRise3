@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { View, StyleSheet, Text, ScrollView } from 'react-native';
-import images from '../constants/images.js';
 import TabBar from '../src/components/TabBar.js';
 import CharacterCAM from '../src/components/CharacterCAM';
 import RefreshList from '../src/components/ExerciseList.js';
@@ -21,20 +20,19 @@ const stressScreen = () => {
 
     return (
         <View style={styles.mainContainer}>
-                <Text style={styles.title}>스트레스를 측정해보세요🙂</Text>
-                <View style={styles.container}>
-                    <CharacterCAM onTakePicture={handleTakePicture} onNextPress={handleNextPress}/>
-                </View>
-                <View style={styles.container}>
-                    <StressLevelIndicator
-                        stressLevel={1}/>
-                </View>
+            <Text style={styles.title}>스트레스를 측정해보세요🙂</Text>
+            <View style={styles.container}>
+                <CharacterCAM onTakePicture={handleTakePicture} onNextPress={handleNextPress}/>
+            </View>
+            <View style={styles.container}>
+                <StressLevelIndicator stressLevel={1}/>
+            </View>
                 <View style={styles.container}>
                     <Text style={styles.title}>🌿Refresh Routine🌿</Text>
                     <RefreshList/>
                 </View>  
-                <TabBar/>     
-            </View>
+            <TabBar/>     
+        </View>
     );
 };
 
