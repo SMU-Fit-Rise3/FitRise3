@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 
 
 const GoalSelector = ({ onSelectGoal }) => {
@@ -11,7 +11,7 @@ const GoalSelector = ({ onSelectGoal }) => {
 
     return(
         <View style={styles.container}>
-            <TouchableOpacity 
+            <Pressable 
                 onPress={() => handleGoalSelect('cut')} 
                 style={[
                     styles.exOption,
@@ -19,9 +19,9 @@ const GoalSelector = ({ onSelectGoal }) => {
                   ]}
             >
             <Text style={styles.icon}>체중 감량</Text>
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity 
+            <Pressable 
                 onPress={() => handleGoalSelect('muscle')} 
                 style={[
                     styles.exOption,
@@ -29,9 +29,9 @@ const GoalSelector = ({ onSelectGoal }) => {
                 ]}
             >
             <Text style={styles.icon}>근육 증가</Text>
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity 
+            <Pressable 
                 onPress={() => handleGoalSelect('health')} 
                 style={[
                     styles.exOption,
@@ -39,7 +39,7 @@ const GoalSelector = ({ onSelectGoal }) => {
                 ]}
             >
             <Text style={styles.icon}>체력 증진</Text>
-            </TouchableOpacity>
+            </Pressable>
         </View>
     );
 };

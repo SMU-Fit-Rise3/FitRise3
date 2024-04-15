@@ -1,24 +1,24 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Pressable, Text, StyleSheet } from 'react-native';
 
 const CustomButton = ({ onPress,title, buttonStyle, textStyle}) => (
-  <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onPress}>
+  <Pressable style={[styles.button, buttonStyle]} onPress={onPress}>
     <Text style={[styles.buttonText, textStyle]}>{title}</Text>
-  </TouchableOpacity>
+  </Pressable>
 );
 
 const styles = StyleSheet.create({
   button: {
     width: '100%',
-    padding: 15,
+    padding: 20,
     backgroundColor: '#FFD700',
     borderRadius: 30,
     alignItems: 'center',
     marginBottom: 30,
-    justifyContent:"center"
+    justifyContent:"center",
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#FFF',
   },
