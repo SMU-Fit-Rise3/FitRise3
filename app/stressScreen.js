@@ -1,11 +1,12 @@
 import React from 'react';
 import { useRouter } from "expo-router";
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, Dimensions,SafeAreaView } from 'react-native';
 import TabBar from '../src/components/TabBar.js';
 import CharacterCAM from '../src/components/CharacterCAM';
 import RefreshList from '../src/components/ExerciseList.js';
 import StressLevelIndicator from '../src/components/StressLevelIndicator.js';
 
+const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
 // 메인 화면 컴포넌트
 const stressScreen = () => {
@@ -19,20 +20,25 @@ const stressScreen = () => {
     };
 
     return (
-        <View style={styles.mainContainer}>
-            <Text style={styles.title}>스트레스를 측정해보세요🙂</Text>
+        <SafeAreaView style={styles.mainContainer}>
             <View style={styles.container}>
-                <CharacterCAM onTakePicture={handleTakePicture} onNextPress={handleNextPress}/>
-            </View>
-            <View style={styles.container}>
-                <StressLevelIndicator stressLevel={1}/>
-            </View>
+                <Text style={styles.title}>스트레스를 측정해보세요🙂</Text>
+                <View style={styles.container}>
+                    <CharacterCAM 
+                        onTakePicture={handleTakePicture}
+                        onNextPress={handleNextPress}
+                        camStyle={styles.characterCamContainer}/>
+                </View>
+                <View style={styles.container}>
+                    <StressLevelIndicator stressLevel={1}/>
+                </View>
                 <View style={styles.container}>
                     <Text style={styles.title}>🌿Refresh Routine🌿</Text>
                     <RefreshList/>
-                </View>  
+                </View> 
+            </View> 
             <TabBar/>     
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -40,18 +46,24 @@ const stressScreen = () => {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        paddingTop: 20,
-        backgroundColor:"white",
-        justifyContent:"space-between"
+        backgroundColor:"#ddd",
+        justifyContent:"space-evenly"
     },
     container: {
         flex:1,
+        backgroundColor:"white",
+    },
+    characterCamContainer: {
+        marginTop: 60,
+        width: width * 0.5, // 이미지 컨테이너의 너비
+        height: height * 0.3, // 이미지 컨테이너의 높이, 스크린 비율에 따라 조절 가능
+        marginBottom:10,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginTop:40,
+        marginTop:10,
     },
 });
 

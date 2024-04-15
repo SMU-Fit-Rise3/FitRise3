@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginHorizontal: 20,
     marginTop: 20,
+    marginBottom:20,
     backgroundColor: '#FFE3E3', // Light red background for alert
     borderRadius: 8,
     shadowColor: '#000',
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   alertText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight:"bold",
     color: '#D8000C', // Dark red text color
     textAlign: 'center',

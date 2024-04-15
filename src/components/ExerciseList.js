@@ -49,25 +49,25 @@ const ExerciseList = () => {
 
 const styles = StyleSheet.create({
   flatList: {
-    marginHorizontal: 20,
-    marginBottom: 40,
+    marginBottom: 34,
   },
   contentContainer: {
     paddingBottom: 5,
   },
   exContainer:{
     flexDirection:"column",
+    height: 30
   },
   item: {
     backgroundColor: 'white',
     padding: 20,
     marginVertical: 10,
-    marginHorizontal:50,
+    marginHorizontal:30,
     borderRadius: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor:'#CECEF6',
+    backgroundColor:'#D6DEFF',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -88,11 +88,12 @@ const styles = StyleSheet.create({
   btn: {
     width:130,
     height:50,
-    backgroundColor: "#380B61",
+    padding:10,
+    backgroundColor: "#aaaccc",
     marginBottom:0,
   },
   btnText: {
-    fontSize: 16,
+    fontSize: 14,
   }
 });
 
