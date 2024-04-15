@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 const ExSelector = ({ onSelectEx }) => {
   const [selectedEx, setSelectedEx] = useState(null);
@@ -10,7 +10,7 @@ const ExSelector = ({ onSelectEx }) => {
   
   return(
   <View style={styles.container}>
-    <Pressable 
+    <TouchableOpacity 
       onPress={() => handleExSelect('beginner')} 
       style={[
         styles.exOption,
@@ -18,9 +18,9 @@ const ExSelector = ({ onSelectEx }) => {
       ]}
     >
     <Text style={styles.icon}>🌱</Text>
-    </Pressable>
+    </TouchableOpacity>
 
-    <Pressable 
+    <TouchableOpacity 
       onPress={() => handleExSelect('middle')} 
       style={[
         styles.exOption,
@@ -28,9 +28,9 @@ const ExSelector = ({ onSelectEx }) => {
       ]}
     >
     <Text style={styles.icon}>🌻</Text>
-    </Pressable>
+    </TouchableOpacity>
 
-    <Pressable 
+    <TouchableOpacity 
       onPress={() => handleExSelect('expert')} 
       style={[
         styles.exOption,
@@ -38,7 +38,7 @@ const ExSelector = ({ onSelectEx }) => {
       ]}
     >
     <Text style={styles.icon}>🌳</Text>
-    </Pressable>
+    </TouchableOpacity>
   </View>
   );
 };

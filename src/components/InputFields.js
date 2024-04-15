@@ -2,11 +2,11 @@ import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import InputLabelView from './InputLabelView';
 
-const InputField = ({ label, textInputProps, extraStyle }) => (
+const InputField = ({ label, textInputProps }) => (
   <InputLabelView label={label}>
     <View style={styles.inputContainer}>
       <TextInput
-        style={[styles.input, extraStyle]}
+        style={styles.input}
         placeholderTextColor="#999"
         {...textInputProps} //text 관련 모든 props
       />
@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 10,
+    flex:1
   },
   input: {
     height: 40, // 고정 높이를 주어 입력 필드의 크기를 일관되게 만듭니다.

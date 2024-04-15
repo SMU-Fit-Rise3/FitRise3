@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 
 const GenderSelector = ({ onSelectGender }) => {
@@ -12,7 +12,7 @@ const GenderSelector = ({ onSelectGender }) => {
 
   return (
     <View style={styles.container}>
-      <Pressable
+      <TouchableOpacity
         onPress={() => handleGenderSelect('female')}
         style={[
           styles.genderOption,
@@ -20,8 +20,8 @@ const GenderSelector = ({ onSelectGender }) => {
         ]}
       >
         <Text style={styles.icon}>👩🏻</Text>
-      </Pressable>
-      <Pressable
+      </TouchableOpacity>
+      <TouchableOpacity
         onPress={() => handleGenderSelect('male')}
         style={[
           styles.genderOption,
@@ -29,7 +29,7 @@ const GenderSelector = ({ onSelectGender }) => {
         ]}
       >
         <Text style={styles.icon}>👨🏻</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };
