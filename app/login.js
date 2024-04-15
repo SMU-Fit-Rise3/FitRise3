@@ -1,12 +1,10 @@
 import React from 'react';
 import { useRouter } from "expo-router";
-import { View, Text, StyleSheet, Image,Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { images } from '../constants';
 import CustomButton from '../src/components/CustomBtn'; // 경로는 실제 위치에 맞게 수정하세요.
 
-const { width, height } = Dimensions.get('window'); // Get the screen dimensions
-
-const login = () => {
+const LoginScreen = () => {
     const router = useRouter();
     
     return (
@@ -45,8 +43,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: width, // 이미지 크기를 원하는 대로 조절하세요.
-    height: height, // 이미지 높이를 원하는 대로 조절하세요.
+    width: 300, // 이미지 크기를 원하는 대로 조절하세요.
+    height: 600, // 이미지 높이를 원하는 대로 조절하세요.
     resizeMode: 'contain',
   },
   textContainer: {
@@ -62,10 +60,10 @@ const styles = StyleSheet.create({
     color: '#000', // 글씨 색상을 원하는 대로 조절하세요.
   },
   descriptionText: {
-    fontSize: 18,
+    fontSize: 16,
     textAlign: 'center',
     color: '#555', // 글씨 색상을 원하는 대로 조절하세요.
   },
 });
 
-export default login;
+export default LoginScreen;
