@@ -39,8 +39,8 @@ const BarChartComponent = ({ weeklyData }) => {
     return (
         <View style={{flex: 1}}>
             <BarChart
-                height={300}
-                width={500}
+                height={280}
+                width={300}
                 barWidth={25}
                 spacing={60}
                 initialSpacing={80}
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        marginTop: 24,
+        marginTop: 20,
         borderWidth:1,
         borderRadius:5,
         padding:10,

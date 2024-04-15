@@ -32,7 +32,7 @@ const SingleLineChart = ({ stressData }) => {
     <View>
       <LineChart
         height={200}
-        width={500}
+        width={300}
         data={customizedDataPoints}
         isAnimated
         thickness={2}

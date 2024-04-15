@@ -21,7 +21,7 @@ const LineChartComponent = ({ weightData, bmiData }) => {
     return (
         <View style={styles.container}>
             <LineChart
-                width={500}
+                width={300}
                 areaChart
                 curved
                 data={weightData}

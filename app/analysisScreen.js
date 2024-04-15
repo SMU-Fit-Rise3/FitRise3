@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from "expo-router";
-import { View, StyleSheet,ScrollView,Text } from 'react-native';
+import { View, StyleSheet,ScrollView,Text,SafeAreaView,Dimensions } from 'react-native';
 import TabBar from '../src/components/TabBar.js';
 import BarChart from '../src/components/BarChartComponent.js';
 import LineChart from '../src/components/LineChartComponent.js';
@@ -8,6 +8,8 @@ import StressChart from '../src/components/SingleLineChart.js';
 import CustomButton from '../src/components/CustomBtn';
 import InputField from '../src/components/InputFields';
 import NutrientAlert from '../src/components/InfoAlertComponent';
+
+const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
 const weeklyNutritionData = [
     { carbs: 120, protein: 80, fats: 60 },
@@ -53,16 +55,16 @@ const analysisScreen = () => {
         router.push('/characterGAN') //화면 이동
     };
     return (
-        <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
                 <View style={styles.centerContainer}>
-                    <View styles={{flex:2}}>
+                    <View style={styles.contentContainer}>
                         <Text style={styles.title}>스트레스 😖</Text>
-                        <StressChart stressData={stressData}/>
+                        <StressChart stressData={stressData} />
                     </View>
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>몸무게 & BMI 변화량 ⚖️</Text>
-                        <LineChart weightData={weight} bmiData={BMI}/>
+                        <LineChart weightData={weight} bmiData={BMI} />
                         <View style={styles.HorContainer}>
                             <InputField
                                 label="몸무게"
@@ -73,59 +75,64 @@ const analysisScreen = () => {
                             <CustomButton
                                 onPress={handleNextPress}
                                 title=" 입력 "
-                                buttonStyle={styles.duplicateCheckBtn}
+                                buttonStyle={styles.InputBtn}
                             />
                         </View>
                     </View>
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>영양분 섭취량 🍴</Text>
-                        <BarChart weeklyData = {weeklyNutritionData} />
-                        <NutrientAlert infoName="단백질" amount="30g"/>
+                        <BarChart weeklyData={weeklyNutritionData} />
+                        <NutrientAlert infoName="단백질" amount="30g" />
                     </View>
                 </View>
             </ScrollView>
-            <TabBar router={router}/>
-        </View>    
+            <TabBar router={router} />
+        </SafeAreaView>   
     );
 };
 
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor:"white",
+        backgroundColor: "#ddd",
+        flex:1
     },
     scrollContainer: {
-        padding:20
+        flex:1
     },
     centerContainer: {
-        alignItems:"center"
+        backgroundColor:"#fff",
+        alignItems: "center",    
+        paddingHorizontal:10
     },
     contentContainer: {
         flex: 1,
-        alignItems:"flex-start",
+        width: width * 0.9, // Adjust width based on screen size
+        alignItems: "flex-start",
+        marginBottom: 15, // Add some bottom margin for better spacing
     },
     HorContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        width:"100%",
-        padding: 20,
+        width: width * 0.6,
     },
-    duplicateCheckBtn: {
-        width:150,
-        height:55,
+    InputBtn: {
+        width: width * 0.3, // Adjust button width based on screen size
+        height: 50,
         backgroundColor: '#d9a1d5',
         borderRadius: 10,
         alignItems: 'center',
         marginLeft: 20,
         marginTop: 30,
+        padding:10
     },
     title: {
-        fontSize: 24,
+        fontSize: width * 0.06, // Adjust font size based on screen width
         fontWeight: 'bold',
-        marginTop:40,
+        marginTop: 40,
     },
     textField: {
-        width:300
+        width: width * 0.4, // Adjust text field width based on screen size
     }
 });
 

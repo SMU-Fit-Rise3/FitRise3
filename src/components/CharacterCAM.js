@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Pressable, StyleSheet, Modal,Image } from 'react-native';
+import { View, Text, Pressable, StyleSheet, Modal,Image,Dimensions } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as FileSystem from 'expo-file-system';
 
-const CharacterCAM = () => {
+const { width, height } = Dimensions.get('window'); // Get the screen dimensions
+
+const CharacterCAM = ({camStyle}) => {
     const [hasPermission, setHasPermission] = useState(null);
     const [cameraVisible, setCameraVisible] = useState(false);
     const [characterImageUri, setCharacterImageUri] = useState(null); // 캐릭터 이미지 URI 상태
     const cameraRef = useRef(null); // useRef 훅을 사용하여 카메라 참조 저장
-  
+    const [cameraType, setCameraType] = useState(Camera.Constants.Type.back); // 카메라 타입 상태 추가
+
     // 카메라 권한 요청 함수
     useEffect(() => {
         (async () => {
@@ -49,11 +52,19 @@ const CharacterCAM = () => {
         }
     };
 
+    const toggleCameraType = () => { // 카메라 전환 함수
+        console.log("카메라 전환");
+        setCameraType((prevType) =>
+            prevType === Camera.Constants.Type.back
+            ? Camera.Constants.Type.front
+            : Camera.Constants.Type.back
+        );
+    };
 
     return (
         <View style={styles.container}>
             {/* 캐릭터 이미지 표시 */}
-            <View style={[styles.imageContainer, characterImageUri && styles.imageContainerFilled]}>
+            <View style={[styles.imageContainer,camStyle, characterImageUri && styles.imageContainerFilled]}>
                 {!characterImageUri && (
                     <Pressable onPress={handlePressIcon} style={styles.icon}>
                         <Text style={styles.iconText}>+</Text>
@@ -76,6 +87,9 @@ const CharacterCAM = () => {
                         <Pressable style={styles.takePictureButton} onPress={handleTakePicture}>
                             <Text style={styles.takePictureText}>📸</Text>
                         </Pressable>
+                        <Pressable style={styles.toggleButton} onPress={toggleCameraType}>
+                            <Text style={styles.toggleButtonText}>↻</Text>
+                        </Pressable>
                     </View>
                 </Camera>
             </Modal>
@@ -94,8 +108,8 @@ const CharacterCAM = () => {
         imageContainer: {
             marginTop: 20,
             marginBottom:100,
-            width: '60%', // 이미지 컨테이너의 너비
-            height: '80%', // 이미지 컨테이너의 높이, 스크린 비율에 따라 조절 가능
+            width: width * 0.8, // 이미지 컨테이너의 너비
+            height: height * 0.5, // 이미지 컨테이너의 높이, 스크린 비율에 따라 조절 가능
             backgroundColor: '#99aff8',
             borderRadius: 10,
             justifyContent: 'center',
@@ -148,6 +162,17 @@ const CharacterCAM = () => {
             marginTop: 20,
             marginBottom:100,
             borderRadius: 10,
+        },
+        toggleButton: {
+            marginTop: 20,
+            marginLeft: 20, // 위치 조정을 위한 마진 추가
+            padding: 10,
+            backgroundColor: '#dddddd', // 버튼 배경색
+            borderRadius: 50, // 원형 버튼
+        },
+        toggleButtonText: {
+            fontSize: 18, // 텍스트 크기
+            color: '#000000', // 텍스트 색상
         },
     });
 

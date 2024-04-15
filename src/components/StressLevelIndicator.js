@@ -3,19 +3,16 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import images from '../../constants/images.js';
 
 const StressLevelIndicator = ({ stressLevel }) => {
-  // Logic to determine the needle position based on the stress level can go here
-  // For example, you could use an animated view to rotate the needle
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>스트레스 지수: {stressLevel}</Text>
       <Image 
-        source={images.stress_level} // Replace with your gauge image path
+        source={images.stress_bar} // Replace with your gauge image path
         style={styles.gauge}
       />
-      {/* This view represents the needle which will rotate according to the stress level */}
-      <View style={[styles.needle, { transform: [{ rotate: `${getRotationForStressLevel(stressLevel)}deg` }] }]}/>
-      <Text style={styles.footer}>충전 필요</Text>
+      <View style={[styles.arrow, { left: `${(stressLevel / 10) * 100}%` }]} />
+      <Text style={styles.footer}>😄 행복한 상태 😄</Text>
     </View>
   );
 };
@@ -33,25 +30,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   header: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#555',
   },
   gauge: {
-    width: 500, // Set according to your image
-    height: 200, // Set according to your image
+    width: "100%", // Set according to your image
+    height: 100, // Set according to your image
+    resizeMode: "contain",
   },
-  needle: {
-    width: 4,
-    height: 88, // Half of your gauge image height
-    backgroundColor: '#fff',
+  arrow: {
     position: 'absolute',
-    bottom: '0%', 
-    left:"42%"
+    bottom: 40, // Adjust this value as needed to place the arrow under the bar
+    width: 0,
+    height: 0,
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderBottomWidth: 20,
+    borderStyle: 'solid',
+    backgroundColor: 'transparent',
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: '#555', // Adjust the color as needed
+    transform: [{ translateX: 75 }], // Adjust this value to center the arrow under the bar
   },
   footer: {
-    fontSize: 16,
+    fontSize: 20,
     color: 'grey',
     marginTop: 10,
+    fontWeight:"bold"
   },
 });
 

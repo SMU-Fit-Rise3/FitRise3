@@ -10,8 +10,8 @@ const FloatingBtn = ({ onPress, imageSource, buttonStyle }) => (
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    right: 30,
-    bottom: 80, // 탭바의 높이를 고려하여 조정하세요
+    right: 10,
+    bottom: 75, // 탭바의 높이를 고려하여 조정하세요
     width: 60,
     height: 60,
     backgroundColor: '#CECEF6',
