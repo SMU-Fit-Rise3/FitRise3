@@ -1,12 +1,8 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { View, StyleSheet,SafeAreaView,Dimensions } from 'react-native';
-import InputField from '../src/components/InputFields';
-import InputLabelView from '../src/components/InputLabelView.js';
-import Selector from '../src/components/Selector.js';
-import CustomButton from '../src/components/CustomBtn'; // 경로는 실제 위치에 맞게 수정하세요.
-import GoalSelector from '../src/components/GoalSelector.js';
-import StepIndicator from '../src/components/StepIndicator';
+import { InputFields,InputLabelView,Selector,CustomBtn,GoalSelector,StepIndicator } from '../src/components'
+
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -60,37 +56,37 @@ const InfoInput = () => {
                 <Selector options={gender} onSelectOption={handleSelectOption}/>
             </InputLabelView>
             <View style={styles.HorContainer}>
-                <InputField
+                <InputFields
                     label="닉네임"
                     placeholder="닉네임 입력"
                     onChangeText={(text) => console.log(text)}
                 />
-                <CustomButton
+                <CustomBtn
                     onPress={handlePress}
                     title=" 중복 확인 "
                     buttonStyle={styles.duplicateCheckBtn}
                 />
             </View>
             <View style={styles.HorContainer}>
-                <InputField
+                <InputFields
                     label="나이"
                     placeholder="세"
                     keyboardType="numeric"
                     onChangeText={(text) => console.log(text)}
                 />
-                <InputField
+                <InputFields
                     label="운동횟수"
                     placeholder="회"
                     keyboardType="numeric"
                 />            
             </View>
             <View style={styles.HorContainer}>
-                <InputField 
+                <InputFields 
                     label="키"
                     placeholder="cm"
                     keyboardType="numeric"
                 />
-                <InputField 
+                <InputFields 
                     label="몸무게"
                     placeholder="kg"
                     keyboardType="numeric"
@@ -103,9 +99,9 @@ const InfoInput = () => {
                 <GoalSelector onSelectGoal={handleSelectGoal}/>
             </InputLabelView>
             <View style={styles.btnContainer}>
-                <CustomButton 
+                <CustomBtn 
                     onPress={handleNextPress}
-                    title=" 완료 " 
+                    title=" 다음 " 
                     buttonStyle={styles.finishBtn}
                 />
             </View>

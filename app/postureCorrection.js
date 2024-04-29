@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
 import { useRouter,useLocalSearchParams } from "expo-router";
-import { View, StyleSheet,Text } from 'react-native';
-import CameraComponent from '../src/components/CameraComponent.js';
-import FeedBack from '../src/components/FeedBack.js';
-import InfoBtn from '../src/components/FloatingBtn.js';
-import CustomBtn from '../src/components/CustomBtn.js';
-import InfoModal from '../src/components/InfoModal.js';
-import CountdownAlert from '../src/components/CountDownAlert.js';
-import FeedbackBox from '../src/components/ScrollTextBox.js';
-import PointBox from '../src/components/PointComponent.js';
+import { View, StyleSheet,Text, SafeAreaView } from 'react-native';
 import icons from '../constants/icons.js';
+import { CameraComponent, FeedBack, FloatingBtn, CustomBtn, InfoModal, ModalWebView, ScrollTextBox, PointComponent } from '../src/components'
+
 
 const PostureCorrection = () => {
     const router = useRouter();
@@ -19,29 +13,22 @@ const PostureCorrection = () => {
         title: title,
         count: count,
     };
-    console.log(exerciseData.count)
+    console.log(exerciseData.title)
     const [modalVisible, setModalVisible] = useState(false);
-    const [showCountdown, setShowCountdown] = useState(true);
+    const [show3DModal, setShow3DModal] = useState(false); // 3D 웹뷰 모달 관리 상태
     const [exerciseFinished, setExerciseFinished] = useState(false);
 
-    // CountDown 닫는 함수
-    const handleCountdownFinish = () => {
-        setShowCountdown(false);
-    };
     const handleFinishExercise = () => {
         setExerciseFinished(true);
         setModalVisible(false);
     };
 
     return (
-        <View style={styles.mainContainer}>
+        <SafeAreaView style={styles.mainContainer}>
             {!exerciseFinished && (
                 <>
-                    {showCountdown && (
-                        <CountdownAlert onFinish={handleCountdownFinish} />
-                    )}
                     <CameraComponent style={exerciseFinished ? styles.hideCamera : null}/>
-                    <InfoBtn
+                    <FloatingBtn
                         imageSource={icons.icon_calendar_p}
                         onPress={() => setModalVisible(true)}
                         buttonStyle={styles.infoButton}
@@ -63,14 +50,14 @@ const PostureCorrection = () => {
                     <View style={styles.textContainer}>
                         <Text style={styles.finishText}>운동을 완료했어요🔥</Text>
                     </View>
-                    <FeedbackBox
+                    <ScrollTextBox
                         message="A jumping jack, also known as a star jump and called a side-straddle hop in the US military, 
                                 is a physical jumping exercise performed by jumping to a position with the legs spread wide 
                                 A jumping jack, also known as a star jump and called a side-straddle hop in the US military,
                                 is a physical jumping exercise performed by jumping to a position with the legs spread wide."
                     />
                     <View style={styles.pointContainer}>
-                        <PointBox points = {30}/>
+                        <PointComponent points = {30}/>
                     </View>
                     <View style={styles.btnContainer}>
                         <CustomBtn
@@ -81,6 +68,10 @@ const PostureCorrection = () => {
                     </View>
                 </View>
             )}
+            <ModalWebView 
+                modalVisible={show3DModal} 
+                setModalVisible={setShow3DModal} 
+            />
             <InfoModal 
                 modalVisible={modalVisible} 
                 setModalVisible={setModalVisible} 
@@ -95,7 +86,7 @@ const PostureCorrection = () => {
                     "Clapping Both Hands",
                 ]}
             />
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -114,7 +105,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     textContainer: {
-        flex:0.3,
+        flex:1,
         alignItems:"center",
         paddingTop:100,
     },

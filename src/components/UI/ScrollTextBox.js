@@ -12,6 +12,7 @@ const ScrollTextBox = ({ message }) => (
 
 const styles = StyleSheet.create({
     container: {
+        flex:1,
         padding: 30,
         margin: 30,
         marginHorizontal: 50,

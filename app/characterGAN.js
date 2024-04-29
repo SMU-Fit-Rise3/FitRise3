@@ -1,14 +1,15 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { SafeAreaView, View, StyleSheet, Text,Dimensions } from 'react-native';
-import CharacterCAM from '../src/components/CharacterCAM';
-import CustomButton from '../src/components/CustomBtn'; 
+import { CharacterCAM,CustomBtn,StepIndicator } from '../src/components'
+
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
 
 const characterGAN = () => {
     const router = useRouter();
+    const stepLabels = ['Step 1', 'Step 2', 'Step 3', 'Step 4'];
     const handleNextPress = () => {
         console.log('다음 버튼 눌림'); // 다음 화면으로 이동하는 로직
         router.push('/mainScreen') //화면 이동
@@ -21,11 +22,15 @@ const characterGAN = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <StepIndicator
+                steps= {stepLabels}
+                currentStep={2}
+            />
             <Text style={styles.title}>나만의 캐릭터를 생성하세요🏃🏻</Text>
             <CharacterCAM 
                 onTakePicture={handleTakePicture} 
                 onNextPress={handleNextPress} />
-            <CustomButton
+            <CustomBtn
                 buttonStyle={styles.Btn} 
                 title="다음"
                 onPress={handleNextPress}

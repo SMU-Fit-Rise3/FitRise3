@@ -1,13 +1,8 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { View, StyleSheet,ScrollView,Text,SafeAreaView,Dimensions } from 'react-native';
-import TabBar from '../src/components/TabBar.js';
-import BarChart from '../src/components/BarChartComponent.js';
-import LineChart from '../src/components/LineChartComponent.js';
-import StressChart from '../src/components/SingleLineChart.js';
-import CustomButton from '../src/components/CustomBtn';
-import InputField from '../src/components/InputFields';
-import NutrientAlert from '../src/components/InfoAlertComponent';
+import {TabBar, BarChartComponent, LineChartComponent,SingleLineChart, CustomBtn, InputFields, InfoAlertComponent } from '../src/components'
+
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -28,11 +23,17 @@ const weight =[
     {value: 73}, 
     {value: 72},
     {value: 68},
+    {value: 73}, 
+    {value: 72},
+    {value: 68},
 ]
 const BMI =[
     {value: 23},
     {value: 23.4},
     {value: 22},
+    {value: 25},
+    {value: 24}, 
+    {value: 23},
     {value: 25},
     {value: 24}, 
     {value: 23},
@@ -60,19 +61,19 @@ const analysisScreen = () => {
                 <View style={styles.centerContainer}>
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>스트레스 😖</Text>
-                        <StressChart stressData={stressData} />
+                        <SingleLineChart stressData={stressData} />
                     </View>
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>몸무게 & BMI 변화량 ⚖️</Text>
-                        <LineChart weightData={weight} bmiData={BMI} />
+                        <LineChartComponent weightData={weight} bmiData={BMI} />
                         <View style={styles.HorContainer}>
-                            <InputField
+                            <InputFields
                                 label="몸무게"
                                 placeholder="몸무게 입력"
                                 onChangeText={(text) => console.log(text)}
                                 extraStyle={styles.textField}
                             />
-                            <CustomButton
+                            <CustomBtn
                                 onPress={handleNextPress}
                                 title=" 입력 "
                                 buttonStyle={styles.InputBtn}
@@ -81,8 +82,8 @@ const analysisScreen = () => {
                     </View>
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>영양분 섭취량 🍴</Text>
-                        <BarChart weeklyData={weeklyNutritionData} />
-                        <NutrientAlert infoName="단백질" amount="30g" />
+                        <BarChartComponent weeklyData={weeklyNutritionData} />
+                        <InfoAlertComponent infoName="단백질" amount="30g" />
                     </View>
                 </View>
             </ScrollView>

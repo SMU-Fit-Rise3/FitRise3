@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import images from '../../constants/images.js';
+import images from '../../../constants/images';
 
 const StressLevelIndicator = ({ stressLevel }) => {
 

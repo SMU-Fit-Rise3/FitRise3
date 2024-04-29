@@ -1,10 +1,7 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { View, StyleSheet, Text, Dimensions,SafeAreaView } from 'react-native';
-import TabBar from '../src/components/TabBar.js';
-import CharacterCAM from '../src/components/CharacterCAM';
-import RefreshList from '../src/components/ExerciseList.js';
-import StressLevelIndicator from '../src/components/StressLevelIndicator.js';
+import { CharacterCAM,ExerciseList,StressLevelIndicator,TabBar } from '../src/components'
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -34,7 +31,7 @@ const stressScreen = () => {
                 </View>
                 <View style={styles.container}>
                     <Text style={styles.title}>🌿Refresh Routine🌿</Text>
-                    <RefreshList/>
+                    <ExerciseList/>
                 </View> 
             </View> 
             <TabBar/>     

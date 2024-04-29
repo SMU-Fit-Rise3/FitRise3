@@ -1,7 +1,7 @@
 // MealList.js
 import React, { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import ColorToggleButton from "./ColorToggleButton";
+import ColorToggleButton from "../UI/ColorToggleButton";
 
 const mealTypes = [
   { label: 'Breakfast', value: 'Breakfast', icon: 'coffee' },

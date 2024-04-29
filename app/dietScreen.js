@@ -1,10 +1,7 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { View, StyleSheet, SafeAreaView, ScrollView, Text } from 'react-native';
-import NutrientBar from '../src/components/NutrientBar.js';
-import MealList from '../src/components/MealList.js';
-import MealTypeSelector from '../src/components/MealTypeSelector.js';
-import TabBar from '../src/components/TabBar.js';
+import { NutrientBar,MealList,MealTypeSelector,TabBar } from '../src/components'
 
 // 메인 화면 컴포넌트
 const dietScreen = () => {
