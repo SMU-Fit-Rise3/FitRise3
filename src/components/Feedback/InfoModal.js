@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react';
-import { Modal, Text, View, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { Modal, Text, View, StyleSheet, Pressable, ScrollView, SafeAreaView } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
 
 const ModalComponent = ({ modalVisible, setModalVisible, exercise, count, exerciseDetails, exerciseDescription, steps }) =>{
@@ -17,7 +17,7 @@ const ModalComponent = ({ modalVisible, setModalVisible, exercise, count, exerci
       animationType="slide"
       transparent={true}
       visible={modalVisible}
-      presentationStyle={"pageSheet"}
+      presentationStyle={"overFullScreen"}
       onRequestClose={() => {
         setModalVisible(!modalVisible);
       }}
@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    marginTop: 100
   },
   closeButton: {
     position: 'absolute',

@@ -1,10 +1,6 @@
-import  CustomBtn from "./CustomBtn"
-
-//import TabBar from "./TabBar";
-//import Character from "./Character";
-
-export{
-    CustomBtn
-}
-
-//인덱스 파일을 통해 간단히 import, export 할 수 있게!!!
+// components/index.js
+export * from './DataDisplay';
+export * from './Feedback';
+export * from './List';
+export * from './Media';
+export * from './UI';

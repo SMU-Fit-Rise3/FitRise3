@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet,SafeAreaView, Dimensions } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import TabBar from '../src/components/TabBar.js';
-import ExerciseList from '../src/components/ExerciseList.js';
+import { TabBar,ExerciseList } from '../src/components'
+
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 

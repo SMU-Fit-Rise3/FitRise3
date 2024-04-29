@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-import CustomBtn from './CustomBtn'
+import CustomBtn from '../UI/CustomBtn'
 
 // 예시 데이터
 const exercises = [

@@ -2,7 +2,8 @@ import React from 'react';
 import { useRouter } from "expo-router";
 import { View, Text, StyleSheet, Image,Dimensions } from 'react-native';
 import { images } from '../constants';
-import CustomButton from '../src/components/CustomBtn'; // 경로는 실제 위치에 맞게 수정하세요.
+import { CustomBtn } from '../src/components'
+
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -23,7 +24,7 @@ const login = () => {
             저희 FitRise가 볼 건강, 정신 건강까지 챙길 수 있도록 함께할게요. :)
           </Text>
         </View>
-        <CustomButton 
+        <CustomBtn 
           title="가입으로 계속하기" 
           onPress={() => router.push('/InfoInput')}
         />

@@ -1,12 +1,8 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { View, StyleSheet, SafeAreaView } from 'react-native';
-import PointDisplay from '../src/components/PointDisplay.js';
-import CharacterImage from '../src/components/CharacterImage.js';
-import ExerciseList from '../src/components/ExerciseList.js';
-import ChatbotButton from '../src/components/FloatingBtn';
 import images from '../constants/images.js';
-import TabBar from '../src/components/TabBar.js';
+import {TabBar, FloatingBtn, ExerciseList,CharacterImage, PointDisplay} from '../src/components'
 
 // 메인 화면 컴포넌트
 const MainScreen = () => {
@@ -20,7 +16,7 @@ const MainScreen = () => {
           <View style={styles.container}>
               <ExerciseList/>
           </View>
-          <ChatbotButton 
+          <FloatingBtn 
               imageSource={images.robot} 
               onPress={() => router.push('/chatScreen')}
           />

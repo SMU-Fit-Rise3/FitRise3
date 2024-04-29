@@ -2,8 +2,8 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { View, FlatList, Text, Image, StyleSheet } from 'react-native';
-import { icons } from '../../constants';
-import CustomBtn from './CustomBtn';
+import { icons } from '../../../constants';
+import CustomBtn from '../UI/CustomBtn';
 const mealTypesData = [
   {
     type: 'Breakfast',
