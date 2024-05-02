@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   genderOption: {
     backgroundColor: '#f5f5f5',
     padding: 15,
-    borderRadius: '50%',
+    // borderRadius: '50%', 안드로이드 오류 발생
   },
   icon: {
       fontSize: 45,

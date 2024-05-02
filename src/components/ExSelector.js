@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   exOption: {
     backgroundColor: '#f5f5f5',
     padding: 15,
-    borderRadius: "50%",
+    // borderRadius: "50%",
   },
   icon: {
     fontSize: 30,

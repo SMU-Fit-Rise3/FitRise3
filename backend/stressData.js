@@ -1,14 +1,19 @@
 const math = require('mathjs');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient({});
 
 exports.updateStressData = async function (req, res) {
-    const userId = parseInt(req.params.userId);  // URL 파라미터에서 userId 가져오기
+    const userId = req.params.id;  // URL 파라미터에서 userId 가져오기
     const gValues = req.body.gValues;
-
-
+    function calculateMagnitude(complex) {
+        return Math.sqrt(complex.re * complex.re + complex.im * complex.im);
+    }
     try {
+        // 진폭 계산 함수=복수수의 절대값
+
         //fft적용
         let fftArray = math.fft(math.complex(gValues));
-        let sampleRate = 25; //프레임
+        let sampleRate = 4; //프레임
         // 파워 스펙트럼 계산=복수수의 절대값의 제곱
         const powerSpectrum = fftArray.map(c => calculateMagnitude(c) ** 2);
 
@@ -33,9 +38,19 @@ exports.updateStressData = async function (req, res) {
         }
 
         console.log(`Stress Ratio: ${stressRatio}`);
-        const updatedUser = await prisma.user.update({
+        
+        //현재는 비율이 2이면 지수가 80정도로 설정
+        let stressPercentage = 0;
+        if (stressRatio >= 2.5) {
+            stressPercentage = 100;
+        } else {
+            stressPercentage = (stressRatio / 2) * 80;
+        }
+        console.log(`Stress Percentage: ${stressPercentage}`);
+
+        const updatedUser = await prisma.users.update({
             where: { id: userId },
-            data: { stressIndex: stressRatio }
+            data: { stressIndex: stressPercentage }
         });
         res.status(200).json(updatedUser);
     } catch (error) {
@@ -43,20 +58,18 @@ exports.updateStressData = async function (req, res) {
     }
 }
 
-/*
-요청 코드
-const gChannelValues = [128, 200, 150, 175]; // 예시 G 채널 값
-
-fetch('http://211.58.143.157:50123/users/:id/stress', {
-    method: 'PATCH', // PATCH 메서드를 사용
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        gValues: gChannelValues
-    })
-})
-.then(response => response.json())
-.then(data => console.log('Success:', data))
-.catch((error) => console.error('Error:', error));
-*/
+exports.getStressData = async function (req, res) {
+    const { id } = req.params;
+    try {
+        const user = await prisma.users.findUnique({
+            where: { id }
+        });
+        if (user) {
+            res.json({ stressIndex: user.stressIndex });
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        res.status(500).send('Server error');
+    }
+}

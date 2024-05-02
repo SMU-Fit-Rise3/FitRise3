@@ -27,7 +27,7 @@ const InfoInput = () => {
     };
 
   return (
-  <View>
+  <View style = {styles.container}>
     <ScrollView style={styles.container}>
         <InputLabelView label="성별">
             <GenderSelector onSelectGender={handleSelectGender} />

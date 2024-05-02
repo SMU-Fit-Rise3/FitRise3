@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useRouter,useLocalSearchParams } from "expo-router";
-import { View, StyleSheet,Text } from 'react-native';
-import CameraComponent from '../src/components/CameraComponent.js';
+import { View, StyleSheet,Text, SafeAreaView } from 'react-native';
+import CameraComponent from '../src/components/CameraComponent.tsx';
 import FeedBack from '../src/components/FeedBack.js';
 import InfoBtn from '../src/components/FloatingBtn.js';
 import CustomBtn from '../src/components/CustomBtn.js';
 import InfoModal from '../src/components/InfoModal.js';
-import CountdownAlert from '../src/components/CountDownAlert.js';
+import ModalWebView from '../src/components/ModalWebView';
 import FeedbackBox from '../src/components/ScrollTextBox.js';
 import PointBox from '../src/components/PointComponent.js';
 import icons from '../constants/icons.js';
+import { useSelector, useDispatch } from 'react-redux';
 
 const PostureCorrection = () => {
     const router = useRouter();
@@ -19,28 +20,24 @@ const PostureCorrection = () => {
         title: title,
         count: count,
     };
-    console.log(exerciseData.count)
+    console.log(exerciseData.title)
     const [modalVisible, setModalVisible] = useState(false);
-    const [showCountdown, setShowCountdown] = useState(true);
     const [exerciseFinished, setExerciseFinished] = useState(false);
-
-    // CountDown 닫는 함수
-    const handleCountdownFinish = () => {
-        setShowCountdown(false);
-    };
+    //리둑스 상태관리
+    const modal3dVisible = useSelector(state => state.modalVisible.modal3dVisible);
     const handleFinishExercise = () => {
         setExerciseFinished(true);
         setModalVisible(false);
     };
 
     return (
-        <View style={styles.mainContainer}>
+        <SafeAreaView style={styles.mainContainer}>
             {!exerciseFinished && (
                 <>
-                    {showCountdown && (
-                        <CountdownAlert onFinish={handleCountdownFinish} />
-                    )}
-                    <CameraComponent style={exerciseFinished ? styles.hideCamera : null}/>
+                    <CameraComponent 
+                    style={exerciseFinished ? styles.hideCamera : null}
+                    isModalVisible={modal3dVisible}    //redux로 3dmodal 컴포넌트 상태를 받아와야함
+                    />
                     <InfoBtn
                         imageSource={icons.icon_calendar_p}
                         onPress={() => setModalVisible(true)}
@@ -81,6 +78,9 @@ const PostureCorrection = () => {
                     </View>
                 </View>
             )}
+            <ModalWebView 
+                modalVisible={modal3dVisible} 
+            />
             <InfoModal 
                 modalVisible={modalVisible} 
                 setModalVisible={setModalVisible} 
@@ -95,7 +95,7 @@ const PostureCorrection = () => {
                     "Clapping Both Hands",
                 ]}
             />
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     textContainer: {
-        flex:0.3,
+        flex:1,
         alignItems:"center",
         paddingTop:100,
     },
