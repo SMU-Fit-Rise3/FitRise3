@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import { useRouter,useLocalSearchParams } from "expo-router";
 import { View, StyleSheet,Text, SafeAreaView } from 'react-native';
+
 import CameraComponent from '../src/components/CameraComponent.tsx';
-import FeedBack from '../src/components/FeedBack.js';
-import InfoBtn from '../src/components/FloatingBtn.js';
-import CustomBtn from '../src/components/CustomBtn.js';
-import InfoModal from '../src/components/InfoModal.js';
-import ModalWebView from '../src/components/ModalWebView';
-import FeedbackBox from '../src/components/ScrollTextBox.js';
-import PointBox from '../src/components/PointComponent.js';
-import icons from '../constants/icons.js';
 import { useSelector, useDispatch } from 'react-redux';
+import icons from '../constants/icons.js';
+import { FeedBack, FloatingBtn, CustomBtn, InfoModal, ModalWebView, ScrollTextBox, PointComponent } from '../src/components'
+
 
 const PostureCorrection = () => {
     const router = useRouter();
@@ -38,7 +34,9 @@ const PostureCorrection = () => {
                     style={exerciseFinished ? styles.hideCamera : null}
                     isModalVisible={modal3dVisible}    //redux로 3dmodal 컴포넌트 상태를 받아와야함
                     />
-                    <InfoBtn
+    
+                    
+                    <FloatingBtn
                         imageSource={icons.icon_calendar_p}
                         onPress={() => setModalVisible(true)}
                         buttonStyle={styles.infoButton}
@@ -60,14 +58,14 @@ const PostureCorrection = () => {
                     <View style={styles.textContainer}>
                         <Text style={styles.finishText}>운동을 완료했어요🔥</Text>
                     </View>
-                    <FeedbackBox
+                    <ScrollTextBox
                         message="A jumping jack, also known as a star jump and called a side-straddle hop in the US military, 
                                 is a physical jumping exercise performed by jumping to a position with the legs spread wide 
                                 A jumping jack, also known as a star jump and called a side-straddle hop in the US military,
                                 is a physical jumping exercise performed by jumping to a position with the legs spread wide."
                     />
                     <View style={styles.pointContainer}>
-                        <PointBox points = {30}/>
+                        <PointComponent points = {30}/>
                     </View>
                     <View style={styles.btnContainer}>
                         <CustomBtn
@@ -79,7 +77,7 @@ const PostureCorrection = () => {
                 </View>
             )}
             <ModalWebView 
-                modalVisible={modal3dVisible} 
+                modalVisible={modal3dVisible}
             />
             <InfoModal 
                 modalVisible={modalVisible} 

@@ -1,11 +1,15 @@
 import React from 'react';
 import { useRouter } from "expo-router";
-import { View, StyleSheet, Text } from 'react-native';
-import CharacterCAM from '../src/components/CharacterCAM';
-import CustomButton from '../src/components/CustomBtn'; 
+import { SafeAreaView, View, StyleSheet, Text,Dimensions } from 'react-native';
+import { CharacterCAM,CustomBtn,StepIndicator } from '../src/components'
+
+
+const { width, height } = Dimensions.get('window'); // Get the screen dimensions
+
 
 const characterGAN = () => {
     const router = useRouter();
+    const stepLabels = ['Step 1', 'Step 2', 'Step 3', 'Step 4'];
     const handleNextPress = () => {
         console.log('다음 버튼 눌림'); // 다음 화면으로 이동하는 로직
         router.push('/mainScreen') //화면 이동
@@ -17,29 +21,40 @@ const characterGAN = () => {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>나만의 캐릭터를 생성하세요🏃🏻</Text>
-            <CharacterCAM 
-                onTakePicture={handleTakePicture} 
-                onNextPress={handleNextPress} />
-            <CustomButton
-                buttonStyle={styles.Btn} 
-                title="다음"
-                onPress={handleNextPress}
+        <SafeAreaView style={styles.safeContainer}>
+            <StepIndicator
+                steps= {stepLabels}
+                currentStep={3}
             />
-        </View>
+            <View style={styles.container}>
+                <Text style={styles.title}>나만의 캐릭터를 생성하세요🏃🏻</Text>
+                <CharacterCAM 
+                    onTakePicture={handleTakePicture} 
+                    onNextPress={handleNextPress} />
+                <CustomBtn
+                    buttonStyle={styles.Btn} 
+                    title="다음"
+                    onPress={handleNextPress}
+                />
+            </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+    safeContainer:{
+        flex:1,
+        backgroundColor: '#ffffff',
+    },
     container: {
         flex: 1,
-        justifyContent: 'space-between',
+        alignItems:"center",
         padding: 20,
         backgroundColor: '#FFFFFF', // 여기서 배경색을 원하는 색상으로 설정하세요.
     },
     Btn:{
         backgroundColor: '#99aff8',
+        width: width * 0.8
     },
     title: {
         fontSize: 24,

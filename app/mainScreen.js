@@ -1,30 +1,28 @@
 import React from 'react';
 import { useRouter } from "expo-router";
-import { View, StyleSheet } from 'react-native';
-import PointDisplay from '../src/components/PointDisplay.js';
-import CharacterImage from '../src/components/CharacterImage.js';
-import ExerciseList from '../src/components/ExerciseList.js';
-import ChatbotButton from '../src/components/FloatingBtn';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import images from '../constants/images.js';
-import TabBar from '../src/components/TabBar.js';
+import {TabBar, FloatingBtn, ExerciseList,CharacterImage, PointDisplay} from '../src/components'
 
 // 메인 화면 컴포넌트
 const MainScreen = () => {
-    const router = useRouter();
+  const router = useRouter();
 
   return (
-    <View style={styles.mainContainer}>
+    <SafeAreaView style={styles.mainContainer}>
+      <View style={styles.container}>
         <PointDisplay/>
-        <CharacterImage/>
-        <View style={styles.container}>
-            <ExerciseList/>
-        </View>
-        <ChatbotButton 
-            imageSource={images.robot} 
-            onPress={() => router.push('/StressScreen')}
-        />
-        <TabBar router={router}/>        
-    </View>
+          <CharacterImage/>
+          <View style={styles.container}>
+              <ExerciseList/>
+          </View>
+          <FloatingBtn 
+              imageSource={images.robot} 
+              onPress={() => router.push('/chatScreen')}
+          />
+        <TabBar router={router}/>  
+      </View>      
+    </SafeAreaView>
   );
 };
 
@@ -32,11 +30,11 @@ const MainScreen = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    paddingTop: 20,
-    backgroundColor:"white"
+    backgroundColor:"#ddd"
   },
   container: {
-      flex:1,
+    flex:1,
+    backgroundColor:"white",
   }
 });
 

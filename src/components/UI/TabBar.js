@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { useRouter } from "expo-router";
-import { icons } from '../../constants';
+import { icons } from '../../../constants';
 import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
 
 // 각 탭 아이템 컴포넌트
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   tabBarContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#BDBDBD',
+    backgroundColor: '#ddd',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
     paddingVertical: 10,

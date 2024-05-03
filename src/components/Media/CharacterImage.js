@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
-import { images } from '../../constants';
+import { images } from '../../../constants';
 
 const CharacterImage = () => (
   <View style={styles.container}>
