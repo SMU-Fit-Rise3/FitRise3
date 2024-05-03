@@ -21,28 +21,33 @@ const characterGAN = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.safeContainer}>
             <StepIndicator
                 steps= {stepLabels}
-                currentStep={2}
+                currentStep={3}
             />
-            <Text style={styles.title}>나만의 캐릭터를 생성하세요🏃🏻</Text>
-            <CharacterCAM 
-                onTakePicture={handleTakePicture} 
-                onNextPress={handleNextPress} />
-            <CustomBtn
-                buttonStyle={styles.Btn} 
-                title="다음"
-                onPress={handleNextPress}
-            />
+            <View style={styles.container}>
+                <Text style={styles.title}>나만의 캐릭터를 생성하세요🏃🏻</Text>
+                <CharacterCAM 
+                    onTakePicture={handleTakePicture} 
+                    onNextPress={handleNextPress} />
+                <CustomBtn
+                    buttonStyle={styles.Btn} 
+                    title="다음"
+                    onPress={handleNextPress}
+                />
+            </View>
         </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+    safeContainer:{
+        flex:1,
+        backgroundColor: '#ffffff',
+    },
     container: {
         flex: 1,
-        justifyContent: 'space-between',
         alignItems:"center",
         padding: 20,
         backgroundColor: '#FFFFFF', // 여기서 배경색을 원하는 색상으로 설정하세요.
