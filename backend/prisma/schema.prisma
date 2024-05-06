@@ -15,8 +15,32 @@ datasource db {
 
 model users {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name  String @unique
-  stressIndex Int
+  nickname String @unique
+  gender String
+  age Int
+  height Int
+  weight Int
+  ex_frequency Int
+  ex_level Level @default(beginner)
+  ex_goal String
+  stressIndex Int @default(0)
+  calorie Calorie[]
+}
+
+model Calorie {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  calorie_goal Int @default(0)
+  carbs Int @default(0)
+  protein Int @default(0)
+  fat Int @default(0)
+  user    users    @relation(fields: [userId], references: [id])
+  userId  String   @db.ObjectId
+}
+
+enum Level {
+  beginner
+  intermediate 
+  advanced
 }
 
 //예전 스키마

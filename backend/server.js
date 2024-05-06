@@ -17,9 +17,12 @@ app.get('/', (req, res) => {
     res.status(200).json({ name: "true", server: "fitrise_server", data: req.body });
 })
 
-const stressAPI = require('./stressData')//스트레스 관련 api
+//스트레스 관련 api
+const stressAPI = require('./stressData')
 app.patch('/users/:id/stress/calculate', stressAPI.updateStressData)  //스트레스 계산 && DB저장
 app.get('/users/:id/stress', stressAPI.getStressData)  //스트레스 데이터 가져오기
 
-
-
+//유저 정보 관련 api
+const userInfoAPI = require('./userInfo')
+app.post('/users',userInfoAPI.postUserData) //유저 데이터 생성
+app.put('/users/:id/calories',userInfoAPI.insertCalorieData) //칼로리 정보 insert 

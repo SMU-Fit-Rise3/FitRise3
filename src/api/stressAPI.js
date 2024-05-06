@@ -1,5 +1,6 @@
-IP_URL=process.env.IP_URL;
-PORT=process.env.PORT;
+IP_URL=process.env.EXPO_PUBLIC_IP_URL;
+PORT=process.env.EXPO_PUBLIC_PORT;
+
 //스트레스 업데이트 (components/CameraComponent.tsx)
 export const updateStress = async (userId, gMeanValues) => {
     try {
@@ -21,6 +22,7 @@ export const updateStress = async (userId, gMeanValues) => {
 
 //스트레스 데이터 가져오기 ()
 export const getStress = async (userId) => {
+  console.log(IP_URL);
     try {
     const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/stress`, {
       method: 'GET',

@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useRouter } from "expo-router";
-import { View, StyleSheet, SafeAreaView, Dimensions, Alert, ScrollView } from 'react-native';
-import { InputFields, InputLabelView, Selector, CustomBtn, GoalSelector, StepIndicator } from '../src/components';
+import { View, StyleSheet, SafeAreaView, Dimensions, Alert, ScrollView } from "react-native";
+import { InputFields, InputLabelView, Selector, CustomBtn, GoalSelector, StepIndicator } from "../src/components";
+import API from "../src/api"
 
 const { width } = Dimensions.get('window'); // Get the screen width
 
 const InfoInput = () => {
-    const router = useRouter(); 
+    const router = useRouter();
     const stepLabels = ['Step 1', 'Step 2', 'Step 3', 'Step 4'];
 
     const genderOptions = [
@@ -41,35 +42,43 @@ const InfoInput = () => {
         if (!weight.trim() || isNaN(Number(weight))) errors.push("몸무게");
         if (!selectedExerciseLevel) errors.push("운동 수준");
         if (!exerciseGoal) errors.push("운동 목표");
-    
+
         if (errors.length > 0) {
             Alert.alert('입력되지 않은 정보가 있습니다!', `${errors.join(", ")}을(를) 확인해주세요.`);
             return false;
         }
         return true;
     };
-    
+
 
     // 다음 버튼 클릭 이벤트
     const handleNextPress = () => {
-        
-        if (validateInputs()) {
-            const userInfo = {
-                selectedGender,
-                nickname,
-                age: Number(age),
-                exerciseFrequency: Number(exerciseFrequency),
-                height: Number(userHeight),
-                weight: Number(weight),
-                selectedExerciseLevel,
-                exerciseGoal,
-            };
-            router.push({pathname:'/caloriesScreen', 
-                         params:{
-                            gender : userInfo.selectedGender,
-                            height: userInfo.height,
-                            exerciseLevel: userInfo.selectedExerciseLevel,
-                            goal: userInfo.exerciseGoal}})
+        const userInfo = {
+            selectedGender,
+            nickname,
+            age: Number(age),
+            exerciseFrequency: Number(exerciseFrequency),
+            height: Number(userHeight),
+            weight: Number(weight),
+            selectedExerciseLevel,
+            exerciseGoal,
+        };
+
+        if(true){// if (validateInputs()) {
+        //     API.createUser(userInfo)
+        //         .then((result) => {
+        //             console.log('Response from server:', result);
+        //         });
+            
+            router.push({
+                pathname: '/caloriesScreen',
+                params: {
+                    gender: userInfo.selectedGender,
+                    height: userInfo.height,
+                    exerciseLevel: userInfo.selectedExerciseLevel,
+                    goal: userInfo.exerciseGoal
+                }
+            })
         }
     };
 
@@ -81,7 +90,7 @@ const InfoInput = () => {
                     currentStep={0}
                 />
                 <InputLabelView label="성별">
-                    <Selector options={genderOptions} onSelectOption={(value) => setSelectedGender(value)}/>
+                    <Selector options={genderOptions} onSelectOption={(value) => setSelectedGender(value)} />
                 </InputLabelView>
                 <View style={styles.HorContainer}>
                     <InputFields
@@ -121,7 +130,7 @@ const InfoInput = () => {
                     />
                 </View>
                 <View style={styles.HorContainer}>
-                    <InputFields 
+                    <InputFields
                         label="키"
                         placeholder="cm"
                         keyboardType="numeric"
@@ -131,7 +140,7 @@ const InfoInput = () => {
                             value: userHeight,
                         }}
                     />
-                    <InputFields 
+                    <InputFields
                         label="몸무게"
                         placeholder="kg"
                         keyboardType="numeric"
@@ -146,12 +155,12 @@ const InfoInput = () => {
                     <Selector options={exerciseLevelOptions} onSelectOption={(value) => setSelectedExerciseLevel(value)} />
                 </InputLabelView>
                 <InputLabelView label="운동 목표">
-                    <GoalSelector onSelectGoal={setExerciseGoal}/>
+                    <GoalSelector onSelectGoal={setExerciseGoal} />
                 </InputLabelView>
                 <View style={styles.btnContainer}>
-                    <CustomBtn 
+                    <CustomBtn
                         onPress={handleNextPress}
-                        title=" 다음 " 
+                        title=" 다음 "
                         buttonStyle={styles.finishBtn}
                     />
                 </View>
@@ -178,7 +187,7 @@ const styles = StyleSheet.create({
         alignItems: 'center', // 세로 방향으로 자식 요소들을 가운데 정렬합니다.
     },
     duplicateCheckBtn: {
-        width: width * 0.3 ,
+        width: width * 0.3,
         height: 45,
         padding: 5,
         backgroundColor: '#d9a1d5',

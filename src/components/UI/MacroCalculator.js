@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
+import API from '../../api'
 
 const MacroCalculator = ({ totalCalories, goal }) => {
   const [macros, setMacros] = useState({
@@ -19,7 +20,7 @@ const MacroCalculator = ({ totalCalories, goal }) => {
     } else if (goal === 'muscle') {
       ratios = { carbs: 0.6, protein: 0.2, fat: 0.2 };
     }
-    
+
     const carbsCalories = Math.round(calories * ratios.carbs);
     const proteinCalories = Math.round(calories * ratios.protein);
     const fatCalories = Math.round(calories * ratios.fat);
@@ -29,6 +30,23 @@ const MacroCalculator = ({ totalCalories, goal }) => {
       protein: proteinCalories,
       fat: fatCalories
     });
+  };
+
+  //update button click
+  const handleButtonPress = async () => {
+    //Calculated Macros
+    calculateMacros(totalCalories, goal);
+    console.log('Calculated Macros:', macros);
+    //Send server
+    API.insertCalories("6637163419548b4c14803d6e",Number(totalCalories),macros.carbs,macros.protein,macros.fat)
+      .then((result) => {
+        console.log('Response from server:', result);
+        setMacros({
+          carbs: result.updateCalorie.carbs,
+          protein: result.updateCalorie.protein,
+          fat: result.updateCalorie.fat
+        });
+      });
   };
 
   return (
@@ -61,7 +79,7 @@ const MacroCalculator = ({ totalCalories, goal }) => {
           onChangeText={(text) => setMacros({ ...macros, fat: parseInt(text || 0, 10) })}
         />
       </View>
-      <Button title="Update" onPress={() => calculateMacros(totalCalories, goal)} />
+      <Button title="Update" onPress={handleButtonPress} />
     </View>
   );
 };

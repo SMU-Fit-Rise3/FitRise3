@@ -38,7 +38,7 @@ exports.updateStressData = async function (req, res) {
         }
 
         console.log(`Stress Ratio: ${stressRatio}`);
-        
+
         //현재는 비율이 2이면 지수가 80정도로 설정
         let stressPercentage = 0;
         if (stressRatio >= 2.5) {
@@ -55,6 +55,8 @@ exports.updateStressData = async function (req, res) {
         res.status(200).json(updatedUser);
     } catch (error) {
         res.status(500).json({ message: error.message });
+    } finally {
+        await prisma.$disconnect();
     }
 }
 
@@ -65,11 +67,13 @@ exports.getStressData = async function (req, res) {
             where: { id }
         });
         if (user) {
-            res.json({ stressIndex: user.stressIndex });
+            res.status(200).json({ stressIndex: user.stressIndex }); //status 설정
         } else {
             res.status(404).send('User not found');
         }
     } catch (error) {
         res.status(500).send('Server error');
+    } finally {
+        await prisma.$disconnect();
     }
 }
