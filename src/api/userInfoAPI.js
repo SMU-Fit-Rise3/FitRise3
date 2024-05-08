@@ -1,6 +1,7 @@
 IP_URL = process.env.EXPO_PUBLIC_IP_URL;
 PORT = process.env.EXPO_PUBLIC_PORT;
 
+//유저생성(app/InfoInput.js)
 export const createUser = async (userData) => {
     try {
         const response = await fetch(`${IP_URL}:${PORT}/users`, {
@@ -21,28 +22,19 @@ export const createUser = async (userData) => {
     }
 }
 
-export const insertCalories = async (userId, calorieGoal, carbs, protein, fat) => {
-    try {
-        const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/calories`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                calorieGoal : calorieGoal,
-                carbs : carbs,
-                protein : protein,
-                fat : fat
-            })
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+//닉네임 중복 체크 (app/InfoInput.js, app/login.js)
+export const checkNickName = async (name) => {
+      try {
+      const response = await fetch(`${IP_URL}:${PORT}/namecheck/${name}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
         }
-        const result = await response.json();
-        console.log("Calorie information updated successfully")
-        return result;
+      });
+      return response;
     } catch (error) {
-        return console.error('Error:', error);
-        return null;
+      console.error('Error:', error);
     }
-};
+  };
+  
+

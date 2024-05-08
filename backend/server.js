@@ -18,11 +18,12 @@ app.get('/', (req, res) => {
 })
 
 //스트레스 관련 api
-const stressAPI = require('./stressData')
+const stressAPI = require('./api/stressData')
 app.patch('/users/:id/stress/calculate', stressAPI.updateStressData)  //스트레스 계산 && DB저장
 app.get('/users/:id/stress', stressAPI.getStressData)  //스트레스 데이터 가져오기
 
 //유저 정보 관련 api
-const userInfoAPI = require('./userInfo')
+const userInfoAPI = require('./api/userInfo')
 app.post('/users',userInfoAPI.postUserData) //유저 데이터 생성
 app.put('/users/:id/calories',userInfoAPI.insertCalorieData) //칼로리 정보 insert 
+app.get('/namecheck/:name', userInfoAPI.nameCheck)  //닉네임 중복체크

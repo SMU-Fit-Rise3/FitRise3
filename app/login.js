@@ -1,36 +1,51 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from "expo-router";
-import { View, Text, StyleSheet, Image,Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
 import { images } from '../constants';
 import { CustomBtn } from '../src/components'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import API from "../src/api"
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
 const login = () => {
-    const router = useRouter();
-    
-    return (
-      <View style={styles.container}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={images.login_image}
-            style={styles.image}
-          />
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.quoteText}>“건강보다 나은 재산은 없다”</Text>
-          <Text style={styles.descriptionText}>
-            저희 FitRise가 볼 건강, 정신 건강까지 챙길 수 있도록 함께할게요. :)
-          </Text>
-        </View>
-        <CustomBtn 
-          title="가입으로 계속하기" 
-          onPress={() => router.push('/InfoInput')}
+  const router = useRouter();
+
+  // 이미 로그인된 유저일시 메인 스크린으로 이동
+  // useEffect(() => {
+  //   const checkStorageAndNavigate = async () => {
+  //     const userNickName = await AsyncStorage.getItem('key');
+  //     API.checkNickName(userNickName).then((res) => {
+  //       if (res.ok) {        
+  //         console.log("로그인 닉네임:" + userNickName)
+  //         router.push('/mainScreen');
+  //       }
+  //     })
+  //   };
+  //   checkStorageAndNavigate();
+  // }, []);
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.imageContainer}>
+        <Image
+          source={images.login_image}
+          style={styles.image}
         />
       </View>
-    );
-  };
+      <View style={styles.textContainer}>
+        <Text style={styles.quoteText}>“건강보다 나은 재산은 없다”</Text>
+        <Text style={styles.descriptionText}>
+          저희 FitRise가 볼 건강, 정신 건강까지 챙길 수 있도록 함께할게요. :)
+        </Text>
+      </View>
+      <CustomBtn
+        title="가입으로 계속하기"
+        onPress={() => router.push('/InfoInput')}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
