@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useRouter,useLocalSearchParams } from "expo-router";
 import { View, StyleSheet,Text, SafeAreaView } from 'react-native';
+
+import CameraComponent from '../src/components/CameraComponent.tsx';
+import { useSelector, useDispatch } from 'react-redux';
 import icons from '../constants/icons.js';
-import { CameraComponent, FeedBack, FloatingBtn, CustomBtn, InfoModal, ModalWebView, ScrollTextBox, PointComponent } from '../src/components'
+import { FeedBack, FloatingBtn, CustomBtn, InfoModal, ModalWebView, ScrollTextBox, PointComponent } from '../src/components'
 
 
 const PostureCorrection = () => {
@@ -15,9 +18,9 @@ const PostureCorrection = () => {
     };
     console.log(exerciseData.title)
     const [modalVisible, setModalVisible] = useState(false);
-    const [show3DModal, setShow3DModal] = useState(false); // 3D 웹뷰 모달 관리 상태
     const [exerciseFinished, setExerciseFinished] = useState(false);
-
+    //리둑스 상태관리
+    const modal3dVisible = useSelector(state => state.modalVisible.modal3dVisible);
     const handleFinishExercise = () => {
         setExerciseFinished(true);
         setModalVisible(false);
@@ -27,7 +30,12 @@ const PostureCorrection = () => {
         <SafeAreaView style={styles.mainContainer}>
             {!exerciseFinished && (
                 <>
-                    <CameraComponent style={exerciseFinished ? styles.hideCamera : null}/>
+                    <CameraComponent 
+                    style={exerciseFinished ? styles.hideCamera : null}
+                    isModalVisible={modal3dVisible}    //redux로 3dmodal 컴포넌트 상태를 받아와야함
+                    />
+    
+                    
                     <FloatingBtn
                         imageSource={icons.icon_calendar_p}
                         onPress={() => setModalVisible(true)}
@@ -69,8 +77,7 @@ const PostureCorrection = () => {
                 </View>
             )}
             <ModalWebView 
-                modalVisible={show3DModal} 
-                setModalVisible={setShow3DModal} 
+                modalVisible={modal3dVisible}
             />
             <InfoModal 
                 modalVisible={modalVisible} 

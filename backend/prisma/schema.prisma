@@ -15,4 +15,74 @@ datasource db {
 
 model users {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
+  name  String @unique
+  stressIndex Int
 }
+
+//예전 스키마
+// model users {
+//   id    String @id @default(auto()) @map("_id") @db.ObjectId
+//   name  String @unique
+//   email String? //@unique
+//   age   Int?
+//   height Int
+//   weight Int
+//   frequency Int?
+//   tier Int @default(1)
+//   ex_level Level @default(beginner)
+//   ex_goal String
+//   exp Int? @default(0)
+//   plans WorkoutDay[]
+//   calendar CalendarDay[]
+//   analysis Analysis[]
+// }
+
+// model WorkoutDay {
+//   id  String @id @default(auto()) @map("_id") @db.ObjectId
+//   day         String
+//   exercises   Exercise[]
+//   user    users    @relation(fields: [userId], references: [id])
+//   userId  String   @db.ObjectId
+// }
+
+// model Exercise {
+//   id  String @id @default(auto()) @map("_id") @db.ObjectId
+//   exercise    String
+//   sets        Int
+//   reps        Int
+//   workoutDay  WorkoutDay @relation(fields: [workoutDayId], references: [id])
+//   workoutDayId String @db.ObjectId
+// }
+
+// model CalendarDay {
+//   id  String @id @default(auto()) @map("_id") @db.ObjectId
+//   day         String
+//   doexercises  doExercise[]
+//   user    users    @relation(fields: [userId], references: [id])
+//   userId  String   @db.ObjectId
+// }
+
+// model doExercise {
+//   id  String @id @default(auto()) @map("_id") @db.ObjectId
+//   exercise String
+//   sets Int
+//   reps Int
+//   CalendarDay  CalendarDay @relation(fields: [CalendarDayId], references: [id])
+//   CalendarDayId String @db.ObjectId
+// }
+
+// model Analysis {
+//   id String @id @default(auto()) @map("_id") @db.ObjectId
+//   date String
+//   weight Int
+//   bmi Int
+//   userName String @map("user_name") 
+//   user  users   @relation(fields: [userName], references: [name])
+// }
+
+
+// enum Level {
+//   beginner
+//   intermediate 
+//   advanced
+// }

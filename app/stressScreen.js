@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from "expo-router";
-import { View, StyleSheet, Text, Dimensions,SafeAreaView } from 'react-native';
-import { CharacterCAM,ExerciseList,StressLevelIndicator,TabBar } from '../src/components'
-
+import API from '../src/api'
+import { View, StyleSheet, Text, Dimensions, SafeAreaView } from 'react-native';
+import { CharacterCAM, ExerciseList, StressLevelIndicator, TabBar } from '../src/components'
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
 // 메인 화면 컴포넌트
 const stressScreen = () => {
+    const [stressIndex, setStressIndex] = useState(0);
+    useEffect(() => {
+        API.getStress("662f792c86be2d4ce4191689")
+            .then(data => {
+                if (data && data.stressIndex) {
+                    setStressIndex(data.stressIndex);  // 데이터에서 스트레스 인덱스를 추출하여 상태 업데이트
+                }
+            })
+    }, []);
+
     const router = useRouter();
     const handleNextPress = () => {
         console.log('다음 버튼 눌림'); // 다음 화면으로 이동하는 로직
@@ -21,20 +31,20 @@ const stressScreen = () => {
             <View style={styles.container}>
                 <Text style={styles.title}>스트레스를 측정해보세요🙂</Text>
                 <View style={styles.container}>
-                    <CharacterCAM 
+                    <CharacterCAM
                         onTakePicture={handleTakePicture}
                         onNextPress={handleNextPress}
-                        camStyle={styles.characterCamContainer}/>
+                        camStyle={styles.characterCamContainer} />
                 </View>
                 <View style={styles.container}>
-                    <StressLevelIndicator stressLevel={1}/>
+                    <StressLevelIndicator stressLevel={stressIndex} />
                 </View>
                 <View style={styles.container}>
                     <Text style={styles.title}>🌿Refresh Routine🌿</Text>
-                    <ExerciseList/>
-                </View> 
-            </View> 
-            <TabBar/>     
+                    <ExerciseList />
+                </View>
+            </View>
+            <TabBar />
         </SafeAreaView>
     );
 };
@@ -43,24 +53,24 @@ const stressScreen = () => {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor:"#ddd",
-        justifyContent:"space-evenly"
+        backgroundColor: "#ddd",
+        justifyContent: "space-evenly"
     },
     container: {
-        flex:1,
-        backgroundColor:"white",
+        flex: 1,
+        backgroundColor: "white",
     },
     characterCamContainer: {
         marginTop: 60,
         width: width * 0.5, // 이미지 컨테이너의 너비
         height: height * 0.3, // 이미지 컨테이너의 높이, 스크린 비율에 따라 조절 가능
-        marginBottom:10,
+        marginBottom: 10,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginTop:10,
+        marginTop: 10,
     },
 });
 

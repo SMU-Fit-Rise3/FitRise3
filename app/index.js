@@ -1,8 +1,7 @@
 import { Redirect } from 'expo-router';
 
-
 const Index = () => {
-    return (
+    return (    
             <Redirect href="/login" />
     )
 }

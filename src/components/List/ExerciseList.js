@@ -1,6 +1,8 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { modalVisibleActions } from '../../store/modalVisible';
 import CustomBtn from '../UI/CustomBtn'
 
 // 예시 데이터
@@ -13,6 +15,7 @@ const exercises = [
 ];
 
 const ExerciseList = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const ExerciseItem = ({ item }) => {
@@ -27,6 +30,7 @@ const ExerciseList = () => {
         textStyle = {styles.btnText}
         title="운동하러 가기"
         onPress={() => {
+          dispatch(modalVisibleActions.on());
           router.push({
             pathname:'/postureCorrection', 
             params: { title: item.title, count: item.count }

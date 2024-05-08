@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from "expo-router";
-import { View, StyleSheet, SafeAreaView, Dimensions, Alert } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Dimensions, Alert, ScrollView } from 'react-native';
 import { InputFields, InputLabelView, Selector, CustomBtn, GoalSelector, StepIndicator } from '../src/components';
 
 const { width } = Dimensions.get('window'); // Get the screen width
@@ -75,7 +75,7 @@ const InfoInput = () => {
 
     return (
         <SafeAreaView style={styles.safeContainer}>
-            <View style={styles.contentContainer}>
+            <ScrollView style={styles.contentContainer}>
                 <StepIndicator
                     steps={stepLabels}
                     currentStep={0}
@@ -155,7 +155,7 @@ const InfoInput = () => {
                         buttonStyle={styles.finishBtn}
                     />
                 </View>
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };
