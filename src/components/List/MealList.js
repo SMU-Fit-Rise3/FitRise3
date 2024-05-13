@@ -1,6 +1,6 @@
 // MealList.js
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet  } from 'react-native';
 import ColorToggleButton from "../UI/ColorToggleButton";
 
 const mealTypes = [
@@ -10,34 +10,14 @@ const mealTypes = [
   { label: 'Snack', value: 'Snack', icon: 'cupcake' },
 ];
 
-const mealsData = {
-  Breakfast: [
-    { id: 'B1', title: '연어 초밥', time: '7am', calories: '450' },
-    // ... 다른 아침 식사 데이터
-  ],
-  Lunch: [
-    // ... 점심 식사 데이터
-    { id: 'L1', title: '저지방 우유', time: '11am', calories: '90' },
-  ],
-  Dinner: [
-    // ... 저녁 식사 데이터
-    { id: 'D1', title: '닭가슴살', time: '5pm', calories: '300' },
-  ],
-  Snack: [
-    // ... 간식 데이터
-    { id: 'S1', title: '그릭 요거트', time: '8am', calories: '100' },
-    { id: 'S2', title: '벌꿀집', time: '8am', calories: '60' },
-  ],
-};
-
-const MealList = () => {
+const MealList = ({ mealData }) => {
   const [selectedMealType, setSelectedMealType] = useState('Breakfast');
-  const meals = mealsData[selectedMealType];
+  const meals = mealData[selectedMealType] || [];
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>오늘의 식단</Text>
+        <Text style={styles.name}>오늘의 식단</Text>
         <ColorToggleButton
           mealTypes={mealTypes}
           onMealTypeChange={setSelectedMealType}
@@ -45,7 +25,7 @@ const MealList = () => {
       </View>
       <FlatList
         data={meals}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.name}
         renderItem={({ item }) => <MealItem meal={item} />}
         style={styles.list}
       />
@@ -57,8 +37,7 @@ const MealItem = ({ meal }) => {
   return (
     <View style={styles.mealItem}>
       <View style={styles.mealDetails}>
-        <Text style={styles.mealTitle}>{meal.title}</Text>
-        <Text style={styles.mealTime}>섭취 시간 : {meal.time}</Text>
+        <Text style={styles.mealname}>{meal.name}</Text>
       </View>
       <Text>{meal.calories} kcal</Text>
     </View>
@@ -85,7 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#444',
   },
-  title: {
+  name: {
     fontSize: 24,
     fontWeight: 'bold',
     marginTop:10,
@@ -111,7 +90,7 @@ const styles = StyleSheet.create({
   mealDetails: {
     flex: 1,
   },
-  mealTitle: {
+  mealname: {
     fontWeight: 'bold',
     fontSize: 16,
   },

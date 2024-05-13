@@ -101,8 +101,7 @@ const InfoInput = () => {
                 <View style={styles.HorContainer}>
                     <InputFields
                         label="나이"
-                        placeholder="세"
-                        keyboardType="numeric"
+                        unit="세"
                         textInputProps={{
                             keyboardType: 'numeric',
                             onChangeText: setAge,
@@ -111,7 +110,7 @@ const InfoInput = () => {
                     />
                     <InputFields
                         label="운동횟수"
-                        placeholder="회"
+                        unit="회"
                         keyboardType="numeric"
                         textInputProps={{
                             keyboardType: 'numeric',
@@ -123,7 +122,7 @@ const InfoInput = () => {
                 <View style={styles.HorContainer}>
                     <InputFields 
                         label="키"
-                        placeholder="cm"
+                        unit="cm"
                         keyboardType="numeric"
                         textInputProps={{
                             keyboardType: 'numeric',
@@ -133,7 +132,7 @@ const InfoInput = () => {
                     />
                     <InputFields 
                         label="몸무게"
-                        placeholder="kg"
+                        unit="kg"
                         keyboardType="numeric"
                         textInputProps={{
                             keyboardType: 'numeric',
@@ -190,7 +189,7 @@ const styles = StyleSheet.create({
     },
     finishBtn: {
         backgroundColor: '#99aff8',
-        width: width * 0.7
+        width: width * 0.85,
     }
 });
 
