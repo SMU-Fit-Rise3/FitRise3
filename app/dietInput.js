@@ -231,7 +231,7 @@ const DietInput = () => {
       </Modal>
       <CustomBtn
         onPress={handleNext}
-        title='다음'
+        title='efkwrereer'
         textStyle={{color:"#444"}}
         buttonStyle={[styles.button, getBackgroundColor(type)]}>
       </CustomBtn>
