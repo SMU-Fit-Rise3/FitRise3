@@ -3,7 +3,7 @@ import { View, FlatList, Text, StyleSheet, TouchableOpacity,
          Modal, Dimensions,ScrollView } from 'react-native';
 import { useLocalSearchParams,useRouter } from 'expo-router';
 import nutrientData from '../src/assets/nutrientData.json';
-import { RowBar, FoodItem, SearchInput, FoodCaloriePicker} from '../src/components'
+import { RowBar, FoodItem, SearchInput, FoodCaloriePicker, CustomBtn} from '../src/components'
 const { width, height } = Dimensions.get('window'); // Get the screen width
 
 const DietInput = () => {
@@ -146,13 +146,25 @@ const DietInput = () => {
                  }})
   }
 
+  // 함수 추가: mealType에 따른 배경색 반환
+  const getBackgroundColor = (mealType) => {
+    switch (mealType) {
+      case 'Breakfast':
+        return { backgroundColor: '#fce1e4' }; // Yellow
+      case 'Lunch':
+        return { backgroundColor: '#ecfcdc' }; // Amber
+      case 'Dinner':
+        return { backgroundColor: '#dee4fa' }; // Orange
+      case 'Snack':
+        return { backgroundColor: '#fcffd6' }; // Deep Orange
+      default:
+        return { backgroundColor: '#ccdddf' }; // Default color
+    }
+  };
+
 
   return (
-    <View style={styles.container}>
-      <Text>Total Calories: {nutrientTotals.calories} kcal</Text>
-      <Text>Total Carbs: {nutrientTotals.carbs}g</Text>
-      <Text>Total Protein: {nutrientTotals.protein}g</Text>
-      <Text>Total Fat: {nutrientTotals.fat}g</Text>
+    <View style={[styles.container, getBackgroundColor(type)]}>
       <ScrollView horizontal={true} style={styles.scrollView}>
         {savedNutrients.map((food, index) => (
           <View key={index} style={styles.foodContainer}>
@@ -171,11 +183,6 @@ const DietInput = () => {
           <FoodItem item={item} onPress={() => openModal(item)} />
         )}
       />
-      <TouchableOpacity 
-              style={[styles.button, styles.buttonCancle]}
-              onPress={handleNext}>
-              <Text style={styles.textStyle}>다음</Text>
-      </TouchableOpacity>
       <Modal
         animationType="slide"
         transparent={true}
@@ -189,19 +196,29 @@ const DietInput = () => {
             <FoodCaloriePicker 
               foodName={selectedItem.Food_Name} 
               energyPer100g={selectedItem.Energy_kcal}
-              onSave={handleCalorieChange}/>
+              onSave={handleCalorieChange}
+            />
+            <View style={{flexDirection:"row", marginTop: 30, justifyContent: 'center',}}>
+              <Text style={styles.modalText}>탄수화물</Text>
+              <View style={styles.carbPoint}/>
+              <Text style={styles.modalText}>단백질</Text>
+              <View style={styles.proteinPoint}/>
+              <Text style={styles.modalText}>지방</Text>
+              <View style={styles.fatPoint}/>
+            </View>
             <RowBar ratios={{
               carbs_ratio: selectedItem.carbs_ratio,
               protein_ratio: selectedItem.protein_ratio,
               fat_ratio: selectedItem.fat_ratio
             }}/>
-            <View style={{flexDirection:"row", marginTop: 30}}>
-              <Text style={styles.modalText}>탄수화물(g): {selectedItem.Carbohydrates_g} g </Text>
-              <Text style={styles.modalText}>단백질(g): {selectedItem.Protein_g} g</Text>
-              <Text style={styles.modalText}>지방(g): {selectedItem.Fat_g} g</Text>
-            </View>
             <Text style={styles.modalText}>총 당류(g): {selectedItem.Total_Sugars_g?.toFixed(2)} g</Text>
-            <TouchableOpacity style={[styles.button, styles.buttonCancle]} onPress={() => setModalVisible(!modalVisible)}>
+            <Text style={styles.modalText}>식이섬유(g): {selectedItem.Dietary_Fiber_g} g</Text>
+            <Text style={styles.modalText}>비타민 A(μg): {selectedItem.Vitamin_A_μg} μg</Text>
+            <Text style={styles.modalText}>비타민 C(μg): {selectedItem.Vitamin_C_μg} μg</Text>
+            <Text style={styles.modalText}>나트륨(mg): {selectedItem.Sodium_mg} mg</Text>
+            <TouchableOpacity 
+              style={[styles.button, styles.buttonCancle]} 
+              onPress={() => setModalVisible(!modalVisible)}>
               <Text style={styles.textStyle}>취소</Text>
             </TouchableOpacity>
             <TouchableOpacity 
@@ -212,19 +229,26 @@ const DietInput = () => {
           </View>
         </View>
       </Modal>
+      <CustomBtn
+        onPress={handleNext}
+        title='다음'
+        textStyle={{color:"#444"}}
+        buttonStyle={[styles.button, getBackgroundColor(type)]}>
+      </CustomBtn>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 50,
     flex: 1,
     paddingHorizontal: 10,
+    backgroundColor:"#ccdddf"
   },
   scrollView: {
     flexDirection: 'row',
-    marginVertical: 20
+    marginVertical: 20,
+    borderRadius:15,
   },
   foodContainer: {
     flexDirection: 'row',
@@ -265,9 +289,13 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
+    width: '100%',
+    padding: 20,
+    backgroundColor: '#ccdddf',
+    borderRadius: 30,
+    alignItems: 'center',
+    marginBottom: 30,
+    justifyContent:"center",
   },
   buttonCancle: {
     backgroundColor: "#2196F3",
@@ -275,7 +303,7 @@ const styles = StyleSheet.create({
   textStyle: {
     color: "white",
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
@@ -284,6 +312,27 @@ const styles = StyleSheet.create({
   foodName: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  carbPoint: {
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    backgroundColor: '#004410',
+    marginRight: 8,
+  },
+  proteinPoint: {
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    backgroundColor: '#00aa10',
+    marginRight: 8,
+  },
+  fatPoint: {
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    backgroundColor: '#99ffaa',
+    marginRight: 8,
   }
 });
 
