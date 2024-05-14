@@ -15,11 +15,12 @@ const SearchInput = ({ query, handleSearch }) => {
 
 const styles = StyleSheet.create({
   input: {
-    height: 40,
+    height: 45,
     borderColor: 'gray',
-    borderWidth: 1,
     paddingHorizontal: 10,
     marginBottom: 10,
+    borderRadius:30,
+    backgroundColor:"#fff"
   }
 });
 
