@@ -17,3 +17,23 @@ export const getExercise = async (userId) => {
         console.error('Error:', error);
     }
 };
+
+//운동 완료 클릭시 로직 (app/postureCorrection.js)
+export const completedExercise = async (userId, exerciseId) => {
+    try {
+        const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/exercise/${exerciseId}/complete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }      
+        const data = await response.json();
+        console.log('Success:', data);
+        return data;
+    } catch (error) {
+        console.error('Error:',error);
+    }
+}

@@ -1,52 +1,60 @@
 import React, { useState } from 'react';
-import { useRouter,useLocalSearchParams } from "expo-router";
-import { View, StyleSheet,Text, SafeAreaView } from 'react-native';
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
 
 import CameraComponent from '../src/components/CameraComponent.tsx';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import icons from '../constants/icons.js';
-import { FeedBack, FloatingBtn, CustomBtn, InfoModal, ModalWebView, ScrollTextBox, PointComponent } from '../src/components'
-
+import { FeedBack, FloatingBtn, CustomBtn, InfoModal, ModalWebView, ScrollTextBox, PointComponent, LoadingModal } from '../src/components'
+import API from '../src/api';
 
 const PostureCorrection = () => {
+
     const router = useRouter();
     // Main Screen ExerciseList에서 넘겨준 값
-    const { title,count } = useLocalSearchParams();
+    const { title, count, id } = useLocalSearchParams();
     const exerciseData = {
         title: title,
         count: count,
+        id: id
     };
     console.log(exerciseData.title)
     const [modalVisible, setModalVisible] = useState(false);
+    const [loadingVisible, setLoadingVisible] = useState(false);
     const [exerciseFinished, setExerciseFinished] = useState(false);
     //리둑스 상태관리
     const modal3dVisible = useSelector(state => state.modalVisible.modal3dVisible);
-    const handleFinishExercise = () => {
-        setExerciseFinished(true);
-        setModalVisible(false);
-    };
 
+    const handleFinishExercise = () => {
+        setLoadingVisible(true);
+        API.completedExercise("6641af7f94a3e52e3b8ea23c", exerciseData.id).then(
+            () => {
+                setLoadingVisible(false);
+                setExerciseFinished(true);
+                setModalVisible(false);
+            });
+    }
     return (
         <SafeAreaView style={styles.mainContainer}>
             {!exerciseFinished && (
                 <>
-                    <CameraComponent 
-                    style={exerciseFinished ? styles.hideCamera : null}
-                    isModalVisible={modal3dVisible}    //redux로 3dmodal 컴포넌트 상태를 받아와야함
+                    <CameraComponent
+                        style={exerciseFinished ? styles.hideCamera : null}
+                        isModalVisible={modal3dVisible}    //redux로 3dmodal 컴포넌트 상태를 받아와야함
                     />
-    
-                    
+
+
                     <FloatingBtn
                         imageSource={icons.icon_calendar_p}
                         onPress={() => setModalVisible(true)}
                         buttonStyle={styles.infoButton}
                     />
                     <View style={styles.FeedBackContainer}>
-                        <FeedBack text="자세를 잡아주세요."/>
+                        <FeedBack text="자세를 잡아주세요." />
                         <View style={styles.buttonWrapper}>
                             <CustomBtn
                                 buttonStyle={styles.FinishBtn}
-                                title = "운동 완료"
+                                title="운동 완료"
                                 onPress={handleFinishExercise}
                             />
                         </View>
@@ -65,7 +73,7 @@ const PostureCorrection = () => {
                                 is a physical jumping exercise performed by jumping to a position with the legs spread wide."
                     />
                     <View style={styles.pointContainer}>
-                        <PointComponent points = {30}/>
+                        <PointComponent points={30} />
                     </View>
                     <View style={styles.btnContainer}>
                         <CustomBtn
@@ -76,15 +84,15 @@ const PostureCorrection = () => {
                     </View>
                 </View>
             )}
-            <ModalWebView 
+            <ModalWebView
                 modalVisible={modal3dVisible}
             />
-            <InfoModal 
-                modalVisible={modalVisible} 
-                setModalVisible={setModalVisible} 
-                exercise = {exerciseData.title}
-                count = {exerciseData.count}
-                exerciseDetails = "Easy | 390 Calories Burn"
+            <InfoModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                exercise={exerciseData.title}
+                count={exerciseData.count}
+                exerciseDetails="Easy | 390 Calories Burn"
                 exerciseDescription="벤치 프레스는 대흉근(가슴 앞쪽과 위쪽)과 소흉근(갈비뼈와 날개뼈를 이어주는 근육)을 단련할 수 있어요."
                 steps={[
                     "Spread Your Arms",
@@ -93,48 +101,49 @@ const PostureCorrection = () => {
                     "Clapping Both Hands",
                 ]}
             />
+            <LoadingModal visible={loadingVisible} />
         </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     mainContainer: {
-      flex: 1,
-      position:"relative" ,
-      backgroundColor: "white"
+        flex: 1,
+        position: "relative",
+        backgroundColor: "white"
     },
     FeedBackContainer: {
-        flex:0.5
+        flex: 0.5
     },
-    exerciseFinishedContainer:{
+    exerciseFinishedContainer: {
         flex: 1,
-        backgroundColor:"white",
+        backgroundColor: "white",
         alignItems: "center"
     },
     textContainer: {
-        flex:1,
-        alignItems:"center",
-        paddingTop:100,
+        flex: 1,
+        alignItems: "center",
+        paddingTop: 100,
     },
     pointContainer: {
-        width:"100%",
+        width: "100%",
     },
     btnContainer: {
-        width:"80%",
+        width: "80%",
     },
     buttonWrapper: {
         width: "100%",
-        alignItems:"center",
+        alignItems: "center",
     },
     FinishBtn: {
-        width:150,
-        height:50,
+        width: 150,
+        height: 50,
         padding: 10,
         backgroundColor: '#d9a1d5',
         borderRadius: 10,
         marginLeft: 10,
         marginTop: 20,
-      },
+    },
     infoButton: {
         position: 'absolute',
         top: 10, // 상단 여백
@@ -143,12 +152,12 @@ const styles = StyleSheet.create({
     },
     homeButton: {
         width: "100%",
-        backgroundColor:"#99aff8",
-        marginTop:50,
+        backgroundColor: "#99aff8",
+        marginTop: 50,
     },
     finishText: {
-        fontWeight:"bold",
-        fontSize:30
+        fontWeight: "bold",
+        fontSize: 30
     }
 });
 

@@ -32,6 +32,7 @@ const ExerciseList = () => {
         plan.exercises.forEach(exercise => {
           exercises.push({
             ...exercise,
+            id : exercise.id,
             day: plan.day,
             title: exercise.exercise,
             count: `Sets: ${exercise.sets}, Reps: ${exercise.reps}`
@@ -58,7 +59,7 @@ const ExerciseList = () => {
             dispatch(modalVisibleActions.on());
             router.push({
               pathname: '/postureCorrection',
-              params: { title: item.title, count: item.count }
+              params: { title: item.title, count: item.count, id: item.id }
             });
           }}
         />

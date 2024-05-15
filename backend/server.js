@@ -30,4 +30,5 @@ app.get('/namecheck/:name', userInfoAPI.nameCheck);  //닉네임 중복체크
 
 //운동 루틴 관련 api
 const exerciseAPI = require('./api/exerciseData');
-app.get('/users/:id/exercise',exerciseAPI.getExerciseData);
+app.get('/users/:id/exercise',exerciseAPI.getExerciseData); //유저 운동루틴 가져오기
+app.post('/users/:id/exercise/:exerciseId/complete',exerciseAPI.completedExercise) // 해당 운동 ex_plans에서 삭제 && calendar에 추가

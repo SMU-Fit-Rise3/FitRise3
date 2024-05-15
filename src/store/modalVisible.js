@@ -10,14 +10,14 @@ export const modalVisibleSlice = createSlice({
   name: 'modalVisible',
   initialState,
   reducers: {
-    // 3D 모달 제어
+    // 3D 모달 제어 (app/postureCorrection.js)
     off: (state) => {
       state.modal3dVisible = false;
     },
     on: (state) => {
       state.modal3dVisible = true;
     },
-    // 로딩 모달 제어
+    // 로딩 모달 제어 (List/ExerciseList.js)
     turnOffLoading: (state) => {
       state.loadingVisible = false;
     },
