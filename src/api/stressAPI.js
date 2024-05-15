@@ -22,7 +22,6 @@ export const updateStress = async (userId, gMeanValues) => {
 
 //스트레스 데이터 가져오기 (app/stressScreen.js)
 export const getStress = async (userId) => {
-  console.log(IP_URL);
     try {
     const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/stress`, {
       method: 'GET',

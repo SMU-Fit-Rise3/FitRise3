@@ -25,6 +25,8 @@ model users {
   ex_goal String
   stressIndex Int @default(0)
   calorie Calorie[]
+  ex_plans WorkoutDay[]
+  calendar CalendarDay[]
 }
 
 model Calorie {
@@ -35,6 +37,40 @@ model Calorie {
   fat Int @default(0)
   user    users    @relation(fields: [userId], references: [id])
   userId  String   @db.ObjectId
+}
+
+model WorkoutDay {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  day         String
+  exercises   Exercise[]
+  user    users    @relation(fields: [userId], references: [id])
+  userId  String   @db.ObjectId
+}
+
+model Exercise {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  exercise    String
+  sets        Int
+  reps        Int
+  workoutDay  WorkoutDay @relation(fields: [workoutDayId], references: [id])
+  workoutDayId String @db.ObjectId
+}
+
+model CalendarDay {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  day         String
+  doexercises  doExercise[]
+  user    users    @relation(fields: [userId], references: [id])
+  userId  String   @db.ObjectId
+}
+
+model doExercise {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  exercise String
+  sets Int
+  reps Int
+  CalendarDay  CalendarDay @relation(fields: [CalendarDayId], references: [id])
+  CalendarDayId String @db.ObjectId
 }
 
 enum Level {

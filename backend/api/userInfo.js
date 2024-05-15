@@ -3,6 +3,19 @@ const prisma = new PrismaClient({});
 
 exports.postUserData = async function (req, res) {
     try {
+        const userProfile = {
+            age: req.body.age,
+            height: req.body.height,
+            weight: req.body.weight,
+            level: req.body.selectedExerciseLevel, // 운동 수준
+            exerciseGoal: req.body.exerciseGoal, // 운동 목표
+            weeklyExerciseFrequency: req.body.exerciseFrequency// 주 운동 횟수
+        };
+
+        const gpt = require('../src/gpt');
+        const response = await gpt.processUserInput(userProfile)
+        const responseJson = JSON.parse(response)
+
         const user = await prisma.users.create({
             data: {
                 nickname: req.body.nickname,
@@ -13,6 +26,18 @@ exports.postUserData = async function (req, res) {
                 ex_frequency: req.body.exerciseFrequency,
                 ex_level: req.body.selectedExerciseLevel,
                 ex_goal: req.body.exerciseGoal,
+                ex_plans: {
+                    create: responseJson.exercisePlan.map((plan) => ({
+                      day: `Day ${plan.day}`,
+                      exercises: {
+                        create: plan.exercises.map(exercise => ({
+                          exercise: exercise.name, // 'name' 필드로 변경됨
+                          sets: exercise.sets,
+                          reps: exercise.reps
+                        }))
+                      }
+                    }))
+                  }
             }
         });
         res.status(200).json(user);

@@ -69,11 +69,11 @@ const InfoInput = () => {
         };
 
         //빈칸검사 && 유저정보 DB생성 주석처리
-        if (true) {// if (validateInputs()) { 
-            //     API.createUser(userInfo)
-            //         .then((result) => {
-            //             console.log('Response from server:', result);
-            //         });
+        if(true){// if (validateInputs()) { 
+        //         API.createUser(userInfo)
+        //             .then((result) => {
+        //                 console.log('Response from server:', result);
+        //             });
 
             router.push({
                 pathname: '/caloriesScreen',

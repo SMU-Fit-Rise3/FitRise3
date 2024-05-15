@@ -2,11 +2,12 @@ import React from 'react';
 import { useRouter } from "expo-router";
 import { View, StyleSheet, SafeAreaView } from 'react-native';
 import images from '../constants/images.js';
-import {TabBar, FloatingBtn, ExerciseList,CharacterImage, PointDisplay} from '../src/components'
-
+import {TabBar, FloatingBtn, ExerciseList,CharacterImage, PointDisplay, LoadingModal} from '../src/components'
+import { useSelector } from 'react-redux';
 // 메인 화면 컴포넌트
 const MainScreen = () => {
   const router = useRouter();
+  const { loadingVisible } = useSelector(state => state.modalVisible);
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -20,7 +21,8 @@ const MainScreen = () => {
               imageSource={images.robot} 
               onPress={() => router.push('/chatScreen')}
           />
-        <TabBar router={router}/>  
+        <TabBar router={router}/>
+        <LoadingModal visible={loadingVisible} />  
       </View>      
     </SafeAreaView>
   );
