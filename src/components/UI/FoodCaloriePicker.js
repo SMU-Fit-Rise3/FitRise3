@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet,Dimensions } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+
+const { width, height } = Dimensions.get('window'); // Get the screen width
+
 
 const FoodCaloriePicker = ({ foodName, energyPer100g, onSave }) => {
   const [selectedWeight, setSelectedWeight] = useState(100);
@@ -20,16 +23,18 @@ const FoodCaloriePicker = ({ foodName, energyPer100g, onSave }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.foodName}>{foodName}</Text>
-      <Text style={styles.calorieText}>{calories.toFixed(0)} kcal</Text>
+      <View style={styles.textContainer}>
+        <Text style={styles.foodName}>{foodName}</Text>
+        <Text style={styles.calorieText}>{calories.toFixed(0)} kcal</Text>
+      </View>
       <Picker
         selectedValue={selectedWeight}
         onValueChange={handleWeightChange}
         style={styles.pickerStyle}
         itemStyle={styles.pickerItemStyle}
       >
-        {Array.from({ length: 5001 }, (_, i) => (
-          <Picker.Item label={`${i} g`} value={i} key={i} />
+        {Array.from({ length: 501 }, (_, i) => (
+          <Picker.Item label={`${i * 5} g`} value={i * 5} key={i} />
         ))}
       </Picker>
     </View>
@@ -38,15 +43,32 @@ const FoodCaloriePicker = ({ foodName, energyPer100g, onSave }) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 30,
     padding: 20,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginBottom: 20
+  },
+  textContainer: {
+    alignItems: 'flex-start',
+    marginRight: 20
   },
   foodName: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5
+    marginBottom: 5,
+    color: '#333'
   },
   calorieText: {
     fontSize: 16,
@@ -54,8 +76,8 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   pickerStyle: {
-    width: 200,
-    height: 150,
+    width: width * 0.5,
+    height: height*0.16,
   },
   pickerItemStyle: {
     height: 150

@@ -27,7 +27,7 @@ const RowBar = ({ ratios }) => {
 const styles = StyleSheet.create({
   barContainer: {
     flexDirection: 'row',
-    width: '80%',
+    width: '100%',
     backgroundColor: '#ecf0f1',
     borderRadius: 10,
     overflow: 'hidden'

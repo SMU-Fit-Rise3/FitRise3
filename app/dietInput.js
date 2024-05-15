@@ -193,45 +193,58 @@ const DietInput = () => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <FoodCaloriePicker 
-              foodName={selectedItem.Food_Name} 
+            <Text style={styles.title}> 섭취량 설정 </Text>
+            <FoodCaloriePicker
+              foodName={selectedItem.Food_Name}
               energyPer100g={selectedItem.Energy_kcal}
               onSave={handleCalorieChange}
             />
-            <View style={{flexDirection:"row", marginTop: 30, justifyContent: 'center',}}>
-              <Text style={styles.modalText}>탄수화물</Text>
-              <View style={styles.carbPoint}/>
-              <Text style={styles.modalText}>단백질</Text>
-              <View style={styles.proteinPoint}/>
-              <Text style={styles.modalText}>지방</Text>
-              <View style={styles.fatPoint}/>
+            <View style={styles.ratiosContainer}>
+              <View style={styles.ratioItem}>
+                <View style={styles.carbPoint} />
+                <Text style={styles.modalText}>탄수화물</Text>
+              </View>
+              <View style={styles.ratioItem}>
+                <View style={styles.fatPoint} />
+                <Text style={styles.modalText}>지방</Text>
+              </View>
+              <View style={styles.ratioItem}>
+                <View style={styles.proteinPoint} />
+                <Text style={styles.modalText}>단백질</Text>
+              </View>
             </View>
             <RowBar ratios={{
               carbs_ratio: selectedItem.carbs_ratio,
               protein_ratio: selectedItem.protein_ratio,
               fat_ratio: selectedItem.fat_ratio
-            }}/>
-            <Text style={styles.modalText}>총 당류(g): {selectedItem.Total_Sugars_g?.toFixed(2)} g</Text>
-            <Text style={styles.modalText}>식이섬유(g): {selectedItem.Dietary_Fiber_g} g</Text>
-            <Text style={styles.modalText}>비타민 A(μg): {selectedItem.Vitamin_A_μg} μg</Text>
-            <Text style={styles.modalText}>비타민 C(μg): {selectedItem.Vitamin_C_μg} μg</Text>
-            <Text style={styles.modalText}>나트륨(mg): {selectedItem.Sodium_mg} mg</Text>
-            <TouchableOpacity 
-              style={[styles.button, styles.buttonCancle]} 
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>취소</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.button, styles.buttonCancle]}
-              onPress={handleSave}>
-              <Text style={styles.textStyle}>저장</Text>
-            </TouchableOpacity>
+            }} />
+            <View style={styles.nutrientInfo}>
+              <Text style={styles.modalText}>총 당류(g): {selectedItem.Total_Sugars_g?.toFixed(2)} g</Text>
+              <Text style={styles.modalText}>식이섬유(g): {selectedItem.Dietary_Fiber_g} g</Text>
+              <Text style={styles.modalText}>비타민 A(μg): {selectedItem.Vitamin_A_μg} μg</Text>
+              <Text style={styles.modalText}>비타민 C(μg): {selectedItem.Vitamin_C_μg} μg</Text>
+              <Text style={styles.modalText}>나트륨(mg): {selectedItem.Sodium_mg} mg</Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <CustomBtn
+                onPress={() => setModalVisible(!modalVisible)}
+                title='취소'
+                buttonStyle={styles.modalButton}
+                textStyle={styles.buttonText}
+              />
+              <CustomBtn
+                onPress={handleSave}
+                title='저장'
+                buttonStyle={styles.modalButton}
+                textStyle={styles.buttonText}
+              />
+            </View>
           </View>
         </View>
       </Modal>
       <CustomBtn
         onPress={handleNext}
-        title='efkwrereer'
+        title='다음'
         textStyle={{color:"#444"}}
         buttonStyle={[styles.button, getBackgroundColor(type)]}>
       </CustomBtn>
@@ -243,41 +256,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 10,
-    backgroundColor:"#ccdddf"
-  },
-  scrollView: {
-    flexDirection: 'row',
-    marginVertical: 20,
-    borderRadius:15,
-  },
-  foodContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#e0e0e0',
-    borderRadius: 20,
-    padding: 10,
-    marginRight: 10
-  },
-  foodName: {
-    marginRight: 10
-  },
-  deleteButton: {
-    backgroundColor: 'red',
-    padding: 5,
-    borderRadius: 5
+    backgroundColor: "#ccdddf"
   },
   centeredView: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    width: width,
-    height: height * 0.7,
-    margin: 20,
+    width: width * 0.9,
+    height: height * 0.8,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -288,6 +280,28 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
+  ratiosContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    width: '100%',
+    marginVertical: 20
+  },
+  ratioItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft:10
+  },
+  nutrientInfo: {
+    width: '100%',
+    marginBottom: 20,
+    paddingHorizontal: 20
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: '100%',
+    marginTop: 20
+  },
   button: {
     width: '100%',
     padding: 20,
@@ -295,23 +309,28 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     marginBottom: 30,
-    justifyContent:"center",
+    justifyContent: "center",
   },
-  buttonCancle: {
-    backgroundColor: "#2196F3",
+  modalButton: {
+    backgroundColor: "#eee",
+    width: '45%',
+    padding: 10,
+    borderRadius: 20,
+    alignItems: 'center'
   },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+  buttonText: {
+    color: "#444",
+    fontSize: 14
   },
   modalText: {
-    marginBottom: 15,
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: 14,
+    marginVertical: 5
   },
-  foodName: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  title:{
+    color:"#444",
+    fontSize: 24,
+    fontWeight:"bold"
   },
   carbPoint: {
     height: 12,
