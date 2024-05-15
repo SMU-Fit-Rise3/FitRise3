@@ -9,12 +9,12 @@ exports.updateStressData = async function (req, res) {
         return Math.sqrt(complex.re * complex.re + complex.im * complex.im);
     }
     try {
-        // 진폭 계산 함수=복수수의 절대값
+        // 진폭 계산 함수=복소수의 절대값
 
         //fft적용
         let fftArray = math.fft(math.complex(gValues));
         let sampleRate = 4; //프레임
-        // 파워 스펙트럼 계산=복수수의 절대값의 제곱
+        // 파워 스펙트럼 계산=복소수의 절대값의 제곱
         const powerSpectrum = fftArray.map(c => calculateMagnitude(c) ** 2);
 
         // 주파수 분해능 = 주파수 점과 점사이의 거림 = 샘플레이트/fft길이

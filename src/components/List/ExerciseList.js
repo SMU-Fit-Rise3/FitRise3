@@ -16,7 +16,6 @@ const ExerciseList = () => {
     API.getExercise("6641af7f94a3e52e3b8ea23c")
       .then((result) => {
         setExercise(formatDataForFlatList(result))
-        console.log(exercise)
         dispatch(modalVisibleActions.turnOffLoading())
       })
       .catch((error) => {
