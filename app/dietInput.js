@@ -1,35 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, Text, StyleSheet, TouchableOpacity,
-         Modal, Dimensions,ScrollView } from 'react-native';
-import { useLocalSearchParams,useRouter } from 'expo-router';
+import { View, FlatList, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import nutrientData from '../src/assets/nutrientData.json';
-import { RowBar, FoodItem, SearchInput, FoodCaloriePicker, CustomBtn} from '../src/components'
-const { width, height } = Dimensions.get('window'); // Get the screen width
+import { FoodItem, SearchInput, CustomBtn, NutrientModal } from '../src/components';
+
+const { width, height } = Dimensions.get('window');
 
 const DietInput = () => {
   const [query, setQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
-  //expo-router로 받은 params(mealType)
   const { type } = useLocalSearchParams();
   const router = useRouter();
-  // 식사 유형 별 정보 저장
   const [meals, setMeals] = useState({
     Breakfast: [],
     Lunch: [],
     Dinner: [],
     Snack: []
-  });  
-  //추가할 식단 영양성분 저장
+  });
   const [savedNutrients, setSavedNutrients] = useState([]);
 
-  //저장한 식단 삭제할 때
   const deleteFood = (index) => {
     setSavedNutrients(currentFoods => currentFoods.filter((_, i) => i !== index));
   };
 
-  // 총 칼로리, 영양성분 계산
   const totalNutrients = () => {
     return savedNutrients.reduce((totals, food) => {
       totals.calories += parseFloat(food.calories);
@@ -42,12 +37,10 @@ const DietInput = () => {
 
   const nutrientTotals = totalNutrients();
 
-
   useEffect(() => {
     setFilteredData(nutrientData);
   }, []);
 
-  //검색 로직
   const handleSearch = (text) => {
     setQuery(text);
     const newData = text ? nutrientData.filter(item => {
@@ -58,14 +51,12 @@ const DietInput = () => {
     setFilteredData(newData);
   };
 
-  //모달 열렸을 때
   const openModal = (item) => {
     const totalSugars = ['Fructose_g', 'Sugar_Alcohol_g', 'Maltose_g', 'Lactose_g', 'Sucrose_g', 'Glucose_g'].reduce((acc, key) => {
       const value = parseFloat(item[key]);
       return acc + (isNaN(value) ? 0 : value);
     }, 0);
 
-    // 100g 에서 탄단지 비율 계산하는 함수
     const calculateNutrientRatios = (carbs_g, protein_g, fat_g) => {
       const total_g = carbs_g + protein_g + fat_g;
       const carbs_ratio = (carbs_g / total_g) * 100;
@@ -88,14 +79,13 @@ const DietInput = () => {
         ...nutrientRatios
       });
 
-      console.log({...nutrientRatios})
+      console.log({ ...nutrientRatios });
     } else {
       console.log("Insufficient nutrient information.");
     }
     setModalVisible(true);
   };
 
-    // 그램수 변경시 값 받아오는 함수
   const handleCalorieChange = (selectedWeight, calculatedCalories) => {
     console.log("Selected Weight:", selectedWeight, "Calories:", calculatedCalories);
     setSelectedItem({
@@ -104,15 +94,14 @@ const DietInput = () => {
       calories: calculatedCalories.toFixed(0)
     });
   };
-  //변경된 그램수의 영양성분 계산
-  const calculateNutrientGram = ( total_g, carbs_g, protein_g, fat_g ) => {
-    const carbs_gram = ((carbs_g /100 ) * total_g).toFixed(0);
+
+  const calculateNutrientGram = (total_g, carbs_g, protein_g, fat_g) => {
+    const carbs_gram = ((carbs_g / 100) * total_g).toFixed(0);
     const protein_gram = ((protein_g / 100) * total_g).toFixed(0);
     const fat_gram = ((fat_g / 100) * total_g).toFixed(0);
     return { carbs_gram, protein_gram, fat_gram };
-  }
+  };
 
-  //저장 눌렀을 때 함수
   const handleSave = () => {
     const nutrientGrams = calculateNutrientGram(
       parseFloat(selectedItem.gram),
@@ -121,7 +110,7 @@ const DietInput = () => {
       parseFloat(selectedItem.Fat_g)
     );
 
-    const newMeal={
+    const newMeal = {
       name: selectedItem.Food_Name,
       calories: selectedItem.calories,
       nutrients: nutrientGrams
@@ -134,34 +123,34 @@ const DietInput = () => {
 
     setSavedNutrients(prevSaved => [...prevSaved, newMeal]);
     setModalVisible(false);
-  }
+  };
 
   const handleNext = () => {
     const selectedMealData = JSON.stringify(meals[type]);
     console.log(selectedMealData)
-    router.push({pathname:'/dietScreen', 
-                 params:{
-                  mealType: type,
-                  meals: selectedMealData
-                 }})
-  }
+    router.push({
+      pathname: '/dietScreen',
+      params: {
+        mealType: type,
+        meals: selectedMealData
+      }
+    });
+  };
 
-  // 함수 추가: mealType에 따른 배경색 반환
   const getBackgroundColor = (mealType) => {
     switch (mealType) {
       case 'Breakfast':
-        return { backgroundColor: '#fce1e4' }; // Yellow
+        return { backgroundColor: '#fce1e4' };
       case 'Lunch':
-        return { backgroundColor: '#ecfcdc' }; // Amber
+        return { backgroundColor: '#ecfcdc' };
       case 'Dinner':
-        return { backgroundColor: '#dee4fa' }; // Orange
+        return { backgroundColor: '#dee4fa' };
       case 'Snack':
-        return { backgroundColor: '#fcffd6' }; // Deep Orange
+        return { backgroundColor: '#fcffd6' };
       default:
-        return { backgroundColor: '#ccdddf' }; // Default color
+        return { backgroundColor: '#ccdddf' };
     }
   };
-
 
   return (
     <View style={[styles.container, getBackgroundColor(type)]}>
@@ -170,84 +159,35 @@ const DietInput = () => {
           <View key={index} style={styles.foodContainer}>
             <Text style={styles.foodName}>{food.name}</Text>
             <TouchableOpacity style={styles.deleteButton} onPress={() => deleteFood(index)}>
-              <Text>X</Text>
+              <Text style={{fontWeight:"bold", fontSize:10}}>X</Text>
             </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
       <SearchInput query={query} handleSearch={handleSearch} />
-      <FlatList
-        data={filteredData}
-        keyExtractor={item => item.Food_CD}
-        renderItem={({ item }) => (
-          <FoodItem item={item} onPress={() => openModal(item)} />
-        )}
+      <View style={styles.flatListContainer}>
+        <FlatList
+          data={filteredData}
+          keyExtractor={item => item.Food_CD}
+          renderItem={({ item }) => (
+            <FoodItem item={item} onPress={() => openModal(item)} />
+          )}
+          contentContainerStyle={styles.flatListContentContainer}
+        />
+      </View>
+      <NutrientModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        selectedItem={selectedItem}
+        handleCalorieChange={handleCalorieChange}
+        handleSave={handleSave}
       />
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.title}> 섭취량 설정 </Text>
-            <FoodCaloriePicker
-              foodName={selectedItem.Food_Name}
-              energyPer100g={selectedItem.Energy_kcal}
-              onSave={handleCalorieChange}
-            />
-            <View style={styles.ratiosContainer}>
-              <View style={styles.ratioItem}>
-                <View style={styles.carbPoint} />
-                <Text style={styles.modalText}>탄수화물</Text>
-              </View>
-              <View style={styles.ratioItem}>
-                <View style={styles.fatPoint} />
-                <Text style={styles.modalText}>지방</Text>
-              </View>
-              <View style={styles.ratioItem}>
-                <View style={styles.proteinPoint} />
-                <Text style={styles.modalText}>단백질</Text>
-              </View>
-            </View>
-            <RowBar ratios={{
-              carbs_ratio: selectedItem.carbs_ratio,
-              protein_ratio: selectedItem.protein_ratio,
-              fat_ratio: selectedItem.fat_ratio
-            }} />
-            <View style={styles.nutrientInfo}>
-              <Text style={styles.modalText}>총 당류(g): {selectedItem.Total_Sugars_g?.toFixed(2)} g</Text>
-              <Text style={styles.modalText}>식이섬유(g): {selectedItem.Dietary_Fiber_g} g</Text>
-              <Text style={styles.modalText}>비타민 A(μg): {selectedItem.Vitamin_A_μg} μg</Text>
-              <Text style={styles.modalText}>비타민 C(μg): {selectedItem.Vitamin_C_μg} μg</Text>
-              <Text style={styles.modalText}>나트륨(mg): {selectedItem.Sodium_mg} mg</Text>
-            </View>
-            <View style={styles.buttonContainer}>
-              <CustomBtn
-                onPress={() => setModalVisible(!modalVisible)}
-                title='취소'
-                buttonStyle={styles.modalButton}
-                textStyle={styles.buttonText}
-              />
-              <CustomBtn
-                onPress={handleSave}
-                title='저장'
-                buttonStyle={styles.modalButton}
-                textStyle={styles.buttonText}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
       <CustomBtn
         onPress={handleNext}
         title='다음'
-        textStyle={{color:"#444"}}
-        buttonStyle={[styles.button, getBackgroundColor(type)]}>
-      </CustomBtn>
+        textStyle={{ color: "#444" }}
+        buttonStyle={[styles.button, getBackgroundColor(type)]}
+      />
     </View>
   );
 };
@@ -258,49 +198,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "#ccdddf"
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  scrollView: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    borderRadius: 15,
   },
-  modalView: {
-    width: width * 0.9,
-    height: height * 0.8,
-    backgroundColor: "white",
+  foodContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
     borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
+    padding: 10,
+    marginRight: 10
   },
-  ratiosContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    width: '100%',
-    marginVertical: 20
+  foodName: {
+    marginRight: 10
   },
-  ratioItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginLeft:10
+  deleteButton: {
+    backgroundColor: '#ddd',
+    padding: 5,
+    borderRadius: 30
   },
-  nutrientInfo: {
-    width: '100%',
-    marginBottom: 20,
-    paddingHorizontal: 20
+  flatListContainer: {
+    height: height * 0.65, // FlatList의 높이를 고정
   },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: '100%',
-    marginTop: 20
+  flatListContentContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   button: {
     width: '100%',
@@ -311,47 +235,11 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     justifyContent: "center",
   },
-  modalButton: {
-    backgroundColor: "#eee",
-    width: '45%',
-    padding: 10,
-    borderRadius: 20,
-    alignItems: 'center'
-  },
-  buttonText: {
-    color: "#444",
-    fontSize: 14
-  },
-  modalText: {
-    textAlign: "center",
-    fontSize: 14,
-    marginVertical: 5
-  },
-  title:{
-    color:"#444",
-    fontSize: 24,
-    fontWeight:"bold"
-  },
-  carbPoint: {
-    height: 12,
-    width: 12,
-    borderRadius: 6,
-    backgroundColor: '#004410',
-    marginRight: 8,
-  },
-  proteinPoint: {
-    height: 12,
-    width: 12,
-    borderRadius: 6,
-    backgroundColor: '#00aa10',
-    marginRight: 8,
-  },
-  fatPoint: {
-    height: 12,
-    width: 12,
-    borderRadius: 6,
-    backgroundColor: '#99ffaa',
-    marginRight: 8,
+  noResultsText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#999'
   }
 });
 

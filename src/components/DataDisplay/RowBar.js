@@ -11,13 +11,13 @@ const RowBar = ({ ratios }) => {
 
   return (
     <View style={styles.barContainer}>
-      <View style={barStyle(ratios.carbs_ratio, '#2e8800')}>
+      <View style={barStyle(ratios.carbs_ratio, '#003310')}>
         <Text style={styles.label}>{ratios.carbs_ratio.toFixed(0)}%</Text>
       </View>
-      <View style={barStyle(ratios.protein_ratio, '#2ecc71')}>
+      <View style={barStyle(ratios.protein_ratio, '#337a33')}>
         <Text style={styles.label}>{ratios.protein_ratio.toFixed(0)}%</Text>
       </View>
-      <View style={barStyle(ratios.fat_ratio, '#2fff77')}>
+      <View style={barStyle(ratios.fat_ratio, '#66b166')}>
         <Text style={styles.label}>{ratios.fat_ratio.toFixed(0)}%</Text>
       </View>
     </View>

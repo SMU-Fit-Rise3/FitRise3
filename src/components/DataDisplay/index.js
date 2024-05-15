@@ -8,3 +8,4 @@ export { default as StressLevelIndicator } from './StressLevelIndicator';
 export { default as RowBar } from './RowBar';
 export { default as SearchInput } from './SearchInput';
 export {default as FoodItem } from './FoodItem';
+export {default as NutrientModal } from './NutrientModal';
