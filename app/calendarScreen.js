@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet,SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import { TabBar,ExerciseList } from '../src/components'
-
+import { TabBar, ExerciseList } from '../src/components'
+import API from '../src/api'
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
 export default class CalendarScreen extends Component {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -14,6 +15,18 @@ export default class CalendarScreen extends Component {
       selectedDate: new Date().toISOString().split('T')[0], // Set initial date to today
     };
   }
+//api 요청관련
+  componentDidMount() {
+    this.fetchCalendarData();
+  }
+
+  fetchCalendarData = async () => {
+    const data = await API.getCalendar('6641af7f94a3e52e3b8ea23c');
+    if (data) {
+      console.log(JSON.stringify(data,null,2));
+    }
+  };
+//api 요청 관련
 
   // Method to update state for active screen
   setActiveScreen = (screen) => {
@@ -44,6 +57,34 @@ export default class CalendarScreen extends Component {
     this.setState({ selectedDate: day.dateString });
   };
 
+  getMarkedDates = () => {
+    const { dietData, exerciseData, weightData } = this;
+    let markedDates = {};
+
+    const addMark = (date, color) => {
+      if (markedDates[date]) {
+        markedDates[date].dots.push({ color });
+      } else {
+        markedDates[date] = {
+          dots: [{ color }],
+          selected: this.state.selectedDate === date,
+          selectedColor: '#D6DEFF',
+        };
+      }
+    };
+
+    for (let date in dietData) {
+      addMark(date, 'blue');  // Color for diet
+    }
+    for (let date in exerciseData) {
+      addMark(date, 'green');  // Color for exercise
+    }
+    for (let date in weightData) {
+      addMark(date, 'red');  // Color for weight
+    }
+
+    return markedDates;
+  };
   // Render functions for each category
   renderDietData = (date) => {
     const dietInfo = this.dietData[date];
@@ -65,7 +106,7 @@ export default class CalendarScreen extends Component {
     const exerciseInfo = this.exerciseData[date];
     return exerciseInfo ? (
       <View style={styles.infoContainer}>
-        <ExerciseList/>
+        <ExerciseList />
       </View>
     ) : <Text style={styles.infoText}>No exercise data for this date.</Text>;
   };
@@ -98,46 +139,45 @@ export default class CalendarScreen extends Component {
     const { activeScreen } = this.state;
     const { router } = this.props; // Use router from props
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.contentContainer}>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        style={[styles.button, activeScreen === 'diet' ? styles.activeButton : null]}
-                        onPress={() => this.setActiveScreen('diet')}
-                    >
-                        <Text style={styles.buttonText}>식단</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[styles.button, activeScreen === 'exercise' ? styles.activeButton : null]}
-                        onPress={() => this.setActiveScreen('exercise')}
-                    >
-                        <Text style={styles.buttonText}>운동</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[styles.button, activeScreen === 'weight' ? styles.activeButton : null]}
-                        onPress={() => this.setActiveScreen('weight')}
-                    >
-                        <Text style={styles.buttonText}>몸무게</Text>
-                    </TouchableOpacity>
-                </View>
-                <Calendar
-                onDayPress={this.onDaySelect}
-                markedDates={{
-                    [this.state.selectedDate]: {selected: true, marked: true, selectedColor: '#D6DEFF'}
-                }}
-                // The theme can be customized as per your app's design
-                theme={{
-                    selectedDayBackgroundColor: '#D6DEFF',
-                    todayTextColor: '#D6DEFF',
-                    arrowColor: 'gray',
-                }}
-                />
-                <View style={styles.dataContainer}>
-                {this.renderData()}
-                </View>
-                
-            </View>
-            <TabBar router={router}/>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.contentContainer}>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.button, activeScreen === 'diet' ? styles.activeButton : null]}
+              onPress={() => this.setActiveScreen('diet')}
+            >
+              <Text style={styles.buttonText}>식단</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, activeScreen === 'exercise' ? styles.activeButton : null]}
+              onPress={() => this.setActiveScreen('exercise')}
+            >
+              <Text style={styles.buttonText}>운동</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, activeScreen === 'weight' ? styles.activeButton : null]}
+              onPress={() => this.setActiveScreen('weight')}
+            >
+              <Text style={styles.buttonText}>몸무게</Text>
+            </TouchableOpacity>
+          </View>
+          <Calendar
+            onDayPress={this.onDaySelect}
+            markedDates={this.getMarkedDates()}
+            markingType={'multi-dot'}
+            // The theme can be customized as per your app's design
+            theme={{
+              selectedDayBackgroundColor: '#D6DEFF',
+              todayTextColor: '#D6DEFF',
+              arrowColor: 'gray',
+            }}
+          />
+          <View style={styles.dataContainer}>
+            {this.renderData()}
+          </View>
+
+        </View>
+        <TabBar router={router} />
       </SafeAreaView>
     );
   }
@@ -146,18 +186,18 @@ export default class CalendarScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:"#ddd"
+    backgroundColor: "#ddd"
   },
-  contentContainer:{
-      flex:1,
-      padding:10,
-      backgroundColor:"#fff"
+  contentContainer: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: "#fff"
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 10,
-    marginVertical:20
+    marginVertical: 20
   },
   button: {
     marginHorizontal: 10,
@@ -172,22 +212,22 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#555',
-    fontWeight:"bold"
+    fontWeight: "bold"
   },
   infoText: {
-      fontSize:24,
-      fontWeight:"bold",
-      marginVertical:1
+    fontSize: 24,
+    fontWeight: "bold",
+    marginVertical: 1
   },
   timeText: {
-    fontSize:20,
-    color:"#666",
-    marginVertical:1
-},
+    fontSize: 20,
+    color: "#666",
+    marginVertical: 1
+  },
   infoContainer: {
     padding: 20,
     alignItems: 'flex-start',
-    height: 0.4 * height 
+    height: 0.4 * height
   },
   dataContainer: {
     padding: 10,
