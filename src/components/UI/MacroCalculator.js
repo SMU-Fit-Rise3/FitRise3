@@ -1,37 +1,55 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
 import API from '../../api'
+=======
+import { View, Text, StyleSheet, Button,Dimensions,Alert } from 'react-native';
+import InputFields from './InputFields.js';
+>>>>>>> feature/34
 
-const MacroCalculator = ({ totalCalories, goal }) => {
+const { width } = Dimensions.get('window'); // Get the screen width
+
+const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
+  
+  //계산된 값 상태 관리
   const [macros, setMacros] = useState({
     carbs: 0,
     protein: 0,
     fat: 0
   });
 
-  useEffect(() => {
-    calculateMacros(totalCalories, goal);
-  }, [totalCalories, goal]);
+  // 사용자가 입력한 값 상태 관리
+  const [userInputs, setUserInputs] = useState({
+    carbs: '',
+    protein: '',
+    fat: ''
+  });
 
-  const calculateMacros = (calories, goal) => {
-    let ratios = { carbs: 0.5, protein: 0.3, fat: 0.2 }; // Default to health
+  // 초기 매크로 계산
+  const calculateInitialMacros = (calories, goal) => {
+    let ratios = { carbs: 0.5, protein: 0.3, fat: 0.2 };
     if (goal === 'cut') {
       ratios = { carbs: 0.65, protein: 0.25, fat: 0.1 };
     } else if (goal === 'muscle') {
       ratios = { carbs: 0.6, protein: 0.2, fat: 0.2 };
     }
+<<<<<<< HEAD
 
     const carbsCalories = Math.round(calories * ratios.carbs);
     const proteinCalories = Math.round(calories * ratios.protein);
     const fatCalories = Math.round(calories * ratios.fat);
+=======
+>>>>>>> feature/34
 
-    setMacros({
-      carbs: carbsCalories,
-      protein: proteinCalories,
-      fat: fatCalories
-    });
+    const initialMacros = {
+      carbs: Math.round(calories * ratios.carbs),
+      protein: Math.round(calories * ratios.protein),
+      fat: Math.round(calories * ratios.fat)
+    };
+    setMacros(initialMacros);
   };
 
+<<<<<<< HEAD
   //update button click
   const handleButtonPress = async () => {
     //Calculated Macros
@@ -49,53 +67,117 @@ const MacroCalculator = ({ totalCalories, goal }) => {
       });
   };
 
+=======
+  // 사용자 입력 처리
+  const handleGramsChange = (nutrient, grams) => {
+    setUserInputs(prev => ({ ...prev, [nutrient]: grams }));
+  };
+
+  const getInputValue = (nutrient) => {
+    const factor = nutrient === 'fat' ? 9 : 4;
+    return userInputs[nutrient] === '' ? Math.round(macros[nutrient] / factor).toString() : userInputs[nutrient];
+  };
+
+  // 칼로리 총량 
+  const totalCaloriesConsumed = macros.carbs + macros.protein + macros.fat;
+
+   // 영양성분 양 업데이트 함수
+   const updateMacros = () => {
+    let newMacros = { ...macros };
+    Object.keys(userInputs).forEach(nutrient => {
+      if (userInputs[nutrient] !== '') {
+        const factor = nutrient === 'fat' ? 9 : 4;
+        newMacros[nutrient] = parseInt(userInputs[nutrient], 10) * factor;
+      }
+    });
+  
+    const totalCaloriesConsumed = newMacros.carbs + newMacros.protein + newMacros.fat;
+    
+    if (totalCaloriesConsumed >= (minCalories - 500) && totalCaloriesConsumed <= maxCalories) {
+      setMacros(newMacros);
+      Alert.alert("변경 완료", "목표 섭취량이 변경되었습니다!");
+    } else {
+      Alert.alert("변경 실패", `일일 권장 섭취량인 ${minCalories - 500} ~ ${maxCalories} 사이가 되도록 변경해주세요.`);
+    }
+  };
+  
+
+  useEffect(() => {
+    calculateInitialMacros(totalCalories, goal);
+  }, [totalCalories, goal]);
+
+>>>>>>> feature/34
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Nutrient Distribution</Text>
       <View style={styles.row}>
-        <Text>Carbs ({macros.carbs} kcal):</Text>
-        <TextInput
-          style={styles.input}
-          value={macros.carbs.toString()}
-          keyboardType="numeric"
-          onChangeText={(text) => setMacros({ ...macros, carbs: parseInt(text || 0, 10) })}
-        />
+        <InputFields
+          label="순탄수"
+          unit="g"
+          unitStyle= {styles.kcalText}
+          viewStyle= {styles.inputfield}
+          inputStyle={styles.kcalText}
+          textInputProps={{
+              onChangeText: text => handleGramsChange('carbs', text), // 상태 업데이트 함수 직접 전달
+              value: getInputValue('carbs'), // 상태 값 직접 전달
+              keyboardType: 'numeric'
+          }}
+      />
+      <Text style={styles.kcalText}>x 4</Text>
+      <Text style={styles.kcalText}>{macros.carbs} Kcal</Text>
       </View>
       <View style={styles.row}>
-        <Text>Protein ({macros.protein} kcal):</Text>
-        <TextInput
-          style={styles.input}
-          value={macros.protein.toString()}
-          keyboardType="numeric"
-          onChangeText={(text) => setMacros({ ...macros, protein: parseInt(text || 0, 10) })}
+        <InputFields
+          label="단백질"
+          unit="g"
+          unitStyle= {styles.kcalText}
+          viewStyle= {styles.inputfield}
+          inputStyle={styles.kcalText}
+          textInputProps={{
+              onChangeText: text => handleGramsChange('protein',text), // 상태 업데이트 함수 직접 전달
+              value: getInputValue('protein'), // 상태 값 직접 전달
+              keyboardType: 'numeric'
+          }}
         />
+        <Text style={styles.kcalText}>x 4</Text>
+        <Text style={styles.kcalText}>{macros.protein} Kcal</Text>
       </View>
       <View style={styles.row}>
-        <Text>Fat ({macros.fat} kcal):</Text>
-        <TextInput
-          style={styles.input}
-          value={macros.fat.toString()}
-          keyboardType="numeric"
-          onChangeText={(text) => setMacros({ ...macros, fat: parseInt(text || 0, 10) })}
+        <InputFields
+          label="지방"
+          unit="g"
+          unitStyle= {styles.kcalText}
+          viewStyle= {styles.inputfield}
+          inputStyle={styles.kcalText}
+          textInputProps={{
+              onChangeText: text => handleGramsChange('fat',text), // 상태 업데이트 함수 직접 전달
+              value: getInputValue('fat'), // 상태 값 직접 전달
+              keyboardType: 'numeric'
+          }}
         />
+        <Text style={styles.kcalText}>x 9</Text>
+        <Text style={styles.kcalText}>{macros.fat} Kcal</Text>
       </View>
+      <View style={styles.row}>
+        <Text style={styles.kcalText}> 목표 섭취 열량🔥  = {totalCaloriesConsumed} Kcal</Text>
+        <Button title="Update" onPress={updateMacros} />
+      </View>
+<<<<<<< HEAD
       <Button title="Update" onPress={handleButtonPress} />
+=======
+>>>>>>> feature/34
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-  },
-  header: {
-    fontSize: 18,
-    fontWeight: 'bold'
+    padding: 10,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10
+    marginVertical: 10,
+    justifyContent:"space-between"
   },
   input: {
     borderWidth: 1,
@@ -103,7 +185,20 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 8,
     marginLeft: 10
-  }
+  },
+  kcalText:{
+    color:"#444",
+    fontSize: 20,
+    fontWeight:"bold"
+},
+inputfield:{
+  marginTop:10,
+  height: 60,
+  justifyContent:"center",
+  alignItems:"flex-start",
+  width:width*0.4,
+
+}
 });
 
 export default MacroCalculator;
