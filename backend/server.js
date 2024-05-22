@@ -33,6 +33,8 @@ const exerciseAPI = require('./api/exerciseData');
 app.get('/users/:id/exercise',exerciseAPI.getExerciseData); //유저 운동루틴 가져오기
 app.post('/users/:id/exercise/:exerciseId/complete',exerciseAPI.completedExercise) // 해당 운동 ex_plans에서 삭제 && calendar에 추가
 
-//달력 관련
+//달력 관련 api
 const calendarAPI = require('./api/calendarData');
 app.get('/users/:id/calendar',calendarAPI.getCalendarData); //캘린더 정보 가져오기
+app.patch('/users/:id/weight',calendarAPI.updateWeightData); //유저 몸무게 저장
+

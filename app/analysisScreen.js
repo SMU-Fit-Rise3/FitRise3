@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from "expo-router";
-import { View, StyleSheet,ScrollView,Text,SafeAreaView,Dimensions } from 'react-native';
-import {TabBar, BarChartComponent, LineChartComponent,SingleLineChart, CustomBtn, InputFields, InfoAlertComponent } from '../src/components'
+import { View, StyleSheet, ScrollView, Text, SafeAreaView, Dimensions, Alert } from 'react-native';
+import { TabBar, BarChartComponent, LineChartComponent, SingleLineChart, CustomBtn, InputFields, InfoAlertComponent, LoadingModal } from '../src/components'
 
+import API from '../src/api'
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -15,29 +16,29 @@ const weeklyNutritionData = [
     // 주마다 데이터 추가
 ];
 
-const weight =[
-    {value: 70},
-    {value: 72},
-    {value: 68},
-    {value: 75},
-    {value: 73}, 
-    {value: 72},
-    {value: 68},
-    {value: 73}, 
-    {value: 72},
-    {value: 68},
+const weight2 = [
+    { value: 70 },
+    { value: 72 },
+    { value: 68 },
+    { value: 75 },
+    { value: 73 },
+    { value: 72 },
+    { value: 68 },
+    { value: 73 },
+    { value: 72 },
+    { value: 68 },
 ]
-const BMI =[
-    {value: 23},
-    {value: 23.4},
-    {value: 22},
-    {value: 25},
-    {value: 24}, 
-    {value: 23},
-    {value: 25},
-    {value: 24}, 
-    {value: 23},
-    {value: 25},
+const BMI = [
+    { value: 23 },
+    { value: 23.4 },
+    { value: 22 },
+    { value: 25 },
+    { value: 24 },
+    { value: 23 },
+    { value: 25 },
+    { value: 24 },
+    { value: 23 },
+    { value: 25 },
 ]
 const stressData = [
     { value: 0, label: '01 Apr' },
@@ -49,14 +50,36 @@ const stressData = [
 ];
 
 const analysisScreen = () => {
+    const [weight, setWeight] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
     const handleNextPress = () => {
-        console.log('입력 버튼 눌림'); // 다음 화면으로 이동하는 로직
-        router.push('/characterGAN') //화면 이동
+        console.log('입력 버튼 눌림'); 
+
+        if (!weight) {
+            Alert.alert('입력 오류', '몸무게를 입력하세요');
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+            API.updateWeight("6637163419548b4c14803d6e", weight)
+                .then(data => {
+                    if (data) {
+                        console.log(data);
+                        setIsLoading(false);
+                        Alert.alert('몸무게 등록완료');
+                        router.push('/characterGAN');
+                    }
+                })
+        } catch (error) {
+            setIsLoading(false);
+            console.error('Error handleNextPress:', error);
+        }
     };
     return (
-    <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
                 <View style={styles.centerContainer}>
                     <View style={styles.contentContainer}>
@@ -65,12 +88,18 @@ const analysisScreen = () => {
                     </View>
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>몸무게 & BMI 변화량 ⚖️</Text>
-                        <LineChartComponent weightData={weight} bmiData={BMI} />
+                        <LineChartComponent weightData={weight2} bmiData={BMI} />
                         <View style={styles.HorContainer}>
                             <InputFields
                                 label="몸무게"
                                 placeholder="몸무게 입력"
-                                onChangeText={(text) => console.log(text)}
+                                textInputProps={{
+                                    value: weight,
+                                    onChangeText: (text) => {
+                                        const numericValue = text.replace(/[^0-9]/g, ''); // Ensure only numeric values
+                                        setWeight(numericValue);
+                                    },
+                                }}
                                 extraStyle={styles.textField}
                             />
                             <CustomBtn
@@ -86,9 +115,10 @@ const analysisScreen = () => {
                         <InfoAlertComponent infoName="단백질" amount="30g" />
                     </View>
                 </View>
+                <LoadingModal visible={isLoading} /> 
             </ScrollView>
             <TabBar router={router} />
-        </SafeAreaView>   
+        </SafeAreaView>
     );
 };
 
@@ -96,15 +126,15 @@ const analysisScreen = () => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#ddd",
-        flex:1
+        flex: 1
     },
     scrollContainer: {
-        flex:1
+        flex: 1
     },
     centerContainer: {
-        backgroundColor:"#fff",
-        alignItems: "center",    
-        paddingHorizontal:10
+        backgroundColor: "#fff",
+        alignItems: "center",
+        paddingHorizontal: 10
     },
     contentContainer: {
         flex: 1,
@@ -125,7 +155,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 20,
         marginTop: 30,
-        padding:10
+        padding: 10
     },
     title: {
         fontSize: width * 0.06, // Adjust font size based on screen width

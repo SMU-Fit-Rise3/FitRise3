@@ -10,8 +10,5 @@ export { default as Selector } from './Selector';
 export { default as StepIndicator } from './StepIndicator';
 export { default as TabBar } from './TabBar';
 export { default as MacroCalculator } from './MacroCalculator';
-<<<<<<< HEAD
 export { default as LoadingModal } from './LoadingModal';
-=======
 export { default as FoodCaloriePicker} from './FoodCaloriePicker'
->>>>>>> feature/34

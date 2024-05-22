@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
-import API from '../../api'
-=======
 import { View, Text, StyleSheet, Button,Dimensions,Alert } from 'react-native';
 import InputFields from './InputFields.js';
->>>>>>> feature/34
+import API from '../../api'
 
 const { width } = Dimensions.get('window'); // Get the screen width
 
@@ -33,13 +29,6 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
     } else if (goal === 'muscle') {
       ratios = { carbs: 0.6, protein: 0.2, fat: 0.2 };
     }
-<<<<<<< HEAD
-
-    const carbsCalories = Math.round(calories * ratios.carbs);
-    const proteinCalories = Math.round(calories * ratios.protein);
-    const fatCalories = Math.round(calories * ratios.fat);
-=======
->>>>>>> feature/34
 
     const initialMacros = {
       carbs: Math.round(calories * ratios.carbs),
@@ -49,7 +38,6 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
     setMacros(initialMacros);
   };
 
-<<<<<<< HEAD
   //update button click
   const handleButtonPress = async () => {
     //Calculated Macros
@@ -67,7 +55,6 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
       });
   };
 
-=======
   // 사용자 입력 처리
   const handleGramsChange = (nutrient, grams) => {
     setUserInputs(prev => ({ ...prev, [nutrient]: grams }));
@@ -106,7 +93,6 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
     calculateInitialMacros(totalCalories, goal);
   }, [totalCalories, goal]);
 
->>>>>>> feature/34
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -161,10 +147,6 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
         <Text style={styles.kcalText}> 목표 섭취 열량🔥  = {totalCaloriesConsumed} Kcal</Text>
         <Button title="Update" onPress={updateMacros} />
       </View>
-<<<<<<< HEAD
-      <Button title="Update" onPress={handleButtonPress} />
-=======
->>>>>>> feature/34
     </View>
   );
 };

@@ -11,18 +11,19 @@ const ExerciseList = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  useEffect(() => {
-    dispatch(modalVisibleActions.turnOnLoading())
-    API.getExercise("6641af7f94a3e52e3b8ea23c")
-      .then((result) => {
-        setExercise(formatDataForFlatList(result))
-        dispatch(modalVisibleActions.turnOffLoading())
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        dispatch(modalVisibleActions.turnOffLoading())
-      });
-  }, []);
+  // 운동리스트 정보 가져오기
+  // useEffect(() => {
+  //   dispatch(modalVisibleActions.turnOnLoading())
+  //   API.getExercise("6641af7f94a3e52e3b8ea23c")
+  //     .then((result) => {
+  //       setExercise(formatDataForFlatList(result))
+  //       dispatch(modalVisibleActions.turnOffLoading())
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error:', error);
+  //       dispatch(modalVisibleActions.turnOffLoading())
+  //     });
+  // }, []);
 
   // 데이터 포맷팅 함수
   const formatDataForFlatList = (data) => {

@@ -17,3 +17,23 @@ export const getCalendar = async (userId) => {
         console.error('Error:', error);
     }
 };
+
+//몸무게 저장 (app/analysisScreen.js)
+export const updateWeight = async (userId, inputWeight) => {
+    try {
+    const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/weight`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        weight: parseInt(inputWeight, 10)
+      })
+    });
+    const data = await response.json();
+    console.log('Success:', data);
+    return data;
+  } catch (error) {
+    return console.error('Error:', error);
+  }
+};
