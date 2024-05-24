@@ -12,18 +12,18 @@ const login = () => {
   const router = useRouter();
 
   // 이미 로그인된 유저일시 메인 스크린으로 이동
-  // useEffect(() => {
-  //   const checkStorageAndNavigate = async () => {
-  //     const userNickName = await AsyncStorage.getItem('key');
-  //     API.checkNickName(userNickName).then((res) => {
-  //       if (res.ok) {        
-  //         console.log("로그인 닉네임:" + userNickName)
-  //         router.push('/mainScreen');
-  //       }
-  //     })
-  //   };
-  //   checkStorageAndNavigate();
-  // }, []);
+  useEffect(() => {
+    const checkStorageAndNavigate = async () => {
+      const userNickName = await AsyncStorage.getItem('key');
+      API.checkNickName(userNickName).then((res) => {
+        if (res.ok) {        
+          console.log("로그인 닉네임:" + userNickName)
+          router.push('/mainScreen');
+        }
+      })
+    };
+    checkStorageAndNavigate();
+  }, []);
 
   return (
     <View style={styles.container}>

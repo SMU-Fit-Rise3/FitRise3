@@ -21,8 +21,6 @@ exports.getCalendarData = async function (req, res) {
     res.status(200).json(cal);
   } catch (error) {
     res.status(500).send('Server error');
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -51,15 +49,12 @@ exports.updateWeightData = async function (req, res) {
     res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
 exports.postEatFood = async function (req, res) {
   const userId = req.params.id;
   const { mealType, newMeals } = req.body;
-  console.log("dd"+JSON.stringify(newMeals));
   const today = new Date().toISOString().split('T')[0];
   try {
     let calendarDay = await prisma.calendarDay.findFirst({
@@ -102,7 +97,5 @@ exports.postEatFood = async function (req, res) {
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
-  } finally {
-    await prisma.$disconnect();
   }
 }

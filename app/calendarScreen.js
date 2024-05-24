@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { TabBar, ExerciseList } from '../src/components'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../src/api'
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
 export default class CalendarScreen extends Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -15,18 +16,20 @@ export default class CalendarScreen extends Component {
       selectedDate: new Date().toISOString().split('T')[0], // Set initial date to today
     };
   }
-//api 요청관련
+  //api 요청관련
   componentDidMount() {
     this.fetchCalendarData();
   }
 
   fetchCalendarData = async () => {
-    const data = await API.getCalendar('6641af7f94a3e52e3b8ea23c');
-    if (data) {
-      console.log(JSON.stringify(data,null,2));
-    }
+    AsyncStorage.getItem('userId').then( async(userId) => {
+      const data = await API.getCalendar(userId);
+      if (data) {
+        console.log(JSON.stringify(data, null, 2));
+      }
+    })
   };
-//api 요청 관련
+  //api 요청 관련
 
   // Method to update state for active screen
   setActiveScreen = (screen) => {

@@ -44,8 +44,6 @@ exports.postUserData = async function (req, res) {
     } catch (error) {
         console.error('Error creating user:', error);
         res.status(500).send('Server error');
-    } finally {
-        await prisma.$disconnect();
     }
 }
 
@@ -84,8 +82,6 @@ exports.insertCalorieData = async function (req, res) {
     } catch (error) {
         console.error('Error updating calorie information:', error);
         res.status(500).json({ message: 'An error occurred while updating calorie information' });
-    } finally {
-        await prisma.$disconnect();
     }
 }
 
@@ -107,7 +103,5 @@ exports.nameCheck = async function (req, res) {
         }
     } catch (e) {
         res.status(500).json("An error occurred while searching for the user");
-    } finally {
-        await prisma.$disconnect();
     }
 }

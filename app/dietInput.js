@@ -3,6 +3,7 @@ import { View, FlatList, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollV
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import nutrientData from '../src/assets/nutrientData.json';
 import { FoodItem, SearchInput, CustomBtn, NutrientModal, LoadingModal } from '../src/components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../src/api'
 const { width, height } = Dimensions.get('window');
 
@@ -132,17 +133,19 @@ const DietInput = () => {
     console.log(type)
     //여기서 요청
     setIsLoading(true);
-    API.postEatFood("6637163419548b4c14803d6e", type, selectedMealData)
-      .then(() => {
-        router.push({
-          pathname: '/dietScreen',
-          params: {
-            mealType: type,
-            meals: selectedMealData
-          }
-        });
-        setIsLoading(false);
-      })
+    AsyncStorage.getItem('userId').then((userId) => {
+      API.postEatFood(userId, type, selectedMealData)
+        .then(() => {
+          router.push({
+            pathname: '/dietScreen',
+            params: {
+              mealType: type,
+              meals: selectedMealData
+            }
+          });
+          setIsLoading(false);
+        })
+    })
   };
 
   const getBackgroundColor = (mealType) => {

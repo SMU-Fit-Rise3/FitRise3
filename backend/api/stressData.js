@@ -5,6 +5,7 @@ const prisma = new PrismaClient({});
 exports.updateStressData = async function (req, res) {
     const userId = req.params.id;  // URL 파라미터에서 userId 가져오기
     const gValues = req.body.gValues;
+    const today = new Date().toISOString().split('T')[0];
     function calculateMagnitude(complex) {
         return Math.sqrt(complex.re * complex.re + complex.im * complex.im);
     }
@@ -48,32 +49,59 @@ exports.updateStressData = async function (req, res) {
         }
         console.log(`Stress Percentage: ${stressPercentage}`);
 
-        const updatedUser = await prisma.users.update({
-            where: { id: userId },
+        let calendarDay = await prisma.calendarDay.findFirst({
+            where: {
+                day: today,
+                userId: userId
+            }
+        });
+        if (!calendarDay) {
+            calendarDay = await prisma.calendarDay.create({
+                data: {
+                    day: today,
+                    userId: userId,
+                }
+            });
+        }
+
+        const updateStress = await prisma.calendarDay.update({
+            where: {
+                id: calendarDay.id
+            },
             data: { stressIndex: stressPercentage }
         });
-        res.status(200).json(updatedUser);
+        res.status(200).json(updateStress);
     } catch (error) {
         res.status(500).json({ message: error.message });
-    } finally {
-        await prisma.$disconnect();
     }
 }
 
 exports.getStressData = async function (req, res) {
-    const { id } = req.params;
+    const userId = req.params.id;
+    const today = new Date().toISOString().split('T')[0];
     try {
-        const user = await prisma.users.findUnique({
-            where: { id }
+        
+        let calendarDay = await prisma.calendarDay.findFirst({
+            where: {
+                day: today,
+                userId: userId
+            }
         });
-        if (user) {
-            res.status(200).json({ stressIndex: user.stressIndex }); //status 설정
+
+        if (!calendarDay) {
+            calendarDay = await prisma.calendarDay.create({
+                data: {
+                    day: today,
+                    userId: userId,
+                }
+            });
+        }
+        if (calendarDay) {
+            res.status(200).json({ stressIndex: calendarDay.stressIndex }); //status 설정
         } else {
             res.status(404).send('User not found');
         }
     } catch (error) {
         res.status(500).send('Server error');
-    } finally {
-        await prisma.$disconnect();
     }
 }

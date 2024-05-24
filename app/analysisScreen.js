@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { View, StyleSheet, ScrollView, Text, SafeAreaView, Dimensions, Alert } from 'react-native';
 import { TabBar, BarChartComponent, LineChartComponent, SingleLineChart, CustomBtn, InputFields, InfoAlertComponent, LoadingModal } from '../src/components'
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../src/api'
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
@@ -55,7 +56,7 @@ const analysisScreen = () => {
     const router = useRouter();
 
     const handleNextPress = () => {
-        console.log('입력 버튼 눌림'); 
+        console.log('입력 버튼 눌림');
 
         if (!weight) {
             Alert.alert('입력 오류', '몸무게를 입력하세요');
@@ -64,15 +65,17 @@ const analysisScreen = () => {
 
         try {
             setIsLoading(true);
-            API.updateWeight("6637163419548b4c14803d6e", weight)
-                .then(data => {
-                    if (data) {
-                        console.log(data);
-                        setIsLoading(false);
-                        Alert.alert('몸무게 등록완료');
-                        router.push('/characterGAN');
-                    }
-                })
+            AsyncStorage.getItem('userId').then((userId) => {
+                API.updateWeight(userId, weight)
+                    .then(data => {
+                        if (data) {
+                            console.log(data);
+                            setIsLoading(false);
+                            Alert.alert('몸무게 등록완료');
+                            router.push('/characterGAN');
+                        }
+                    })
+            })
         } catch (error) {
             setIsLoading(false);
             console.error('Error handleNextPress:', error);
@@ -115,7 +118,7 @@ const analysisScreen = () => {
                         <InfoAlertComponent infoName="단백질" amount="30g" />
                     </View>
                 </View>
-                <LoadingModal visible={isLoading} /> 
+                <LoadingModal visible={isLoading} />
             </ScrollView>
             <TabBar router={router} />
         </SafeAreaView>

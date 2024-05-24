@@ -6,6 +6,7 @@ import CameraComponent from '../src/components/CameraComponent.tsx';
 import { useSelector } from 'react-redux';
 import icons from '../constants/icons.js';
 import { FeedBack, FloatingBtn, CustomBtn, InfoModal, ModalWebView, ScrollTextBox, PointComponent, LoadingModal } from '../src/components'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../src/api';
 
 const PostureCorrection = () => {
@@ -27,12 +28,14 @@ const PostureCorrection = () => {
 
     const handleFinishExercise = () => {
         setLoadingVisible(true);
-        API.completedExercise("6641af7f94a3e52e3b8ea23c", exerciseData.id).then(
-            () => {
-                setLoadingVisible(false);
-                setExerciseFinished(true);
-                setModalVisible(false);
-            });
+        AsyncStorage.getItem('userId').then((userId) => {
+            API.completedExercise(userId, exerciseData.id).then(
+                () => {
+                    setLoadingVisible(false);
+                    setExerciseFinished(true);
+                    setModalVisible(false);
+                });
+        })
     }
     return (
         <SafeAreaView style={styles.mainContainer}>

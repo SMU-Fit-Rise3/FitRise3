@@ -38,7 +38,7 @@ export const updateWeight = async (userId, inputWeight) => {
   }
 };
 
-//유저 식단 데이터 생성
+//유저 식단 데이터 생성 (app/dietInput.js)
 export const postEatFood = async (userId, m_type, selectMeal) => {
   try {
       const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/eatFood`, {

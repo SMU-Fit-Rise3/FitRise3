@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button,Dimensions,Alert } from 'react-native';
+import { View, Text, StyleSheet, Button, Dimensions, Alert } from 'react-native';
 import InputFields from './InputFields.js';
-import API from '../../api'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import API from '../../api';
 
 const { width } = Dimensions.get('window'); // Get the screen width
 
 const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
-  
+
   //계산된 값 상태 관리
   const [macros, setMacros] = useState({
     carbs: 0,
@@ -38,23 +39,6 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
     setMacros(initialMacros);
   };
 
-  //update button click
-  const handleButtonPress = async () => {
-    //Calculated Macros
-    calculateMacros(totalCalories, goal);
-    console.log('Calculated Macros:', macros);
-    //Send server
-    API.insertCalories("6637163419548b4c14803d6e",Number(totalCalories),macros.carbs,macros.protein,macros.fat)
-      .then((result) => {
-        console.log('Response from server:', result);
-        setMacros({
-          carbs: result.updateCalorie.carbs,
-          protein: result.updateCalorie.protein,
-          fat: result.updateCalorie.fat
-        });
-      });
-  };
-
   // 사용자 입력 처리
   const handleGramsChange = (nutrient, grams) => {
     setUserInputs(prev => ({ ...prev, [nutrient]: grams }));
@@ -68,18 +52,28 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
   // 칼로리 총량 
   const totalCaloriesConsumed = macros.carbs + macros.protein + macros.fat;
 
-   // 영양성분 양 업데이트 함수
-   const updateMacros = () => {
+  // 영양성분 양 업데이트 함수
+  const updateMacros = () => {
     let newMacros = { ...macros };
     Object.keys(userInputs).forEach(nutrient => {
       if (userInputs[nutrient] !== '') {
         const factor = nutrient === 'fat' ? 9 : 4;
         newMacros[nutrient] = parseInt(userInputs[nutrient], 10) * factor;
+        console.log(newMacros);
+
+        //Send server
+        // AsyncStorage.getItem('userId').then((userId) => {
+        //   console.log(userId);
+        //   API.insertCalories(userId, totalCaloriesConsumed, newMacros.carbs, newMacros.protein, newMacros.fat)
+        //     .then((result) => {
+        //       console.log('Response from server:', result);
+        //     });
+        // })
       }
     });
-  
+
     const totalCaloriesConsumed = newMacros.carbs + newMacros.protein + newMacros.fat;
-    
+
     if (totalCaloriesConsumed >= (minCalories - 500) && totalCaloriesConsumed <= maxCalories) {
       setMacros(newMacros);
       Alert.alert("변경 완료", "목표 섭취량이 변경되었습니다!");
@@ -87,7 +81,7 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
       Alert.alert("변경 실패", `일일 권장 섭취량인 ${minCalories - 500} ~ ${maxCalories} 사이가 되도록 변경해주세요.`);
     }
   };
-  
+
 
   useEffect(() => {
     calculateInitialMacros(totalCalories, goal);
@@ -99,29 +93,29 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
         <InputFields
           label="순탄수"
           unit="g"
-          unitStyle= {styles.kcalText}
-          viewStyle= {styles.inputfield}
+          unitStyle={styles.kcalText}
+          viewStyle={styles.inputfield}
           inputStyle={styles.kcalText}
           textInputProps={{
-              onChangeText: text => handleGramsChange('carbs', text), // 상태 업데이트 함수 직접 전달
-              value: getInputValue('carbs'), // 상태 값 직접 전달
-              keyboardType: 'numeric'
+            onChangeText: text => handleGramsChange('carbs', text), // 상태 업데이트 함수 직접 전달
+            value: getInputValue('carbs'), // 상태 값 직접 전달
+            keyboardType: 'numeric'
           }}
-      />
-      <Text style={styles.kcalText}>x 4</Text>
-      <Text style={styles.kcalText}>{macros.carbs} Kcal</Text>
+        />
+        <Text style={styles.kcalText}>x 4</Text>
+        <Text style={styles.kcalText}>{macros.carbs} Kcal</Text>
       </View>
       <View style={styles.row}>
         <InputFields
           label="단백질"
           unit="g"
-          unitStyle= {styles.kcalText}
-          viewStyle= {styles.inputfield}
+          unitStyle={styles.kcalText}
+          viewStyle={styles.inputfield}
           inputStyle={styles.kcalText}
           textInputProps={{
-              onChangeText: text => handleGramsChange('protein',text), // 상태 업데이트 함수 직접 전달
-              value: getInputValue('protein'), // 상태 값 직접 전달
-              keyboardType: 'numeric'
+            onChangeText: text => handleGramsChange('protein', text), // 상태 업데이트 함수 직접 전달
+            value: getInputValue('protein'), // 상태 값 직접 전달
+            keyboardType: 'numeric'
           }}
         />
         <Text style={styles.kcalText}>x 4</Text>
@@ -131,13 +125,13 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
         <InputFields
           label="지방"
           unit="g"
-          unitStyle= {styles.kcalText}
-          viewStyle= {styles.inputfield}
+          unitStyle={styles.kcalText}
+          viewStyle={styles.inputfield}
           inputStyle={styles.kcalText}
           textInputProps={{
-              onChangeText: text => handleGramsChange('fat',text), // 상태 업데이트 함수 직접 전달
-              value: getInputValue('fat'), // 상태 값 직접 전달
-              keyboardType: 'numeric'
+            onChangeText: text => handleGramsChange('fat', text), // 상태 업데이트 함수 직접 전달
+            value: getInputValue('fat'), // 상태 값 직접 전달
+            keyboardType: 'numeric'
           }}
         />
         <Text style={styles.kcalText}>x 9</Text>
@@ -159,7 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,
-    justifyContent:"space-between"
+    justifyContent: "space-between"
   },
   input: {
     borderWidth: 1,
@@ -168,19 +162,19 @@ const styles = StyleSheet.create({
     padding: 8,
     marginLeft: 10
   },
-  kcalText:{
-    color:"#444",
+  kcalText: {
+    color: "#444",
     fontSize: 20,
-    fontWeight:"bold"
-},
-inputfield:{
-  marginTop:10,
-  height: 60,
-  justifyContent:"center",
-  alignItems:"flex-start",
-  width:width*0.4,
+    fontWeight: "bold"
+  },
+  inputfield: {
+    marginTop: 10,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "flex-start",
+    width: width * 0.4,
 
-}
+  }
 });
 
 export default MacroCalculator;

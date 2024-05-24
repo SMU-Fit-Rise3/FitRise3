@@ -48,7 +48,7 @@ exports.completedExercise = async function (req, res) {
       });
     }
     
-      const exercise = await prisma.Exercise.findUnique({
+      const exercise = await prisma.exercise.findUnique({
         where: { id: exercise_Id }
       });
 
@@ -151,7 +151,5 @@ exports.completedExercise = async function (req, res) {
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
-  } finally {
-    await prisma.$disconnect();
   }
 }

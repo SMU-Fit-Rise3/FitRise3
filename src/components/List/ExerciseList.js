@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { modalVisibleActions } from '../../store/modalVisible';
 import CustomBtn from '../UI/CustomBtn'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../../api';
 
 const ExerciseList = () => {
@@ -12,18 +13,20 @@ const ExerciseList = () => {
   const router = useRouter();
 
   // 운동리스트 정보 가져오기
-  // useEffect(() => {
-  //   dispatch(modalVisibleActions.turnOnLoading())
-  //   API.getExercise("6641af7f94a3e52e3b8ea23c")
-  //     .then((result) => {
-  //       setExercise(formatDataForFlatList(result))
-  //       dispatch(modalVisibleActions.turnOffLoading())
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error:', error);
-  //       dispatch(modalVisibleActions.turnOffLoading())
-  //     });
-  // }, []);
+  useEffect(() => {
+    dispatch(modalVisibleActions.turnOnLoading())
+    AsyncStorage.getItem('userId').then((userId) => {
+    API.getExercise(userId)
+      .then((result) => {
+        setExercise(formatDataForFlatList(result))
+        dispatch(modalVisibleActions.turnOffLoading())
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        dispatch(modalVisibleActions.turnOffLoading())
+      });
+    })
+  }, []);
 
   // 데이터 포맷팅 함수
   const formatDataForFlatList = (data) => {

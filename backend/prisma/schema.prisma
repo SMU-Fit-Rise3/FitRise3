@@ -21,9 +21,8 @@ model users {
   height Int
   weight Int
   ex_frequency Int
-  ex_level Level @default(beginner)
+  ex_level Level
   ex_goal String
-  stressIndex Int @default(0)
   calorie Calorie[]
   ex_plans WorkoutDay[]
   calendar CalendarDay[]
@@ -59,6 +58,7 @@ model Exercise {
 model CalendarDay {
   id  String @id @default(auto()) @map("_id") @db.ObjectId
   day         String
+  stressIndex Int @default(0)
   doexercises  doExercise[]
   weight  Int?
   eatfood eatFood[]
@@ -89,10 +89,9 @@ model eatFood {
 
 enum Level {
   beginner
-  intermediate 
-  advanced
+  middle
+  expert
 }
-
 //예전 스키마
 // model users {
 //   id    String @id @default(auto()) @map("_id") @db.ObjectId

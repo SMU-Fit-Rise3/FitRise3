@@ -14,7 +14,6 @@ const InputField = ({ label, textInputProps, viewStyle, inputStyle, placeholder,
         placeholderTextColor="#000"
         placeholder={placeholder}
         {...textInputProps} //text 관련 모든 props
-        keyboardType="numeric"
       />
       <Text 
         style={[styles.unitLabel, unitStyle]}
