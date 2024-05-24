@@ -37,4 +37,5 @@ app.post('/users/:id/exercise/:exerciseId/complete',exerciseAPI.completedExercis
 const calendarAPI = require('./api/calendarData');
 app.get('/users/:id/calendar',calendarAPI.getCalendarData); //캘린더 정보 가져오기
 app.patch('/users/:id/weight',calendarAPI.updateWeightData); //유저 몸무게 저장
+app.post('/users/:id/eatFood',calendarAPI.postEatFood); //유저 식단 데이터 생성
 

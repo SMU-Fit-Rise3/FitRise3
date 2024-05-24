@@ -37,3 +37,26 @@ export const updateWeight = async (userId, inputWeight) => {
     return console.error('Error:', error);
   }
 };
+
+//유저 식단 데이터 생성
+export const postEatFood = async (userId, m_type, selectMeal) => {
+  try {
+      const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/eatFood`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            mealType: m_type,
+            newMeals: selectMeal
+          })
+      });
+      if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }      
+      const data = await response.json();
+      console.log('Success:', data);  
+  } catch (error) {
+      console.error('Error:',error);
+  }
+}

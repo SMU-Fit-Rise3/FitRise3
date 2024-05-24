@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { View, FlatList, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import nutrientData from '../src/assets/nutrientData.json';
-import { FoodItem, SearchInput, CustomBtn, NutrientModal } from '../src/components';
-
+import { FoodItem, SearchInput, CustomBtn, NutrientModal, LoadingModal } from '../src/components';
+import API from '../src/api'
 const { width, height } = Dimensions.get('window');
 
 const DietInput = () => {
   const [query, setQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const { type } = useLocalSearchParams();
   const router = useRouter();
@@ -128,13 +129,20 @@ const DietInput = () => {
   const handleNext = () => {
     const selectedMealData = JSON.stringify(meals[type]);
     console.log(selectedMealData)
-    router.push({
-      pathname: '/dietScreen',
-      params: {
-        mealType: type,
-        meals: selectedMealData
-      }
-    });
+    console.log(type)
+    //여기서 요청
+    setIsLoading(true);
+    API.postEatFood("6637163419548b4c14803d6e", type, selectedMealData)
+      .then(() => {
+        router.push({
+          pathname: '/dietScreen',
+          params: {
+            mealType: type,
+            meals: selectedMealData
+          }
+        });
+        setIsLoading(false);
+      })
   };
 
   const getBackgroundColor = (mealType) => {
@@ -159,7 +167,7 @@ const DietInput = () => {
           <View key={index} style={styles.foodContainer}>
             <Text style={styles.foodName}>{food.name}</Text>
             <TouchableOpacity style={styles.deleteButton} onPress={() => deleteFood(index)}>
-              <Text style={{fontWeight:"bold", fontSize:10}}>X</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 10 }}>X</Text>
             </TouchableOpacity>
           </View>
         ))}
@@ -188,6 +196,7 @@ const DietInput = () => {
         textStyle={{ color: "#444" }}
         buttonStyle={[styles.button, getBackgroundColor(type)]}
       />
+      <LoadingModal visible={isLoading} />
     </View>
   );
 };
@@ -220,7 +229,7 @@ const styles = StyleSheet.create({
     borderRadius: 30
   },
   flatListContainer: {
-    height: height * 0.65, // FlatList의 높이를 고정
+    height: height * 0.6, // FlatList의 높이를 고정
   },
   flatListContentContainer: {
     flexGrow: 1,

@@ -79,8 +79,10 @@ model eatFood {
   id  String @id @default(auto()) @map("_id") @db.ObjectId
   mealType String
   food String
-  time Int
   calories Int
+  carbs Int
+  protein Int
+  fat Int
   CalendarDay  CalendarDay @relation(fields: [CalendarDayId], references: [id])
   CalendarDayId String @db.ObjectId
 }

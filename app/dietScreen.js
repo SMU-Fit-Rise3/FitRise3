@@ -1,6 +1,6 @@
 import React,{ useState, useEffect } from 'react';
 import { useLocalSearchParams } from "expo-router";
-import { View, StyleSheet, SafeAreaView, Text } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Text, ScrollView } from 'react-native';
 import { NutrientBar,MealList,MealTypeSelector,TabBar } from '../src/components'
 
 
@@ -91,7 +91,7 @@ const dietScreen = () => {
     return (
         <SafeAreaView style={styles.Vcontainer}>
             <View style={styles.contentContainer}>
-                <View style={styles.nutrientContainer}>
+                <ScrollView style={styles.nutrientContainer}>
                     <Text style={styles.title}>오늘의 영양소 섭취량🙂</Text>
                     {nutrients.map((item) => (
                         <NutrientBar
@@ -102,7 +102,7 @@ const dietScreen = () => {
                             totalValue={item.totalValue}
                         />
                     ))}
-                </View>
+                </ScrollView>
                 <MealList mealData={mealData} />
                 <View style={styles.container}>
                     <Text style={styles.title}>식단 추가하기🙂</Text>
