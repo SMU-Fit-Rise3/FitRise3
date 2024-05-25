@@ -25,7 +25,7 @@ const MealList = ({ mealData }) => {
       </View>
       <FlatList
         data={meals}
-        keyExtractor={(item) => item.name}
+        keyExtractor={(item) => item.food}
         renderItem={({ item }) => <MealItem meal={item} />}
         style={styles.list}
       />
@@ -37,7 +37,7 @@ const MealItem = ({ meal }) => {
   return (
     <View style={styles.mealItem}>
       <View style={styles.mealDetails}>
-        <Text style={styles.mealname}>{meal.name}</Text>
+        <Text style={styles.mealname}>{meal.food}</Text>
       </View>
       <Text>{meal.calories} kcal</Text>
     </View>

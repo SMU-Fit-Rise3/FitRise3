@@ -137,11 +137,7 @@ const DietInput = () => {
       API.postEatFood(userId, type, selectedMealData)
         .then(() => {
           router.push({
-            pathname: '/dietScreen',
-            params: {
-              mealType: type,
-              meals: selectedMealData
-            }
+            pathname: '/dietScreen'
           });
           setIsLoading(false);
         })
