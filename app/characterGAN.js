@@ -54,10 +54,11 @@ const CharacterGAN = () => {
   const classifyImage = async () => {
     if (!imageUri) return;
     try {
-      const response = await fetch(imageUri, {}, { isBinary: true });
-      const imageData = await response.arrayBuffer();
-      const imageTensor = tfReactNative.decodeJpeg(new Uint8Array(imageData));
-
+        const fileInfo = await FileSystem.getInfoAsync(imageUri);
+        const imageData = await FileSystem.readAsStringAsync(fileInfo.uri, { encoding: FileSystem.EncodingType.Base64 });
+        const imageBuffer = tf.util.encodeString(imageData, 'base64').buffer;
+        const imageTensor = tfReactNative.decodeJpeg(new Uint8Array(imageBuffer));
+    
       // 이미지 전처리 (리사이즈 및 정규화)
       const resizedImage = tf.image.resizeBilinear(imageTensor, [224, 224]); // 모델 입력 크기에 맞춤
       const normalizedImage = resizedImage.div(255.0); // 정규화
