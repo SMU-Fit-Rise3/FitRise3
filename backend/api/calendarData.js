@@ -13,7 +13,9 @@ exports.getCalendarData = async function (req, res) {
         calendar: {
           select: {
             day: true,
-            doexercises: true
+            doexercises: true,
+            weight: true,
+            eatfood: true
           }
         }
       }
