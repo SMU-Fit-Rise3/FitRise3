@@ -39,6 +39,10 @@ app.get('/users/:id/calendar',calendarAPI.getCalendarData); //캘린더 데이�
 app.patch('/users/:id/weight',calendarAPI.updateWeightData); //유저 몸무게 저장
 app.post('/users/:id/eatFood',calendarAPI.postEatFood); //유저 식단 데이터 생성
 
-//식단 관련 api
+//식단 화면 관련 api
 const mealAPI = require('./api/mealData');
 app.get('/users/:id/todayMeal',mealAPI.getTodayMealData); //오늘의 식단 데이터 가져오기
+
+//분석 화면 관련 api
+const analysisAPI = require('./api/analysisData');
+app.get('/users/:id/analysis',analysisAPI.getAnalysisData);

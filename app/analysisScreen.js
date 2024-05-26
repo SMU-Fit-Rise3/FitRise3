@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from "expo-router";
 import { View, StyleSheet, ScrollView, Text, SafeAreaView, Dimensions, Alert } from 'react-native';
 import { TabBar, BarChartComponent, LineChartComponent, SingleLineChart, CustomBtn, InputFields, InfoAlertComponent, LoadingModal } from '../src/components'
@@ -8,52 +8,100 @@ import API from '../src/api'
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
-const weeklyNutritionData = [
-    { carbs: 120, protein: 80, fats: 60 },
-    { carbs: 70, protein: 100, fats: 50 },
-    { carbs: 130, protein: 90, fats: 70 },
-    { carbs: 80, protein: 90, fats: 70 },
-    { carbs: 100, protein: 50, fats: 40 },
-    // 주마다 데이터 추가
-];
-
-const weight2 = [
-    { value: 70 },
-    { value: 72 },
-    { value: 68 },
-    { value: 75 },
-    { value: 73 },
-    { value: 72 },
-    { value: 68 },
-    { value: 73 },
-    { value: 72 },
-    { value: 68 },
-]
-const BMI = [
-    { value: 23 },
-    { value: 23.4 },
-    { value: 22 },
-    { value: 25 },
-    { value: 24 },
-    { value: 23 },
-    { value: 25 },
-    { value: 24 },
-    { value: 23 },
-    { value: 25 },
-]
-const stressData = [
-    { value: 0, label: '01 Apr' },
-    { value: 6, label: '02 Apr' },
-    { value: 4, label: '03 Apr' },
-    { value: 1, label: '04 Apr' },
-    { value: 8, label: '05 Apr' },
-    { value: 10, label: '06 Apr' },
-];
-
 const analysisScreen = () => {
     const [weight, setWeight] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [stressData, setStressData] = useState([]);
+    const [weightData, setWeightData] = useState([]);
+    const [weeklyNutritionData, setWeeklyNutritionData] = useState([]);
+    const [deficitData, setDeficitData] = useState({});
     const router = useRouter();
+
+    useEffect(() => {
+        AsyncStorage.getItem('userId').then((userId) => {
+            API.getAnalysis(userId)
+                .then((data) => {
+                    processData(data);
+                })
+        })
+    }, []);
+
+    const processData = (data) => {
+        if (!data || !data[0].calendar) return;
+
+        console.log(JSON.stringify(data, null, 2));
+        const stressData = [];
+        const weightData = [];
+        const weeklyNutritionData = [];
+
+        let totalCalories = 0;
+        let totalCarbs = 0;
+        let totalProtein = 0;
+        let totalFat = 0;
+
+        //전체데이터처리
+        data[0].calendar.forEach(dayData => {
+            const { day, weight, eatfood, stressIndex } = dayData;
+            const bmiIndex = weight / ((data[0].height / 100) * (data[0].height / 100));
+
+            if (stressIndex > 0) {
+                stressData.push({ label: day, value: stressIndex });
+            }
+
+            if (weight !== null) {
+                weightData.push({ label: day, value: weight, bmi: bmiIndex.toFixed(2) });
+            }
+
+            if (eatfood.length !== 0) {
+                const dailyNutrition = eatfood.reduce((totals, food) => {
+                    totals.calories += food.calories;
+                    totals.carbs += food.carbs;
+                    totals.protein += food.protein;
+                    totals.fat += food.fat;
+                    return totals;
+                }, { label: day, calories: 0, carbs: 0, protein: 0, fat: 0 });
+
+                weeklyNutritionData.push(dailyNutrition);
+            }
+        });
+
+        // 최근 7일데이터
+        const recent7DaysData = data[0].calendar.slice(-7);
+
+        recent7DaysData.forEach(dayData => {
+            const { eatfood } = dayData;
+
+            if (eatfood.length !== 0) {
+                eatfood.forEach(food => {
+                    totalCalories += food.calories;
+                    totalCarbs += food.carbs;
+                    totalProtein += food.protein;
+                    totalFat += food.fat;
+                });
+            }
+        })
+        const numOfDays = recent7DaysData.length;
+        const calorieDeficit = Math.max(0, data[0].calorie[0].calorie_goal * numOfDays - totalCalories);
+        const carbsDeficit = Math.max(0, data[0].calorie[0].carbs * numOfDays - totalCarbs);
+        const proteinDeficit = Math.max(0, data[0].calorie[0].protein * numOfDays - totalProtein);
+        const fatDeficit = Math.max(0, data[0].calorie[0].fat * numOfDays - totalFat);
+
+        const allDeficitData = {
+            calorieDeficit,
+            carbsDeficit,
+            proteinDeficit,
+            fatDeficit
+        };
+
+        console.log("stressData:" + JSON.stringify(stressData));
+        console.log("weightData:" + JSON.stringify(weightData));
+        console.log("nutrieData:" + JSON.stringify(weeklyNutritionData));
+        console.log("deficitData:" + JSON.stringify(allDeficitData));
+        setStressData(stressData);
+        setWeightData(weightData);
+        setWeeklyNutritionData(weeklyNutritionData);
+        setDeficitData(allDeficitData);
+    };
 
     const handleNextPress = () => {
         console.log('입력 버튼 눌림');
@@ -81,6 +129,7 @@ const analysisScreen = () => {
             console.error('Error handleNextPress:', error);
         }
     };
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
@@ -91,7 +140,7 @@ const analysisScreen = () => {
                     </View>
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>몸무게 & BMI 변화량 ⚖️</Text>
-                        <LineChartComponent weightData={weight2} bmiData={BMI} />
+                        <LineChartComponent weightData={weightData} />
                         <View style={styles.HorContainer}>
                             <InputFields
                                 label="몸무게"
@@ -115,7 +164,7 @@ const analysisScreen = () => {
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>영양분 섭취량 🍴</Text>
                         <BarChartComponent weeklyData={weeklyNutritionData} />
-                        <InfoAlertComponent infoName="단백질" amount="30g" />
+                        <InfoAlertComponent feedbackData={deficitData} />
                     </View>
                 </View>
                 <LoadingModal visible={isLoading} />
@@ -124,7 +173,6 @@ const analysisScreen = () => {
         </SafeAreaView>
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
@@ -141,9 +189,9 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         flex: 1,
-        width: width * 0.9, // Adjust width based on screen size
+        width: width * 0.9,
         alignItems: "flex-start",
-        marginBottom: 15, // Add some bottom margin for better spacing
+        marginBottom: 15,
     },
     HorContainer: {
         flexDirection: 'row',
@@ -151,7 +199,7 @@ const styles = StyleSheet.create({
         width: width * 0.6,
     },
     InputBtn: {
-        width: width * 0.3, // Adjust button width based on screen size
+        width: width * 0.3,
         height: 50,
         backgroundColor: '#d9a1d5',
         borderRadius: 10,
@@ -161,13 +209,13 @@ const styles = StyleSheet.create({
         padding: 10
     },
     title: {
-        fontSize: width * 0.06, // Adjust font size based on screen width
+        fontSize: width * 0.06,
         fontWeight: 'bold',
         marginTop: 40,
     },
     textField: {
-        width: width * 0.4, // Adjust text field width based on screen size
+        width: width * 0.4,
     }
 });
 
-export default analysisScreen
+export default analysisScreen;
