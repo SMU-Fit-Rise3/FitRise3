@@ -42,7 +42,7 @@ export const uploadImageToServer = async (photoUri) => {
     }
 
     const formData = new FormData();
-    formData.append('image', { uri: photoUri, name: 'userchracter.jpg', type: 'image/jpg' });
+    formData.append('image', { uri: photoUri, name: 'userchracter.png', type: 'image/png' });
 
     const response = await fetch(`${process.env.EXPO_PUBLIC_IP_URL}:${process.env.EXPO_PUBLIC_SOCKET_PORT}/upload-image`, {
         method: 'POST',

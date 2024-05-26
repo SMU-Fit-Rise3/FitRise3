@@ -19,7 +19,7 @@ const CharacterGAN = () => {
   const [imageUri, setImageUri] = useState(null);
   const [prediction, setPrediction] = useState(null);
   const [characterImage, setCharacterImage] = useState(null);
-  const [photoUri, setPhotoUri] = useState(null); // 추가된 상태 변수
+  const [photoUri, setPhotoUri] = useState(null); //handleNextPress에서 사용하기위해
 
   const stepLabels = ['Step 1', 'Step 2', 'Step 3', 'Step 4'];
   useEffect(() => {
@@ -92,7 +92,7 @@ const CharacterGAN = () => {
       console.log('Prediction:', images[labels[maxIndex]]);
 
       const predictedImage = characterImages[labels[maxIndex]];
-      const uri = await loadImageUri(predictedImage);
+      const uri = await loadImageUri(predictedImage); //캐릭터 이미지의 uri
       setPhotoUri(uri); // 상태 변수로 설정
 
     } catch (error) {
@@ -107,6 +107,7 @@ const CharacterGAN = () => {
     })();
   }, []);
 
+  // 캐릭터 이미지의 uri를 로드하는 함수
   const loadImageUri = async (imagePath) => {
     const asset = Asset.fromModule(imagePath);
     await asset.downloadAsync();
@@ -119,7 +120,7 @@ const CharacterGAN = () => {
 
     try {
       console.log(photoUri);
-      uploadImageToServer(photoUri)
+      uploadImageToServer(photoUri) // 캐릭터 이미지를 서버로보내는 함수
         .then(() => {
           console.log('업로드 성공');
           // 업로드 성공 처리
