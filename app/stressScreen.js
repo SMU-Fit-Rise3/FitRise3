@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from "expo-router";
-import API from '../src/api'
+import API from '../src/api';
 import { View, StyleSheet, Text, Dimensions, SafeAreaView } from 'react-native';
 import { CharacterCAM, ExerciseList, StressLevelIndicator, TabBar } from '../src/components'
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions

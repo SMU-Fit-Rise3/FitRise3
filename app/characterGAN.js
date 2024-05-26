@@ -7,21 +7,25 @@ import * as ImagePicker from 'expo-image-picker';
 import { fetch } from '@tensorflow/tfjs-react-native';
 import { CustomBtn, StepIndicator } from '../src/components';
 import { images } from '../constants';
+import * as FileSystem from 'expo-file-system';
+import { receiveImages, uploadImageToServer } from '../backend/getGif';
+import { Asset } from 'expo-asset';
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
 const CharacterGAN = () => {
   const router = useRouter();
+  const [imag, setImages] = useState([]);
   const [imageUri, setImageUri] = useState(null);
   const [prediction, setPrediction] = useState(null);
   const [characterImage, setCharacterImage] = useState(null);
+  const [photoUri, setPhotoUri] = useState(null); // 추가된 상태 변수
 
   const stepLabels = ['Step 1', 'Step 2', 'Step 3', 'Step 4'];
-  
-  const handleNextPress = () => {
-    console.log('다음 버튼 눌림'); // 다음 화면으로 이동하는 로직
-    router.push('/mainScreen'); //화면 이동
-  };
+  useEffect(() => {
+    const unsubscribe = receiveImages(setImages); // 이미지 수신 기능을 getGif에서 가져옴.
+    return () => unsubscribe();
+  }, []);
 
   // 갤러리에서 이미지를 선택하는 함수
   const selectImage = async () => {
@@ -54,11 +58,11 @@ const CharacterGAN = () => {
   const classifyImage = async () => {
     if (!imageUri) return;
     try {
-        const fileInfo = await FileSystem.getInfoAsync(imageUri);
-        const imageData = await FileSystem.readAsStringAsync(fileInfo.uri, { encoding: FileSystem.EncodingType.Base64 });
-        const imageBuffer = tf.util.encodeString(imageData, 'base64').buffer;
-        const imageTensor = tfReactNative.decodeJpeg(new Uint8Array(imageBuffer));
-    
+      const fileInfo = await FileSystem.getInfoAsync(imageUri);
+      const imageData = await FileSystem.readAsStringAsync(fileInfo.uri, { encoding: FileSystem.EncodingType.Base64 });
+      const imageBuffer = tf.util.encodeString(imageData, 'base64').buffer;
+      const imageTensor = tfReactNative.decodeJpeg(new Uint8Array(imageBuffer));
+
       // 이미지 전처리 (리사이즈 및 정규화)
       const resizedImage = tf.image.resizeBilinear(imageTensor, [224, 224]); // 모델 입력 크기에 맞춤
       const normalizedImage = resizedImage.div(255.0); // 정규화
@@ -85,6 +89,12 @@ const CharacterGAN = () => {
       };
       setCharacterImage(characterImages[labels[maxIndex]]);
 
+      console.log('Prediction:', images[labels[maxIndex]]);
+
+      const predictedImage = characterImages[labels[maxIndex]];
+      const uri = await loadImageUri(predictedImage);
+      setPhotoUri(uri); // 상태 변수로 설정
+
     } catch (error) {
       console.error("Error classifying image: ", error);
       alert("이미지를 분류하는 데 오류가 발생했습니다. 다시 시도해 주세요.");
@@ -96,6 +106,37 @@ const CharacterGAN = () => {
       await tf.ready(); // TensorFlow.js가 준비될 때까지 대기합니다.
     })();
   }, []);
+
+  const loadImageUri = async (imagePath) => {
+    const asset = Asset.fromModule(imagePath);
+    await asset.downloadAsync();
+    return asset.localUri;
+  };
+
+  const handleNextPress = async () => {
+    // 먼저 다음 화면으로 이동
+    router.push('/mainScreen');
+
+    try {
+      console.log(photoUri);
+      uploadImageToServer(photoUri)
+        .then(() => {
+          console.log('업로드 성공');
+          // 업로드 성공 처리
+        })
+        .catch((error) => {
+          console.error('이미지 업로드 중 에러 발생:', error);
+          // 업로드 실패 처리
+        })
+        .finally(() => {
+          setUploading(false); // 업로드 종료
+        });
+    } catch (error) {
+      console.error('이미지 로딩 중 에러 발생:', error);
+      setUploading(false); // 에러 발생 시에도 업로드 상태를 종료로 변경
+    }
+  };
+
 
   return (
     <SafeAreaView style={styles.safeContainer}>
