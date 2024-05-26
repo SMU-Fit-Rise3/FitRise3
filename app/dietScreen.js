@@ -39,25 +39,35 @@ const dietScreen = () => {
         let totalProtein = 0;
         let totalFat = 0;
 
-        data.meal.eatfood.forEach(item => {
-            meals[item.mealType].push({
-                food: item.food,
-                calories: item.calories
+        if (data.meal) {
+            data.meal.eatfood.forEach(item => {
+                meals[item.mealType].push({
+                    food: item.food,
+                    calories: item.calories
+                });
+                totalCalories += item.calories;
+                totalCarbs += item.carbs;
+                totalProtein += item.protein;
+                totalFat += item.fat;
             });
-            totalCalories += item.calories;
-            totalCarbs += item.carbs;
-            totalProtein += item.protein;
-            totalFat += item.fat;
-        });
 
-        setMealData(meals);
+            setMealData(meals);
 
-        setNutrients([
-            { id: 'calories', name: '칼로리', value: totalCalories, totalValue: data.calories.calorie_goal, icon: "🔥" },
-            { id: 'carbs', name: '탄수화물', value: totalCarbs, totalValue: data.calories.carbs, icon: "🌾" },
-            { id: 'protein', name: '단백질', value: totalProtein, totalValue: data.calories.protein, icon: "🍖" },
-            { id: 'fats', name: '지방', value: totalFat, totalValue: data.calories.fat, icon: "🍟" },
-        ]);
+            setNutrients([
+                { id: 'calories', name: '칼로리', value: totalCalories, totalValue: data.calories.calorie_goal, icon: "🔥" },
+                { id: 'carbs', name: '탄수화물', value: totalCarbs, totalValue: data.calories.carbs, icon: "🌾" },
+                { id: 'protein', name: '단백질', value: totalProtein, totalValue: data.calories.protein, icon: "🍖" },
+                { id: 'fats', name: '지방', value: totalFat, totalValue: data.calories.fat, icon: "🍟" },
+            ]);
+        }
+        else{
+            setNutrients([
+                { id: 'calories', name: '칼로리', value: 0, totalValue: data.calories.calorie_goal, icon: "🔥" },
+                { id: 'carbs', name: '탄수화물', value: 0, totalValue: data.calories.carbs, icon: "🌾" },
+                { id: 'protein', name: '단백질', value: 0, totalValue: data.calories.protein, icon: "🍖" },
+                { id: 'fats', name: '지방', value: 0, totalValue: data.calories.fat, icon: "🍟" },
+            ]);
+        }
     };
 
     return (
