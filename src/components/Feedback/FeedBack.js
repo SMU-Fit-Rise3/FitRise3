@@ -1,11 +1,11 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 
-const FeedbackComponent = ({text}) => {
+const FeedbackComponent = ({viewStyle, containerStyle, text, textStyle}) => {
     return (
-        <View style={styles.mainContainer}>
-            <View style={styles.textContainer}>
-                <Text style={styles.quoteText}>{text}</Text>
+        <View style={[styles.mainContainer, viewStyle]}>
+            <View style={[styles.textContainer, containerStyle]}>
+                <Text style={[styles.quoteText, textStyle]}>{text}</Text>
             </View>
         </View>
     );

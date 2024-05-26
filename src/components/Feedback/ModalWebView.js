@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
 import { Modal, StyleSheet, View, Text, Pressable, ActivityIndicator, SafeAreaView } from 'react-native';
 import { WebView } from 'react-native-webview';
+import { useSelector, useDispatch } from 'react-redux';
+import { modalVisibleActions } from '../../store/modalVisible';
 
 const ModalWebView = () => {
-    const [modalVisible, setModalVisible] = useState(true);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const modal3dVisible = useSelector(state => state.modalVisible.modal3dVisible);
+    const dispatch = useDispatch();
     return (
         <Modal
-            visible={modalVisible}
+            visible={modal3dVisible}
             animationType="slide"
-            onRequestClose={() => setModalVisible(false)}
+            onRequestClose={() => dispatch(modalVisibleActions.off())}
             transparent={true}
         >
             <SafeAreaView style={styles.modalOverlay}>
                 <View style={styles.modalView}>
                     <Pressable
                         style={styles.closeButton}
-                        onPress={() => setModalVisible(false)}
+                        onPress={() => dispatch(modalVisibleActions.off())}
                     >
                         <Text style={styles.boldText}>x</Text>
                     </Pressable>

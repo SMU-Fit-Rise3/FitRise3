@@ -1,20 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../src/api'
 import { View, StyleSheet, Text, Dimensions, SafeAreaView } from 'react-native';
 import { CharacterCAM, ExerciseList, StressLevelIndicator, TabBar } from '../src/components'
+
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
 // 메인 화면 컴포넌트
 const stressScreen = () => {
     const [stressIndex, setStressIndex] = useState(0);
     useEffect(() => {
-        API.getStress("662f792c86be2d4ce4191689")
-            .then(data => {
-                if (data && data.stressIndex) {
-                    setStressIndex(data.stressIndex);  // 데이터에서 스트레스 인덱스를 추출하여 상태 업데이트
-                }
+        try {
+            AsyncStorage.getItem('userId').then((userId) => {
+            API.getStress(userId)
+                .then(data => {
+                    if (data && data.stressIndex) {
+                        setStressIndex(data.stressIndex);  // 데이터에서 스트레스 인덱스를 추출하여 상태 업데이트
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching stress data:', error);
+                });
             })
+        } catch (error) {
+            console.error('Error in useEffect:', error);
+        }
     }, []);
 
     const router = useRouter();

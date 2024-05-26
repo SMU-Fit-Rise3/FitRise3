@@ -1,31 +1,39 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LineChart } from "react-native-gifted-charts";
-// BMI 데이터를 스케일링하는 함수
-const scaleBMI = (bmiData, weightData) => {
-    const weightMax = Math.max(...weightData.map(d => d.value));
-    const bmiMax = Math.max(...bmiData.map(d => d.value));
-    const scaleFactor = (weightMax / bmiMax) * 0.7; // 스케일링 계수
 
-    return bmiData.map(dataPoint => ({
-        ...dataPoint,
-        value: dataPoint.value * scaleFactor, // BMI 값을 스케일링
-        originalValue: dataPoint.value
-    }));
-};
-
-
-const LineChartComponent = ({ weightData, bmiData }) => {
-    const scaledBMIData = scaleBMI(bmiData, weightData); // BMI 데이터 스케일링 적용
+const LineChartComponent = ({ weightData }) => {
     
+    const bmiData = weightData.map(item => ({
+        label: item.label, 
+        value: parseFloat(item.bmi)
+    }));
+
+    //날짜 형식 수정 && 시작 가비지 데이터 추가
+    const truncatedWeightData = [
+        { label: '', value: weightData[0]?.value }, 
+        ...weightData.map(item => ({
+            ...item,
+            label: item.label.substring(5)
+        }))
+    ];
+    
+    const truncatedBmiData = [
+        { label: '', value: weightData[0]?.bmi }, 
+        ...bmiData.map(item => ({
+            ...item,
+            label: item.label.substring(5)
+        }))
+    ];
+
     return (
         <View style={styles.container}>
             <LineChart
                 width={300}
                 areaChart
                 curved
-                data={weightData}
-                data2={scaledBMIData}
+                data={truncatedWeightData}
+                data2={truncatedBmiData}
                 hideDataPoints
                 spacing={50}
                 color1="#aaa" // 몸무게 선 색상
@@ -44,6 +52,7 @@ const LineChartComponent = ({ weightData, bmiData }) => {
                 rulesColor="gray"
                 yAxisTextStyle={{color: 'gray'}}
                 xAxisColor="lightgray"
+                xAxisTextStyle={{ textAlign: 'center' }}
                 maxValue={100}
                 isAnimated
                 pointerConfig={{
@@ -60,9 +69,9 @@ const LineChartComponent = ({ weightData, bmiData }) => {
 
                         return (
                             <View style={styles.pointerLabel}>
-                                <Text style={styles.yearText}>Year: {new Date().getFullYear()}</Text>
+                                <Text style={styles.yearText}>Date: {weightData[0]?.label}</Text>
                                 <Text style={styles.valueText}>Weight: {items[0]?.value}kg</Text>
-                                <Text style={styles.valueText}>BMI: {originalBMIValue}</Text>
+                                <Text style={styles.valueText}>BMI: {items[0]?.bmi}</Text>
                             </View>
                         );
                     },
@@ -83,11 +92,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#666',
         borderRadius: 5,
         justifyContent: 'space-evenly',
-        alignItems:"center",
+        alignItems: "center",
         marginHorizontal: 20,
-        marginVertical:30,
+        marginVertical: 30,
     },
-
     yearText: {
         color: 'lightgray',
         fontSize: 14,
@@ -100,3 +108,6 @@ const styles = StyleSheet.create({
 });
 
 export default LineChartComponent;
+
+
+

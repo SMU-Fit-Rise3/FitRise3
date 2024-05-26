@@ -4,28 +4,15 @@ import { useRouter } from "expo-router";
 import { View, FlatList, Text, Image, StyleSheet } from 'react-native';
 import { icons } from '../../../constants';
 import CustomBtn from '../UI/CustomBtn';
+
 const mealTypesData = [
-  {
-    type: 'Breakfast',
-    image: icons.icon_breakfast, // 아침 이미지 경로
-  },
-  {
-    type: 'Lunch',
-    image: icons.icon_lunch, // 점심 이미지 경로
-  },
-  {
-    type: 'Dinner',
-    image: icons.icon_dinner, // 저녁 이미지 경로
-  },
-  {
-    type: 'Snack',
-    image: icons.icon_snack, // 간식 이미지 경로
-  },
-  // 여기에 더 많은 식사 유형을 추가할 수 있습니다.
+  { type: 'Breakfast', image: icons.icon_breakfast},
+  { type: 'Lunch', image: icons.icon_lunch },
+  { type: 'Dinner', image: icons.icon_dinner },
+  { type: 'Snack', image: icons.icon_snack },
 ];
 
 const MealTypeSelector = ({ onMealTypeSelected }) => {
-    const router = useRouter();
   return (
     <FlatList
       horizontal
@@ -44,13 +31,14 @@ const MealTypeSelector = ({ onMealTypeSelected }) => {
   );
 };
 
-const MealTypeCard = ({ type, image, count, onSelect }) => {
+const MealTypeCard = ({ type, image}) => {
+  const router = useRouter();
   return (
     <View style={styles.card}>
       <Image source={image} style={styles.image} />
       <Text style={styles.type}>{type}</Text>
       <CustomBtn
-        onPress={() => router.push('/chatScreen')}
+        onPress={() => router.push({pathname:'/dietInput', params:{type}})}
         title = "추가하기"
         buttonStyle = {styles.addBtn} 
         textStyle = {styles.btnText}/>

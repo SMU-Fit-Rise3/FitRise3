@@ -9,7 +9,8 @@ import * as posedetection from '@tensorflow-models/pose-detection';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import '@tensorflow/tfjs-react-native';
 import * as blazeface from '@tensorflow-models/blazeface';
-import API from '../api'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import API from '../api';
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 const TensorCamera = cameraWithTensors(Camera);
 
@@ -136,8 +137,10 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
     isModalVisibleRef.current = isModalVisible;
     if (!isModalVisible) {
       if (gChannel.length > 0) {
-          //스트레스 계산 요청
-          API.updateStress("662f792c86be2d4ce4191689", gChannel);
+        //스트레스 계산 요청
+        AsyncStorage.getItem('userId').then((userId) => {
+          API.updateStress(userId, gChannel);
+        })
       }
     }
   }, [isModalVisible]);
@@ -178,9 +181,9 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
             const clampedHeight = Math.min(Math.round(size[1]), imageTensor.shape[0] - clampedY);
             const clampedX = Math.min(Math.round(start[0]), imageTensor.shape[1] - 1);
             const clampedWidth = Math.min(Math.round(size[0]), imageTensor.shape[1] - clampedX);
-          
+
             tf.tidy(() => {// 함수 종료 시 slicedTensor는 자동으로 메모리에서 해제됩니다.
-            
+
               //얼굴영역만 자르기
               const faceTensor = tf.slice(imageTensor, [clampedY, clampedX, 0], [clampedHeight, clampedWidth, 3]);
               console.log("faceTensor:" + faceTensor);
