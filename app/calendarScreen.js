@@ -44,7 +44,7 @@ export default class CalendarScreen extends Component {
       entry.calendar.forEach(day => {
         const date = day.day;
 
-        if (day.eatfood) {
+        if (day.eatfood && day.eatfood.length > 0) {
           dietData[date] = {
             meals: day.eatfood.length,
             calories: day.eatfood.reduce((total, item) => total + item.calories, 0),
@@ -59,7 +59,7 @@ export default class CalendarScreen extends Component {
           };
         }
 
-        if (day.doexercises) {
+        if (day.doexercises && day.doexercises.length > 0) {
           exerciseData[date] = day.doexercises.map(item => ({
             exercise: item.exercise,
             sets: item.sets,
@@ -101,13 +101,13 @@ export default class CalendarScreen extends Component {
     };
 
     for (let date in dietData) {
-      addMark(date, 'blue');  // Color for diet
+      addMark(date, '#32A4FF');  // Color for diet
     }
     for (let date in exerciseData) {
-      addMark(date, 'green');  // Color for exercise
+      addMark(date, '#32CD32');  // Color for exercise
     }
     for (let date in weightData) {
-      addMark(date, 'red');  // Color for weight
+      addMark(date, '#FF7F50');  // Color for weight
     }
 
     return markedDates;
@@ -174,9 +174,9 @@ export default class CalendarScreen extends Component {
     const { activeScreen } = this.state;
     const { router } = this.props; // Use router from props
 
-    const dietButtonStyle = activeScreen === 'diet' ? [styles.button, styles.activeButton, { borderColor: 'blue' }] : [styles.button, { borderColor: 'blue' }];
-    const exerciseButtonStyle = activeScreen === 'exercise' ? [styles.button, styles.activeButton, { borderColor: 'green' }] : [styles.button, { borderColor: 'green' }];
-    const weightButtonStyle = activeScreen === 'weight' ? [styles.button, styles.activeButton, { borderColor: 'red' }] : [styles.button, { borderColor: 'red' }];
+    const dietButtonStyle = activeScreen === 'diet' ? [styles.button, styles.activeButton, { borderColor: '#32A4FF' }] : [styles.button, { borderColor: '#32A4FF' }];
+    const exerciseButtonStyle = activeScreen === 'exercise' ? [styles.button, styles.activeButton, { borderColor: '#32CD32' }] : [styles.button, { borderColor: '#32CD32' }];
+    const weightButtonStyle = activeScreen === 'weight' ? [styles.button, styles.activeButton, { borderColor: '#FF7F50' }] : [styles.button, { borderColor: '#FF7F50' }];
 
     return (
       <SafeAreaView style={styles.container}>
