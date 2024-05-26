@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { View, StyleSheet, SafeAreaView } from 'react-native';
 import images from '../constants/images.js';
 import {TabBar, FloatingBtn, ExerciseList,CharacterImage, PointDisplay} from '../src/components'
+import CharacterGif from '../backend/CharacterGif'; // CharacterGif 컴포넌트 가져오기
 
 // 메인 화면 컴포넌트
 const MainScreen = () => {
@@ -12,7 +13,7 @@ const MainScreen = () => {
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.container}>
         <PointDisplay/>
-          <CharacterImage/>
+          <CharacterGif/>
           <View style={styles.container}>
               <ExerciseList/>
           </View>
