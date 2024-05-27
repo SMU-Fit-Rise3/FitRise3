@@ -87,17 +87,20 @@ exports.insertCalorieData = async function (req, res) {
 
 exports.nameCheck = async function (req, res) {
     const  name  = req.params.name
+    console.log(name);
     try {
         const user = await prisma.users.findMany({
             where: {
                 nickname: name,
             },
         });
-
+        console.log(user);
         if (user.length === 0) {
+            console.log("dd");
             // 사용자가 없을 경우
             res.status(404).json("user not found");
         } else {
+            console.log("ee");
             // 사용자가 존재할 경우
             res.status(200).json(user[0].nickname);
         }

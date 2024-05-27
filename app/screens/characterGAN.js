@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { SafeAreaView, View, StyleSheet, Text,Dimensions } from 'react-native';
-import { CharacterCAM,CustomBtn,StepIndicator } from '../src/components'
+import { CharacterCAM,CustomBtn,StepIndicator } from '../../src/components'
 
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
@@ -12,7 +12,7 @@ const characterGAN = () => {
     const stepLabels = ['Step 1', 'Step 2', 'Step 3', 'Step 4'];
     const handleNextPress = () => {
         console.log('다음 버튼 눌림'); // 다음 화면으로 이동하는 로직
-        router.push('/mainScreen') //화면 이동
+        router.push('tabs/mainScreen') //화면 이동
     };
     // 카메라로부터 사진을 받는 함수
     const handleTakePicture = (photo) => {

@@ -22,7 +22,7 @@ const NutrientModal = ({
       }}
     >
       <View style={styles.centeredView}>
-          <ScrollView style={styles.modalView}>
+          <View style={styles.modalView}>
             <Text style={styles.title}>섭취량 설정</Text>
             <FoodCaloriePicker
               foodName={selectedItem.Food_Name}
@@ -92,7 +92,7 @@ const NutrientModal = ({
                 textStyle={styles.buttonText}
               />
             </View>
-          </ScrollView>
+          </View>
       </View>
     </Modal>
   );
@@ -168,7 +168,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: width * 0.7,
+    width: '100%',
+    alignItems: "center",
   },
   modalButton: {
     backgroundColor: "#fff",

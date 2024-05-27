@@ -1,8 +1,8 @@
 import React from 'react';
 import { useRouter } from "expo-router";
 import { View, StyleSheet, SafeAreaView } from 'react-native';
-import images from '../constants/images.js';
-import {TabBar, FloatingBtn, ExerciseList,CharacterImage, PointDisplay, LoadingModal} from '../src/components'
+import images from '../../constants/images.js';
+import {TabBar, FloatingBtn, ExerciseList,CharacterImage, PointDisplay, LoadingModal} from '../../src/components'
 import { useSelector } from 'react-redux';
 // 메인 화면 컴포넌트
 const MainScreen = () => {
@@ -19,9 +19,8 @@ const MainScreen = () => {
           </View>
           <FloatingBtn 
               imageSource={images.robot} 
-              onPress={() => router.push('/chatScreen')}
+              onPress={() => router.push('screens/chatScreen')}
           />
-        <TabBar router={router}/>
         <LoadingModal visible={loadingVisible} />  
       </View>      
     </SafeAreaView>

@@ -38,7 +38,7 @@ const MealTypeCard = ({ type, image}) => {
       <Image source={image} style={styles.image} />
       <Text style={styles.type}>{type}</Text>
       <CustomBtn
-        onPress={() => router.push({pathname:'/dietInput', params:{type}})}
+        onPress={() => router.push({pathname:'screens/dietInput', params:{type}})}
         title = "추가하기"
         buttonStyle = {styles.addBtn} 
         textStyle = {styles.btnText}/>

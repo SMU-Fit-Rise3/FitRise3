@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import nutrientData from '../src/assets/nutrientData.json';
-import { FoodItem, SearchInput, CustomBtn, NutrientModal, LoadingModal } from '../src/components';
+import nutrientData from '../../src/assets/nutrientData.json';
+import { FoodItem, SearchInput, CustomBtn, NutrientModal, LoadingModal } from '../../src/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from '../src/api'
+import API from '../../src/api'
 const { width, height } = Dimensions.get('window');
 
 const DietInput = () => {
@@ -137,7 +137,7 @@ const DietInput = () => {
       API.postEatFood(userId, type, selectedMealData)
         .then(() => {
           router.push({
-            pathname: '/dietScreen'
+            pathname: 'tabs/dietScreen'
           });
           setIsLoading(false);
         })
@@ -223,12 +223,12 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   deleteButton: {
-    backgroundColor: '#ddd',
+    backgroundColor: '#eee',
     padding: 5,
     borderRadius: 30
   },
   flatListContainer: {
-    height: height * 0.6, // FlatList의 높이를 고정
+    height: height * 0.65, // FlatList의 높이를 고정
   },
   flatListContentContainer: {
     flexGrow: 1,

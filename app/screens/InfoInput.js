@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
 import { View, StyleSheet, SafeAreaView, Dimensions, Alert, ScrollView } from "react-native";
-import { InputFields, InputLabelView, Selector, CustomBtn, GoalSelector, StepIndicator, LoadingModal } from "../src/components";
+import { InputFields, InputLabelView, Selector, CustomBtn, GoalSelector, StepIndicator, LoadingModal } from "../../src/components";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from "../src/api";
+import API from "../../src/api";
 
 
 const { width } = Dimensions.get('window'); // Get the screen width
@@ -70,26 +70,26 @@ const InfoInput = () => {
         };
 
         //빈칸검사 && 유저정보 DB생성 주석처리
-        if(true){// if (validateInputs()) {
-        //     setIsLoading(true);
-        //         API.createUser(userInfo)
-        //             .then((result) => {
-        //                 console.log('Response from server:', result);
-        //                 AsyncStorage.setItem('userId', result.id).then(console.log('AsyncStorage ID저장완료'));
-        //                 setIsLoading(false);
-        //             });
+        if (validateInputs()) {
+            setIsLoading(true);
+            API.createUser(userInfo)
+                .then((result) => {
+                    console.log('Response from server:', result);
+                    AsyncStorage.setItem('userId', result.id).then(console.log('AsyncStorage ID저장완료'));
+                    setIsLoading(false);
+                });
 
             router.push({
-                pathname: '/caloriesScreen',
+                pathname: 'screens/caloriesScreen',
                 params: {
                     gender: userInfo.selectedGender,
                     height: userInfo.height,
                     exerciseLevel: userInfo.selectedExerciseLevel,
                     goal: userInfo.exerciseGoal
                 }
-            })
-        }
-    };
+            });
+        } // This closing brace was missing
+    };    
 
     const NickcopyCheck = (nickname) => {
         setIsLoading(true);

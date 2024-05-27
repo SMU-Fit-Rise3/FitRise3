@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useLocalSearchParams } from "expo-router";
-import { View, StyleSheet, SafeAreaView, Text, ScrollView } from 'react-native';
-import { NutrientBar, MealList, MealTypeSelector, TabBar } from '../src/components'
+import { View, StyleSheet, SafeAreaView, Text,Button } from 'react-native';
+import { NutrientBar, MealList, MealTypeSelector } from '../../src/components'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from '../src/api'
+import API from '../../src/api'
 
 // 메인 화면 컴포넌트
 const dietScreen = () => {
+    const clearAsyncStorage = async () => {
+        try {
+          await AsyncStorage.clear();
+          console.log('AsyncStorage has been cleared.');
+        } catch (error) {
+          console.error('Failed to clear AsyncStorage:', error);
+        }
+    };
+
     const [nutrients, setNutrients] = useState([
         { id: 'calories', name: '칼로리', value: 0, totalValue: 2000, icon: "🔥" },
         { id: 'carbs', name: '탄수화물', value: 0, totalValue: 200, icon: "🌾" },
@@ -72,8 +81,9 @@ const dietScreen = () => {
 
     return (
         <SafeAreaView style={styles.Vcontainer}>
+            <Button title="Clear AsyncStorage" onPress={clearAsyncStorage} />
             <View style={styles.contentContainer}>
-                <ScrollView style={styles.nutrientContainer}>
+                <View style={styles.nutrientContainer}>
                     <Text style={styles.title}>오늘의 영양소 섭취량🙂</Text>
                     {nutrients.map((item) => (
                         <NutrientBar
@@ -84,14 +94,13 @@ const dietScreen = () => {
                             totalValue={item.totalValue}
                         />
                     ))}
-                </ScrollView>
+                </View>
                 <MealList mealData={mealData} />
                 <View style={styles.container}>
                     <Text style={styles.title}>식단 추가하기🙂</Text>
                     <MealTypeSelector />
                 </View>
             </View>
-            <TabBar />
         </SafeAreaView>
     );
 };

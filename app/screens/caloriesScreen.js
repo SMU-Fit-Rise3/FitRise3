@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Alert,Dimensions } from 'react-native';
-import { InputFields,StepIndicator,CustomBtn,MacroCalculator } from '../src/components';
+import { InputFields,StepIndicator,CustomBtn,MacroCalculator } from '../../src/components';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 const { width } = Dimensions.get('window'); // Get the screen width
@@ -84,7 +84,7 @@ const CaloriesScreen = () => {
 
     //다음 화면 이동 함수 
     const handleNextPress = () => {
-        router.push({pathname:'/characterGAN'})
+        router.push({pathname:'screens/characterGAN'})
     };
 
     return (

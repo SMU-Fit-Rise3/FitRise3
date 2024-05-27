@@ -7,7 +7,7 @@ import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
 const TabItem = ({ icon, selectedIcon, label, onPress,isSelected }) => (
   <Pressable style={styles.tabItem} onPress={onPress}>
     <Image source={isSelected ? selectedIcon : icon} style={styles.tabIcon} />
-    <Text style={[styles.tabLabel, { color: isSelected ? '#380B61' : '#fff' }]}>{label}</Text>
+    <Text style={[styles.tabLabel, { color: isSelected ? '#444' : '#fff' }]}>{label}</Text>
   </Pressable>
 );
 
@@ -28,35 +28,35 @@ const TabBar = () => {
         selectedIcon={icons.icon_home_p}
         label="홈"
         isSelected={selectedTab =='home'}
-        onPress={() => handleTabPress('home', '/mainScreen')}
+        onPress={() => handleTabPress('home', 'screens/mainScreen')}
       />
       <TabItem
         icon={icons.icon_stress_w}
         selectedIcon={icons.icon_stress_p}
         label="스트레스"
         isSelected={selectedTab =='stress'}
-        onPress={() => handleTabPress('stress', '/stressScreen')}
+        onPress={() => handleTabPress('stress', 'screens/stressScreen')}
       />
       <TabItem
         icon={icons.icon_rice_w}
         selectedIcon={icons.icon_home_p}
         label="식단"
         isSelected={selectedTab =='diet'}
-        onPress={() => handleTabPress('diet', '/dietScreen')}
+        onPress={() => handleTabPress('diet', 'screens/dietScreen')}
       />
       <TabItem
         icon={icons.icon_graph_w}
         selectedIcon={icons.icon_graph_p}
         label="분석"
         isSelected={selectedTab =='analysis'}
-        onPress={() => handleTabPress('stress', '/analysisScreen')}
+        onPress={() => handleTabPress('stress', 'screens/analysisScreen')}
       />
       <TabItem
         icon={icons.icon_calendar_w}
         selectedIcon={icons.icon_calendar_p}
         label="캘린더"
         isSelected={selectedTab =='calendar'}
-        onPress={() => handleTabPress('stress', '/calendarScreen')}
+        onPress={() => handleTabPress('stress', 'screens/calendarScreen')}
       />
     </View>
   );

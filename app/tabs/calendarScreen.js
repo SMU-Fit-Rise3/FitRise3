@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import { TabBar, ExerciseList } from '../src/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from '../src/api';
+import API from '../../src/api';
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -101,13 +100,13 @@ export default class CalendarScreen extends Component {
     };
 
     for (let date in dietData) {
-      addMark(date, '#32A4FF');  // Color for diet
+      addMark(date, '#9C9CE8');  // Color for diet
     }
     for (let date in exerciseData) {
-      addMark(date, '#32CD32');  // Color for exercise
+      addMark(date, '#8181F7');  // Color for exercise
     }
     for (let date in weightData) {
-      addMark(date, '#FF7F50');  // Color for weight
+      addMark(date, '#D0A9F5');  // Color for weight
     }
 
     return markedDates;
@@ -116,44 +115,63 @@ export default class CalendarScreen extends Component {
   renderDietData = (date) => {
     const dietInfo = this.state.dietData[date];
     return dietInfo ? (
-      <ScrollView style={styles.infoContainer}>
-        <Text style={styles.infoText}>Meals: {dietInfo.meals}</Text>
-        <Text style={styles.infoText}>Calories: {dietInfo.calories}</Text>
-        {dietInfo.food.map((item, index) => (
-          <View key={index}>
-            <Text style={styles.foodTitle}>{item.mealType}: {item.food}</Text>
-            <Text style={styles.foodDetail}>Calories: {item.calories}</Text>
-            <Text style={styles.foodDetail}>Carbs: {item.carbs}</Text>
-            <Text style={styles.foodDetail}>Protein: {item.protein}</Text>
-            <Text style={styles.foodDetail}>Fat: {item.fat}</Text>
-          </View>
-        ))}
+      <View style={styles.contentContainer}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>오늘의 섭취 열량: {dietInfo.calories} Kcal</Text>
+        </View>
+        <ScrollView style={styles.infoContainer}>
+          {dietInfo.food.map((item, index) => (
+            <View key={index} style={styles.card}>
+              <Text style={styles.cardTitle}>{item.mealType}: {item.food}</Text>
+              <Text style={styles.cardDetail}>열량: {item.calories} Kcal</Text>
+              <Text style={styles.cardDetail}>탄수화물: {item.carbs} g</Text>
+              <Text style={styles.cardDetail}>단백질: {item.protein} g</Text>
+              <Text style={styles.cardDetail}>지방: {item.fat} g</Text>
+            </View>
+          ))}
       </ScrollView>
+      </View>
     ) : <Text style={styles.infoText}>No diet data for this date.</Text>;
   };
-
+  
   renderExerciseData = (date) => {
     const exerciseInfo = this.state.exerciseData[date];
     return exerciseInfo ? (
-      <View style={styles.infoContainer}>
-        {exerciseInfo.map((item, index) => (
-          <View key={index}>
-            <Text style={styles.infoText}>{item.exercise}</Text>
-            <Text style={styles.timeText}>Sets: {item.sets}</Text>
-            <Text style={styles.timeText}>Reps: {item.reps}</Text>
-          </View>
-        ))}
+      <View style={styles.contentContainer}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>오늘의 운동량</Text>
+        </View>
+        <ScrollView style={styles.infoContainer}>
+          {exerciseInfo.map((item, index) => (
+            <View key={index} style={styles.card}>
+              <Text style={styles.exerciseTitle}>{item.exercise}</Text>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailText}>Sets: {item.sets}</Text>
+                <Text style={styles.detailText}>Reps: {item.reps}</Text>
+              </View>
+            </View>
+          ))}
+        </ScrollView>
       </View>
-    ) : <Text style={styles.infoText}>No exercise data for this date.</Text>;
+    ) : 
+    <View style={styles.infoContainer}>
+      <Text style={styles.infoText}>No exercise data for this date.</Text>;
+    </View>
   };
 
   renderWeightData = (date) => {
     const weightInfo = this.state.weightData[date];
     return weightInfo ? (
-      <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>Weight: {weightInfo.weight} kg</Text>
+      <View style={styles.contentContainer}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>오늘의 몸무게</Text>
+        </View>
+        <View styles={{justifyContent:"center"}}>
+          <Text style={styles.infoText}>Weight: {weightInfo.weight} kg</Text>
+        </View>
       </View>
-    ) : <Text style={styles.infoText}>No weight data for this date.</Text>;
+    ) : 
+    <Text style={styles.infoText}>No weight data for this date.</Text>;
   };
 
   renderData = () => {
@@ -174,9 +192,9 @@ export default class CalendarScreen extends Component {
     const { activeScreen } = this.state;
     const { router } = this.props; // Use router from props
 
-    const dietButtonStyle = activeScreen === 'diet' ? [styles.button, styles.activeButton, { borderColor: '#32A4FF' }] : [styles.button, { borderColor: '#32A4FF' }];
-    const exerciseButtonStyle = activeScreen === 'exercise' ? [styles.button, styles.activeButton, { borderColor: '#32CD32' }] : [styles.button, { borderColor: '#32CD32' }];
-    const weightButtonStyle = activeScreen === 'weight' ? [styles.button, styles.activeButton, { borderColor: '#FF7F50' }] : [styles.button, { borderColor: '#FF7F50' }];
+    const dietButtonStyle = activeScreen === 'diet' ? [styles.button, styles.activeButton, { borderColor: '#9C9CE8' }] : [styles.button, { borderColor: '#9C9CE8' }];
+    const exerciseButtonStyle = activeScreen === 'exercise' ? [styles.button, styles.activeButton, { borderColor: '#8181F7' }] : [styles.button, { borderColor: '#8181F7' }];
+    const weightButtonStyle = activeScreen === 'weight' ? [styles.button, styles.activeButton, { borderColor: '#D0A9F5' }] : [styles.button, { borderColor: '#D0A9F5' }];
 
     return (
       <SafeAreaView style={styles.container}>
@@ -216,7 +234,6 @@ export default class CalendarScreen extends Component {
             {this.renderData()}
           </View>
         </View>
-        <TabBar router={router} />
       </SafeAreaView>
     );
   }
@@ -255,7 +272,7 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 24,
     fontWeight: "bold",
-    marginVertical: 1
+    marginVertical: 1,
   },
   timeText: {
     fontSize: 20,
@@ -263,10 +280,41 @@ const styles = StyleSheet.create({
     marginVertical: 1
   },
   infoContainer: {
-    height: 0.25 * height
+    height: 0.35 * height,
+    padding: 10,
+  },
+  header: {
+    marginBottom: 10,
+    flexDirection:"row",
+    justifyContent: 'center',
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    marginBottom: 10,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#444',
+  },
+  cardDetail: {
+    fontSize: 14,
+    color: '#666',
   },
   dataContainer: {
     justifyContent: 'center',
+    flex:1
   },
   foodTitle: {
     fontSize: 18,
@@ -275,5 +323,20 @@ const styles = StyleSheet.create({
   foodDetail: {
     fontSize: 16,
     color: '#555',
+  },
+  //운동
+  exerciseTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#444',
+    marginBottom: 8,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  detailText: {
+    fontSize: 16,
+    color: '#666',
   },
 });

@@ -12,21 +12,21 @@ const ExerciseList = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // 운동리스트 정보 가져오기
-  // useEffect(() => {
-  //   dispatch(modalVisibleActions.turnOnLoading())
-  //   AsyncStorage.getItem('userId').then((userId) => {
-  //   API.getExercise(userId)
-  //     .then((result) => {
-  //       setExercise(formatDataForFlatList(result))
-  //       dispatch(modalVisibleActions.turnOffLoading())
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error:', error);
-  //       dispatch(modalVisibleActions.turnOffLoading())
-  //     });
-  //   })
-  // }, []);
+  //운동리스트 정보 가져오기
+  useEffect(() => {
+    dispatch(modalVisibleActions.turnOnLoading())
+    AsyncStorage.getItem('userId').then((userId) => {
+    API.getExercise(userId)
+      .then((result) => {
+        setExercise(formatDataForFlatList(result))
+        dispatch(modalVisibleActions.turnOffLoading())
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        dispatch(modalVisibleActions.turnOffLoading())
+      });
+    })
+  }, []);
 
   // 데이터 포맷팅 함수
   const formatDataForFlatList = (data) => {
@@ -62,7 +62,7 @@ const ExerciseList = () => {
           onPress={() => {
             dispatch(modalVisibleActions.on());
             router.push({
-              pathname: '/postureCorrection',
+              pathname: 'screens/postureCorrection',
               params: { title: item.title, count: item.count, id: item.id }
             });
           }}

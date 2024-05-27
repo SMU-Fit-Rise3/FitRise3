@@ -55,6 +55,7 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
   // 영양성분 양 업데이트 함수
   const updateMacros = () => {
     let newMacros = { ...macros };
+    console.log(userInputs);
     Object.keys(userInputs).forEach(nutrient => {
       if (userInputs[nutrient] !== '') {
         const factor = nutrient === 'fat' ? 9 : 4;
@@ -62,13 +63,13 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
         console.log(newMacros);
 
         //Send server
-        // AsyncStorage.getItem('userId').then((userId) => {
-        //   console.log(userId);
-        //   API.insertCalories(userId, totalCaloriesConsumed, newMacros.carbs, newMacros.protein, newMacros.fat)
-        //     .then((result) => {
-        //       console.log('Response from server:', result);
-        //     });
-        // })
+        AsyncStorage.getItem('userId').then((userId) => {
+          console.log(userId);
+          API.insertCalories(userId, totalCaloriesConsumed, newMacros.carbs, newMacros.protein, newMacros.fat)
+            .then((result) => {
+              console.log('Response from server:', result);
+            });
+        })
       }
     });
 

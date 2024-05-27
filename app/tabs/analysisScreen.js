@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from "expo-router";
 import { View, StyleSheet, ScrollView, Text, SafeAreaView, Dimensions, Alert } from 'react-native';
-import { TabBar, BarChartComponent, LineChartComponent, SingleLineChart, CustomBtn, InputFields, InfoAlertComponent, LoadingModal } from '../src/components'
+import { BarChartComponent, LineChartComponent, SingleLineChart, CustomBtn, InputFields, InfoAlertComponent, LoadingModal } from '../../src/components'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from '../src/api'
+import API from '../../src/api'
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -120,7 +120,6 @@ const analysisScreen = () => {
                             console.log(data);
                             setIsLoading(false);
                             Alert.alert('몸무게 등록완료');
-                            router.push('/characterGAN');
                         }
                     })
             })
@@ -169,7 +168,6 @@ const analysisScreen = () => {
                 </View>
                 <LoadingModal visible={isLoading} />
             </ScrollView>
-            <TabBar router={router} />
         </SafeAreaView>
     );
 };

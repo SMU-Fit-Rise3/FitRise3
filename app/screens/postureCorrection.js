@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
 
-import CameraComponent from '../src/components/CameraComponent.tsx';
+import CameraComponent from '../../src/components/CameraComponent'
 import { useSelector } from 'react-redux';
-import icons from '../constants/icons.js';
-import { FeedBack, FloatingBtn, CustomBtn, InfoModal, ModalWebView, ScrollTextBox, PointComponent, LoadingModal } from '../src/components'
+import icons from '../../constants/icons.js';
+import { FeedBack, FloatingBtn, CustomBtn, InfoModal, ModalWebView, ScrollTextBox, PointComponent, LoadingModal } from '../../src/components'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from '../src/api';
+import API from '../../src/api';
 
 const PostureCorrection = () => {
 
@@ -82,7 +82,7 @@ const PostureCorrection = () => {
                         <CustomBtn
                             buttonStyle={styles.homeButton}
                             title="홈으로"
-                            onPress={() => router.push('/mainScreen')}
+                            onPress={() => router.push('tabs/mainScreen')}
                         />
                     </View>
                 </View>

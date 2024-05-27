@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useRouter } from "expo-router";
 import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
-import { images } from '../constants';
-import { CustomBtn } from '../src/components'
+import { images } from '../../constants';
+import { CustomBtn } from '../../src/components'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from "../src/api"
+import API from "../../src/api"
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -18,7 +18,7 @@ const login = () => {
       API.checkNickName(userNickName).then((res) => {
         if (res.ok) {        
           console.log("로그인 닉네임:" + userNickName)
-          router.push('/mainScreen');
+          router.push('tabs/mainScreen');
         }
       })
     };
@@ -41,7 +41,7 @@ const login = () => {
       </View>
       <CustomBtn
         title="가입으로 계속하기"
-        onPress={() => router.push('/InfoInput')}
+        onPress={() => router.push('screens/InfoInput')}
       />
     </View>
   );
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   quoteText: {
+    fontFamily: 'jua',
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',

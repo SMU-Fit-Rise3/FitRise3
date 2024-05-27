@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from '../src/api'
+import API from '../../src/api'
 import { View, StyleSheet, Text, Dimensions, SafeAreaView } from 'react-native';
-import { CharacterCAM, ExerciseList, StressLevelIndicator, TabBar } from '../src/components'
+import { CharacterCAM, ExerciseList, StressLevelIndicator, TabBar } from '../../src/components'
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -31,7 +31,7 @@ const stressScreen = () => {
     const router = useRouter();
     const handleNextPress = () => {
         console.log('다음 버튼 눌림'); // 다음 화면으로 이동하는 로직
-        router.push('/mainScreen') //화면 이동
+        router.push('screens/mainScreen') //화면 이동
     };
     const handleTakePicture = (photo) => {
         console.log(photo);
@@ -55,7 +55,6 @@ const stressScreen = () => {
                     <ExerciseList />
                 </View>
             </View>
-            <TabBar />
         </SafeAreaView>
     );
 };
