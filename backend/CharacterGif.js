@@ -8,7 +8,7 @@ const baseGifPath = process.env.EXPO_PUBLIC_LOCAL_URI_GIF;
 // 기본 경로에 파일명을 추가하여 전체 파일 경로를 구성
 // 여기서는 확인을 위해 고정된 파일명을 사용. 실제로는 파일명을 동적으로 처리해야 함.
 // 예를들면 운동을 완료한 사용자의 운동에 따라 다른 파일명을 사용하도록 처리해야 함.
-const gifImagePath = `${baseGifPath}jesse_dance.gif`;
+const gifImagePath = `${baseGifPath}squat.gif`;
 
 const CharacterGif = () => {
     console.log('Gif image path:', gifImagePath); // 이미지 경로 로그
