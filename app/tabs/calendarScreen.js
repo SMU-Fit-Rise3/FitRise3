@@ -153,11 +153,12 @@ export default class CalendarScreen extends Component {
           ))}
         </ScrollView>
       </View>
-    ) : 
-    <View style={styles.infoContainer}>
-      <Text style={styles.infoText}>No exercise data for this date.</Text>;
-    </View>
-  };
+    ) : (
+      <View style={styles.infoContainer}>
+        <Text style={styles.infoText}>No exercise data for this date.</Text>
+      </View>
+    );
+  };  
 
   renderWeightData = (date) => {
     const weightInfo = this.state.weightData[date];

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Alert,Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Alert,Dimensions } from 'react-native';
 import { InputFields,StepIndicator,CustomBtn,MacroCalculator } from '../../src/components';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 

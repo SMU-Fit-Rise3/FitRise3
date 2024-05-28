@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json()) // body parsing 관련
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }));
-const port = 8080;
+const port = 8083;
 
 
 app.listen(port, () => {
