@@ -114,126 +114,7 @@ const StressCamera = () => {
     };
   }, []);
 
-  //api 요청 부분
-  // useEffect(() => {
-  //   isModalVisibleRef.current = isModalVisible;
-  //     if (gChannel.length > 0) {
-  //       //스트레스 계산 요청
-  //       AsyncStorage.getItem('userId').then((userId) => {
-  //         API.updateStress(userId, gChannel);
-  //       })
-  //     }
-  //   }
-  // }, []);
-
-  const handleCameraStream = async (
-    images: IterableIterator<tf.Tensor3D>,
-    updatePreview: () => void,
-    gl: ExpoWebGLRenderingContext
-  ) => {
-    let gChannelMeans: number[] = [];
-    const loop = async () => {
-
-      // Get the tensor and run pose detection.
-      const imageTensor = images.next().value as tf.Tensor3D;
-      const startTs = Date.now();
-
-      // 얼굴감지 처리
-      const predictions = await faceModel!.estimateFaces(
-        imageTensor,
-        false, // 반환된 데이터 타입 (텐서:true /JSON:false)
-        false,// 웹캠 이미지가 미러 모드인 경우 true(미러모드 이미지가 좌우 반전되는 모드) 
-        true// 얼굴 경계 상자 true/false
-      );
-
-      if (predictions.length > 0) {
-        for (let i = 0; i < predictions.length; i++) {
-          const start = predictions[i].topLeft as [number, number];   //start[0]=x start[1]=y
-          const end = predictions[i].bottomRight as [number, number];  //end[0]=x end[1]=y
-          const size = [end[0] - start[0], end[1] - start[1]];
-
-          // 얼굴 경계 상자의 위치와 크기 정보를 사용합니다.
-          console.log(`Face ${i}: x=${start[0]}, y=${start[1]}, width=${size[0]}, height=${size[1]}`);
-          //얼굴상자가 화면 경계값일경우 전처리
-          const clampedY = Math.min(Math.round(start[1]), imageTensor.shape[0] - 1);
-          const clampedHeight = Math.min(Math.round(size[1]), imageTensor.shape[0] - clampedY);
-          const clampedX = Math.min(Math.round(start[0]), imageTensor.shape[1] - 1);
-          const clampedWidth = Math.min(Math.round(size[0]), imageTensor.shape[1] - clampedX);
-
-          tf.tidy(() => {// 함수 종료 시 slicedTensor는 자동으로 메모리에서 해제됩니다.
-
-            //얼굴영역만 자르기
-            const faceTensor = tf.slice(imageTensor, [clampedY, clampedX, 0], [clampedHeight, clampedWidth, 3]);
-            // console.log("faceTensor:" + faceTensor);
-
-            // RGB 채널 분리
-            let [r, g, b] = tf.split(faceTensor, 3, 2);
-
-            // YCrCb 변환
-            let y = r.mul(0.299).add(g.mul(0.587)).add(b.mul(0.114));
-            let cb = b.sub(y).mul(0.564).add(128);
-            let cr = r.sub(y).mul(0.713).add(128);
-
-            // 피부 색상 범위 필터링
-            let skinMask = y.greaterEqual(0).logicalAnd(y.lessEqual(255))
-              .logicalAnd(cb.greaterEqual(85)).logicalAnd(cb.lessEqual(135))
-              .logicalAnd(cr.greaterEqual(135)).logicalAnd(cr.lessEqual(180));
-
-            // 피부 영역만 추출하여 G 채널만을 가져옵니다.
-            let skinGChannel = tf.where(skinMask, g, tf.zerosLike(g));
-            // console.log("피부영역G채널 :" + skinGChannel);
-
-            // 0이 아닌 G 채널 값들의 평균 계산
-            //0이 아닌값 true false
-            let nonzeroSkinGChannel = skinGChannel.greater(0);
-            //true와 곱해서 의미있는 값들의 배열
-            let nonzeroValues = skinGChannel.mul(nonzeroSkinGChannel);
-            //true의 수
-            let nonzeroCount = nonzeroSkinGChannel.sum();
-
-            // 평균 계산
-            let meanValue = nonzeroValues.sum().div(nonzeroCount);
-            meanValue.data().then(data => {
-              gChannelMeans.push(data[0]);
-              setGChannel(gChannelMeans);
-            })
-          });
-        }
-        //얼굴 감지
-        const faceDetectedInBox = isFaceInStaticBox(predictions[0]);
-
-        //얼굴이 윤곽안에있을때
-        if (faceDetectedInBox) {
-          setFaceInBox(true);
-        }
-        //얼굴이 윤곽 밖에있을때
-        else {
-          setFaceInBox(false);
-          setFaceInBoxTime(0);
-          gChannelMeans=[];
-        }
-      }
-      setFacebox(predictions);
-      const latency = Date.now() - startTs;
-      setFps(Math.floor(1000 / latency));
-
-      tf.dispose([imageTensor]);
-      if (rafId.current === 0) {
-        return;
-      }
-
-      // Render camera preview manually when autorender=false.
-      if (!AUTO_RENDER) {
-        updatePreview();
-        gl.endFrameEXP();
-      }
-
-      rafId.current = requestAnimationFrame(loop);
-    };
-
-    loop();
-  };
-
+  //30초 계산
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     if (faceInBox) {
@@ -261,6 +142,114 @@ const StressCamera = () => {
       clearInterval(intervalId);
     };
   }, [faceInBox, router]);
+  const handleCameraStream = async (
+    images: IterableIterator<tf.Tensor3D>,
+    updatePreview: () => void,
+    gl: ExpoWebGLRenderingContext
+  ) => {
+    let gChannelMeans: number[] = [];
+    const loop = async () => {
+
+      //고정프레임 0.250s == 4fps
+      await new Promise(resolve => setTimeout(resolve, 250));
+    
+      // Get the tensor and run pose detection.
+      const imageTensor = images.next().value as tf.Tensor3D;
+      const startTs = Date.now();
+
+      // 얼굴감지 처리
+      const predictions = await faceModel!.estimateFaces(
+        imageTensor,
+        false, // 반환된 데이터 타입 (텐서:true /JSON:false)
+        false,// 웹캠 이미지가 미러 모드인 경우 true(미러모드 이미지가 좌우 반전되는 모드) 
+        true// 얼굴 경계 상자 true/false
+      );
+      if (predictions.length > 0) {
+        //얼굴 감지
+        const faceDetectedInBox = isFaceInStaticBox(predictions[0]);
+
+        //얼굴이 윤곽안에있을때
+        if (faceDetectedInBox) {
+          setFaceInBox(true);
+          for (let i = 0; i < predictions.length; i++) {
+            const start = predictions[i].topLeft as [number, number];   //start[0]=x start[1]=y
+            const end = predictions[i].bottomRight as [number, number];  //end[0]=x end[1]=y
+            const size = [end[0] - start[0], end[1] - start[1]];
+  
+            // 얼굴 경계 상자의 위치와 크기 정보를 사용합니다.
+            console.log(`Face ${i}: x=${start[0]}, y=${start[1]}, width=${size[0]}, height=${size[1]}`);
+            //얼굴상자가 화면 경계값일경우 전처리
+            const clampedY = Math.min(Math.round(start[1]), imageTensor.shape[0] - 1);
+            const clampedHeight = Math.min(Math.round(size[1]), imageTensor.shape[0] - clampedY);
+            const clampedX = Math.min(Math.round(start[0]), imageTensor.shape[1] - 1);
+            const clampedWidth = Math.min(Math.round(size[0]), imageTensor.shape[1] - clampedX);
+  
+            tf.tidy(() => {// 함수 종료 시 slicedTensor는 자동으로 메모리에서 해제됩니다.
+  
+              //얼굴영역만 자르기
+              const faceTensor = tf.slice(imageTensor, [clampedY, clampedX, 0], [clampedHeight, clampedWidth, 3]);
+  
+              // RGB 채널 분리
+              let [r, g, b] = tf.split(faceTensor, 3, 2);
+  
+              // YCrCb 변환
+              let y = r.mul(0.299).add(g.mul(0.587)).add(b.mul(0.114));
+              let cb = b.sub(y).mul(0.564).add(128);
+              let cr = r.sub(y).mul(0.713).add(128);
+  
+              // 피부 색상 범위 필터링
+              let skinMask = y.greaterEqual(0).logicalAnd(y.lessEqual(255))
+                .logicalAnd(cb.greaterEqual(85)).logicalAnd(cb.lessEqual(135))
+                .logicalAnd(cr.greaterEqual(135)).logicalAnd(cr.lessEqual(180));
+  
+              // 피부 영역만 추출하여 G 채널만을 가져옵니다.
+              let skinGChannel = tf.where(skinMask, g, tf.zerosLike(g));
+              // console.log("피부영역G채널 :" + skinGChannel);
+  
+              // 0이 아닌 G 채널 값들의 평균 계산
+              //0이 아닌값 true false
+              let nonzeroSkinGChannel = skinGChannel.greater(0);
+              //true와 곱해서 의미있는 값들의 배열
+              let nonzeroValues = skinGChannel.mul(nonzeroSkinGChannel);
+              //true의 수
+              let nonzeroCount = nonzeroSkinGChannel.sum();
+  
+              // 평균 계산
+              let meanValue = nonzeroValues.sum().div(nonzeroCount);
+              meanValue.data().then(data => {
+                gChannelMeans.push(data[0]);
+                setGChannel(gChannelMeans);
+                console.log(gChannelMeans);
+              })
+            });
+          }
+        }
+        //얼굴이 윤곽 밖에있을때
+        else {
+          setFaceInBox(false);
+          setFaceInBoxTime(0);
+          gChannelMeans=[];
+        }
+      }
+      setFacebox(predictions);
+      const latency = Date.now() - startTs;
+      setFps(Math.floor(1000 / latency));
+
+      tf.dispose([imageTensor]);
+      if (rafId.current === 0) {
+        return;
+      }
+
+      // Render camera preview manually when autorender=false.
+      if (!AUTO_RENDER) {
+        updatePreview();
+        gl.endFrameEXP();
+      }
+
+      rafId.current = requestAnimationFrame(loop);
+    };
+    loop();
+  };
 
   //얼굴 윤곽 비교 판단
   const isFaceInStaticBox = (prediction: blazeface.NormalizedFace) => {
