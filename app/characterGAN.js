@@ -120,7 +120,7 @@ const CharacterGAN = () => {
 
     try {
       console.log(photoUri);
-      uploadImageToServer(photoUri) // 캐릭터 이미지를 서버로보내는 함수
+      uploadImageToServer(photoUri,1) //이미지를 서버로. 성별은 남자로 설정
         .then(() => {
           console.log('업로드 성공');
           // 업로드 성공 처리
