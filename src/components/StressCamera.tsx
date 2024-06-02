@@ -131,7 +131,7 @@ const StressCamera = () => {
               AsyncStorage.getItem('userId').then((userId) => {
                 cleanupAndNavigate(() => {
                 API.updateStress(userId, gChannel)
-                  .then(() => { {router.push('/stressScreen')} });
+                  .then(() => { {router.push('/tabs/stressScreen')} });
               });
               });
             }
