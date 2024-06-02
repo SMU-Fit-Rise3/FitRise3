@@ -11,6 +11,18 @@ import '@tensorflow/tfjs-react-native';
 import * as blazeface from '@tensorflow-models/blazeface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../api';
+import Curl from '../../backend/posture/Curl';
+import Fly from '../../backend/posture/Fly';
+import LegRaise from '../../backend/posture/LegRaise';
+import PushUp from '../../backend/posture/PushUp';
+import ShoulderPress from '../../backend/posture/ShoulderPress';
+import SideLateralRaise from '../../backend/posture/SideLateralRaise';
+import SitUp from '../../backend/posture/SitUp';
+import Squat from '../../backend/posture/Squat';
+import Triceps from '../../backend/posture/Triceps';
+
+
+
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 const TensorCamera = cameraWithTensors(Camera);
 
@@ -35,7 +47,26 @@ const AUTO_RENDER = false;
 
 type Rotation = 0 | 90 | 180 | 270;
 
-const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
+const CameraComponent = ({ 
+  isModalVisible,
+  exerciseData, 
+  onFeedback ,
+  onExerciseComplete
+}: {
+  isModalVisible: boolean;
+  exerciseData: {
+    title: string;
+    count: string;
+    id: string;
+    sets: number;
+    reps: number;
+  
+};
+  onFeedback:(feedback: string) => void;
+  onExerciseComplete: boolean;
+
+ }) => {
+
   const cameraRef = useRef(null);
   const [tfReady, setTfReady] = useState(false);
   const [model, setModel] = useState<posedetection.PoseDetector>(); //포즈감지 모델
@@ -50,6 +81,10 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
   const [gChannel, setGChannel] = useState<number[]>([]);
   const isModalVisibleRef = useRef(isModalVisible);
   const rafId = useRef<number | null>(null);
+  const [sets, setSets] = useState(0);
+  const [count, setCount] = useState(0);
+  const [ExerciseComponent, setExerciseComponent] =  useState<React.ElementType | null>(null);
+ 
   // 카메라 권한 요청 함수
   useEffect(() => {
     (async () => {
@@ -57,6 +92,40 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
       setHasPermission(status === 'granted');
     })();
   }, []);
+
+  
+  const handleSetUpdate = (newSets: number) => {
+    setSets(newSets);
+  };
+
+  const renderSet = () =>{
+    return (
+      <View style={styles.setsContainer}>
+        <Text style={styles.text}>sets: {exerciseData.sets}/{sets}</Text>
+      </View>
+    );
+  }
+
+  const handleCountUpdate = (newCount: number) => {
+    setCount(newCount);
+  };
+
+  const renderCount = () =>{
+    return (
+      <View style={styles.countsContainer}>
+        <Text style={styles.text}>reps: {exerciseData.reps}/{count}</Text>
+      </View>
+    );
+  }
+
+  useEffect(()=>{
+    if(onExerciseComplete){
+      setExerciseComponent(null);
+    }
+
+  },[onExerciseComplete])
+
+
 
   useEffect(() => {
     async function prepare() {
@@ -260,7 +329,7 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
 
   const renderPose = () => {
     if (poses != null && poses.length > 0) {
-      console.log(poses[0].keypoints);
+      //console.log(poses[0].keypoints);
       const keypoints = poses[0].keypoints
         .filter((k) => (k.score ?? 0) > MIN_KEYPOINT_SCORE)
         .map((k) => {
@@ -281,7 +350,7 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
               cy={cy}
               r='4'
               strokeWidth='2'
-              fill='#00AA00'
+              fill='white'
               stroke='white'
             />
           );
@@ -318,7 +387,7 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
             x2={x2}
             y2={y2}
             stroke='white'
-            strokeWidth='2'
+            strokeWidth='3'
           />;
         }
       });
@@ -344,6 +413,7 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
     );
   };
 
+  
   const renderCameraTypeSwitcher = () => {
     return (
       <View
@@ -471,8 +541,19 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
           onReady={handleCameraStream}
         />
         {renderPose()}
-        {renderFps()}
-        {renderCameraTypeSwitcher()}
+        {renderSet()}
+        {renderCount()}
+        {exerciseData.title === 'dumbbell curl' && <Curl exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
+        {exerciseData.title === 'dumbbell fly' && <Fly exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
+        {exerciseData.title === 'leg raise' && <LegRaise exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
+        {exerciseData.title === 'push up' && <PushUp exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
+        {exerciseData.title === 'dumbbell shoulder press' && <ShoulderPress exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
+        {exerciseData.title === 'side lateral raise' && <SideLateralRaise exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
+        {exerciseData.title === 'sit up' && <SitUp exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
+        {exerciseData.title === 'squat' && <Squat exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
+        {exerciseData.title === 'dumbbell tricep extension' && <Triceps exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
+        {(!exerciseData.title || exerciseData.title === '') && <Text>No exercise selected</Text>}
+
       </View>
     );
   }
@@ -533,7 +614,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     left: 10,
-    width: 80,
+    width: 100,
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, .7)',
     borderRadius: 2,
@@ -551,6 +632,32 @@ const styles = StyleSheet.create({
     padding: 8,
     zIndex: 20,
   },
+  setsContainer: { // sets 표시를 위한 새로운 스타일
+    position: 'absolute',
+    top: 10, // fpsContainer 아래에 위치하도록 top 조정
+    left: 10,
+    width: 130, // 너비 증가
+    alignItems: 'center',
+    backgroundColor:'rgba(255, 255, 255, .7)', // 배경색 변경
+    borderRadius: 2,
+    padding: 8,
+    zIndex: 20,
+  },
+  countsContainer: { // counts 표시를 위한 새로운 스타일
+    position: 'absolute',
+    top: 60, // setsContainer 아래에 위치하도록 top 조정
+    left: 10,
+    width: 130, // 너비 증가
+    alignItems: 'center',
+    backgroundColor:'rgba(255, 255, 255, .7)', // 배경색 변경
+    borderRadius: 2,
+    padding: 8,
+    zIndex: 20,
+  },
+  text: {
+    color: 'black',
+    fontSize: 18 // 텍스트 크기 설정
+  }
 });
 
 export default CameraComponent;

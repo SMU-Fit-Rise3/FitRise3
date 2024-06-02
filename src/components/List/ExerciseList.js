@@ -39,7 +39,9 @@ const ExerciseList = () => {
             id : exercise.id,
             day: plan.day,
             title: exercise.exercise,
-            count: `Sets: ${exercise.sets}, Reps: ${exercise.reps}`
+            count: `Sets: ${exercise.sets}, Reps: ${exercise.reps}`,
+            sets: exercise.sets,
+            reps: exercise.reps
           });
         });
       });
@@ -63,7 +65,7 @@ const ExerciseList = () => {
             dispatch(modalVisibleActions.on());
             router.push({
               pathname: 'screens/postureCorrection',
-              params: { title: item.title, count: item.count, id: item.id }
+              params: { title: item.title, count: item.count, id: item.id, sets: item.sets, reps: item.reps }
             });
           }}
         />

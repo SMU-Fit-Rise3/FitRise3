@@ -13,12 +13,15 @@ const PostureCorrection = () => {
 
     const router = useRouter();
     // Main Screen ExerciseList에서 넘겨준 값
-    const { title, count, id } = useLocalSearchParams();
+    const { title, count, id, sets, reps } = useLocalSearchParams();
     const exerciseData = {
         title: title,
         count: count,
-        id: id
+        id: id,
+        sets: sets,
+        reps: reps
     };
+    const [feedback, setFeedback] = useState("자세를 잡아주세요.");
     console.log(exerciseData.title)
     const [modalVisible, setModalVisible] = useState(false);
     const [loadingVisible, setLoadingVisible] = useState(false);
@@ -26,17 +29,22 @@ const PostureCorrection = () => {
     //리둑스 상태관리
     const modal3dVisible = useSelector(state => state.modalVisible.modal3dVisible);
 
-    const handleFinishExercise = () => {
+    const handleFinishExercise = (exerciseCompleted) => {
         setLoadingVisible(true);
         AsyncStorage.getItem('userId').then((userId) => {
             API.completedExercise(userId, exerciseData.id).then(
                 () => {
                     setLoadingVisible(false);
-                    setExerciseFinished(true);
+                    setExerciseFinished(exerciseCompleted);
                     setModalVisible(false);
                 });
         })
     }
+
+    const handleFeedback = (newFeedback) => {
+        setFeedback(newFeedback); // 피드백 메시지 업데이트
+    };
+
     return (
         <SafeAreaView style={styles.mainContainer}>
             {!exerciseFinished && (
@@ -44,6 +52,9 @@ const PostureCorrection = () => {
                     <CameraComponent
                         style={exerciseFinished ? styles.hideCamera : null}
                         isModalVisible={modal3dVisible}    //redux로 3dmodal 컴포넌트 상태를 받아와야함
+                        exerciseData={exerciseData}
+                        onFeedback={handleFeedback}
+                        onExerciseComplete={handleFinishExercise}
                     />
 
 
@@ -53,14 +64,14 @@ const PostureCorrection = () => {
                         buttonStyle={styles.infoButton}
                     />
                     <View style={styles.FeedBackContainer}>
-                        <FeedBack text="자세를 잡아주세요." />
-                        <View style={styles.buttonWrapper}>
+                        <FeedBack text={feedback} />
+                        {/* <View style={styles.buttonWrapper}>
                             <CustomBtn
                                 buttonStyle={styles.FinishBtn}
                                 title="운동 완료"
                                 onPress={handleFinishExercise}
                             />
-                        </View>
+                        </View> */}
                     </View>
                 </>
             )}
@@ -116,7 +127,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     FeedBackContainer: {
-        flex: 0.5
+        flex: 0.3
     },
     exerciseFinishedContainer: {
         flex: 1,
