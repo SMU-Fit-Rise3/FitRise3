@@ -1,7 +1,7 @@
 const { OpenAI } = require('openai');
 
 // OpenAI API 키를 환경 변수에서 로드
-require("dotenv").config({ path: "../.env"});
+require("dotenv").config({ path: "../.env" });
 
 // OpenAI 클라이언트 초기화
 const openai = new OpenAI({
@@ -51,9 +51,9 @@ async function processUserInput(userProfile) {
                                                     name: {
                                                         type: "string",
                                                         enum: [
-                                                            "push up", "sit up", "squat", "dumbbell fly",
-                                                            "dumbbell curl", "dumbbell shoulder press",
-                                                            "leg raise", "side lateral raise", "dumbbell tricep extension"
+                                                            "푸시 업", "앉아", "스쿼트", "덤벨 플라이",
+                                                            "덤벨 컬", "덤벨 숄더 프레스",
+                                                            "레그 레이즈", "사이드 레터럴 레이즈", "덤벨 트라이셉스 익스텐션"
                                                         ],
                                                         description: "운동 이름"
                                                     },

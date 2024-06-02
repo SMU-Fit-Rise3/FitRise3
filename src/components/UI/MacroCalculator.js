@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, Dimensions, Alert } from 'react-native';
 import InputFields from './InputFields.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from '../../api';
+
 
 const { width } = Dimensions.get('window'); // Get the screen width
 
-const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
+const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories, onChange }) => {
 
   //계산된 값 상태 관리
   const [macros, setMacros] = useState({
@@ -37,6 +36,13 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
       fat: Math.round(calories * ratios.fat)
     };
     setMacros(initialMacros);
+
+    onChange({
+      totalCalories:calories,
+      carbs:Math.floor(initialMacros.carbs/4),
+      protein:Math.floor(initialMacros.protein/4),
+      fat:Math.floor(initialMacros.fat/9)
+    });
   };
 
   // 사용자 입력 처리
@@ -60,7 +66,6 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
       if (userInputs[nutrient] !== '') {
         const factor = nutrient === 'fat' ? 9 : 4;
         newMacros[nutrient] = parseInt(userInputs[nutrient], 10) * factor;
-        console.log(newMacros);
 
         //Send server
         AsyncStorage.getItem('userId').then((userId) => {
@@ -70,6 +75,12 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories }) => {
               console.log('Response from server:', result);
             });
         })
+        onChange({
+          totalCalories:totalCaloriesConsumed,
+          carbs:Math.floor(newMacros.carbs/4),
+          protein:Math.floor(newMacros.protein/4),
+          fat:Math.floor(newMacros.fat/9)
+        });
       }
     });
 

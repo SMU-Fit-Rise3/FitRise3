@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert,Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Button, Alert,Dimensions } from 'react-native';
 import { InputFields,StepIndicator,CustomBtn,MacroCalculator } from '../../src/components';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import API from '../../src/api';
 
 const { width } = Dimensions.get('window'); // Get the screen width
 
@@ -48,7 +50,7 @@ const CaloriesScreen = () => {
     const [currentStep, setCurrentStep] = useState(2);
 
     //expo-router로 받은 params
-    const { gender, height, exerciseLevel,goal } = useLocalSearchParams();
+    const { gender, height, exerciseLevel, goal } = useLocalSearchParams();
 
     //계산된 칼로리 값
     const [calorieInfo, setCalorieInfo] = useState({
@@ -58,6 +60,17 @@ const CaloriesScreen = () => {
 
     // 사용자가 설정한 칼로리 값
     const [userCalories, setUserCalories] = useState('');
+
+    const [resCalorieInfo, setResCalorieInfo] = useState({
+        totalCalories: 0,
+        carbs: 0,
+        fat: 0,
+        protein: 0
+    });
+
+    const handleMacroCalculatorChange = (newCalorieInfo) => {
+        setResCalorieInfo(newCalorieInfo);
+    };
 
     useEffect(() => {
         const calcResults = calculateCalories(height, gender, exerciseLevel);
@@ -84,76 +97,86 @@ const CaloriesScreen = () => {
 
     //다음 화면 이동 함수 
     const handleNextPress = () => {
-        router.push({pathname:'screens/characterGAN'})
+        // Send server
+        AsyncStorage.getItem('userId').then((userId) => {
+            console.log(userId);
+            API.insertCalories(userId, resCalorieInfo.totalCaloriesConsumed, resCalorieInfo.carbs, resCalorieInfo.protein, resCalorieInfo.fat)
+                .then((result) => {
+                    console.log('Response from server:', result);
+                });
+        })
+        console.log(JSON.stringify(resCalorieInfo));
+        router.push({ pathname: '/characterGAN' })
     };
 
     return (
         <View style={styles.mainContainer}>
-            <StepIndicator steps={['Step 1', 'Step 2', 'Step 3', 'Step 4']} currentStep={currentStep - 1}/>
-                {currentStep === 2 && (
-                    <View style={styles.mainContainer}>
-                        <View style={styles.container}>
-                            <Text style={styles.title}>목표 칼로리를 {"\n"}계산해드렸어요 🔥</Text>
-                            <Text style={styles.description}>
-                                일일 권장 섭취량은
-                                <Text style={styles.highlightedText}>
-                                    {calorieInfo.minCalories} ~ {calorieInfo.maxCalories} kcal {""}
-                                </Text>
-                                예요.{"\n"}다이어트를 위한 목표량을 직접 입력할 수도 있어요.
-                            </Text>                            
-                        </View>
-                        <View style={styles.contentContainer}>
-                            <InputFields
-                                label="목표 섭취 열량 (kcal)"
-                                placeholder="목표 섭취 열량을 입력해주세요."
-                                unit="kcal"
-                                unitStyle= {styles.kcalText}
-                                viewStyle= {styles.input}
-                                inputStyle={styles.kcalText}
-                                textInputProps={{
-                                    onChangeText: handleCalorieChange, // 상태 업데이트 함수 직접 전달
-                                    value: userCalories, // 상태 값 직접 전달
-                                    keyboardType: 'numeric'
-                                }}
-                            />
-                        </View>
-                        <View style={styles.contentContainer}>
-                            <Text style={styles.description}>일반적으로 권장 섭취량보다 {""}
-                                <Text style={styles.highlightedText}>500 kcal {""}</Text>
-                                정도 {"\n"}적게 먹으면 감량 효과를 기대할 수 있어요.
+            <StepIndicator steps={['Step 1', 'Step 2', 'Step 3', 'Step 4']} currentStep={currentStep - 1} />
+            {currentStep === 2 && (
+                <View style={styles.mainContainer}>
+                    <View style={styles.container}>
+                        <Text style={styles.title}>목표 칼로리를 {"\n"}계산해드렸어요 🔥</Text>
+                        <Text style={styles.description}>
+                            일일 권장 섭취량은
+                            <Text style={styles.highlightedText}>
+                                {calorieInfo.minCalories} ~ {calorieInfo.maxCalories} kcal {""}
                             </Text>
-                        </View>
-                        <View style={{alignItems: 'center'}}>
-                            <CustomBtn 
-                                onPress={handleNextStep}
-                                title=" 다음 " 
-                                buttonStyle={styles.finishBtn}
-                            />
-                        </View>
-                    </View>
-                )}
-                {currentStep ===3 && (
-                    <View>
-                        <Text style={styles.title}>목표 탄단지 정하기 {"\n"}이제 다 왔어요👏</Text>
-                        <Text>목표 열량과 식단에 맞는 
-                            <Text style={styles.highlightedText}>추천 섭취량</Text>
-                            을 계산했어요. {"\n"}목표량을 직접 입력할 수도 있어요.
+                            예요.{"\n"}다이어트를 위한 목표량을 직접 입력할 수도 있어요.
                         </Text>
-                        <MacroCalculator 
-                            totalCalories={userCalories} 
-                            goal={goal} 
-                            minCalories={calorieInfo.minCalories} 
-                            maxCalories={calorieInfo.maxCalories}
-                        />
-                        <View style={{alignItems: 'center'}}>
-                            <CustomBtn 
-                                onPress={handleNextPress}
-                                title=" 다음 " 
-                                buttonStyle={styles.finishBtn}
-                            />
-                        </View>
                     </View>
-                )}
+                    <View style={styles.contentContainer}>
+                        <InputFields
+                            label="목표 섭취 열량 (kcal)"
+                            placeholder="목표 섭취 열량을 입력해주세요."
+                            unit="kcal"
+                            unitStyle={styles.kcalText}
+                            viewStyle={styles.input}
+                            inputStyle={styles.kcalText}
+                            textInputProps={{
+                                onChangeText: handleCalorieChange, // 상태 업데이트 함수 직접 전달
+                                value: userCalories, // 상태 값 직접 전달
+                                keyboardType: 'numeric'
+                            }}
+                        />
+                    </View>
+                    <View style={styles.contentContainer}>
+                        <Text style={styles.description}>일반적으로 권장 섭취량보다 {""}
+                            <Text style={styles.highlightedText}>500 kcal {""}</Text>
+                            정도 {"\n"}적게 먹으면 감량 효과를 기대할 수 있어요.
+                        </Text>
+                    </View>
+                    <View style={{ alignItems: 'center' }}>
+                        <CustomBtn
+                            onPress={handleNextStep}
+                            title=" 다음 "
+                            buttonStyle={styles.finishBtn}
+                        />
+                    </View>
+                </View>
+            )}
+            {currentStep === 3 && (
+                <View>
+                    <Text style={styles.title}>목표 탄단지 정하기 {"\n"}이제 다 왔어요👏</Text>
+                    <Text>목표 열량과 식단에 맞는
+                        <Text style={styles.highlightedText}>추천 섭취량</Text>
+                        을 계산했어요. {"\n"}목표량을 직접 입력할 수도 있어요.
+                    </Text>
+                    <MacroCalculator
+                        totalCalories={userCalories}
+                        goal={goal}
+                        minCalories={calorieInfo.minCalories}
+                        maxCalories={calorieInfo.maxCalories}
+                        onChange={handleMacroCalculatorChange}
+                    />
+                    <View style={{ alignItems: 'center' }}>
+                        <CustomBtn
+                            onPress={handleNextPress}
+                            title=" 다음 "
+                            buttonStyle={styles.finishBtn}
+                        />
+                    </View>
+                </View>
+            )}
         </View>
     );
 };
@@ -161,18 +184,18 @@ const CaloriesScreen = () => {
 const styles = StyleSheet.create({
     mainContainer: {
         padding: 10,
-        flex:1,
-        backgroundColor:"white"
+        flex: 1,
+        backgroundColor: "white"
     },
     container: {
-        flex:1,
-        backgroundColor:"white",
+        flex: 1,
+        backgroundColor: "white",
     },
-    contentContainer:{
-        flex:2,
+    contentContainer: {
+        flex: 2,
         alignItems: 'center', //가로 중앙에 정렬
         justifyContent: 'flex-start',
-        marginTop:50
+        marginTop: 50
     },
     title: {
         fontSize: 30,
@@ -182,27 +205,27 @@ const styles = StyleSheet.create({
     description: {
         fontSize: 16,
         marginBottom: 20,
-        fontWeight:"500",
-        color:"#333"
+        fontWeight: "500",
+        color: "#333"
     },
     input: {
-        marginTop:10,
+        marginTop: 10,
         height: 60,
-        justifyContent:"center",
-        alignItems:"flex-start",
-        width:width*0.9,
+        justifyContent: "center",
+        alignItems: "flex-start",
+        width: width * 0.9,
     },
     finishBtn: {
         backgroundColor: '#99aff8',
         width: width * 0.85,
     },
-    kcalText:{
-        color:"#444",
+    kcalText: {
+        color: "#444",
         fontSize: 20,
-        fontWeight:"bold"
+        fontWeight: "bold"
     },
-    highlightedText:{
-        color:"#2FADFF"
+    highlightedText: {
+        color: "#2FADFF"
     }
 });
 

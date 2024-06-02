@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../../src/api'
 import { View, StyleSheet, Text, Dimensions, SafeAreaView } from 'react-native';
-import { CharacterCAM, ExerciseList, StressLevelIndicator, TabBar } from '../../src/components'
+import { CharacterCAM, ExerciseList, StressLevelIndicator, TabBar, StressBtn } from '../../src/components'
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -27,12 +27,6 @@ const stressScreen = () => {
             console.error('Error in useEffect:', error);
         }
     }, []);
-
-    const router = useRouter();
-    const handleNextPress = () => {
-        console.log('다음 버튼 눌림'); // 다음 화면으로 이동하는 로직
-        router.push('screens/mainScreen') //화면 이동
-    };
     const handleTakePicture = (photo) => {
         console.log(photo);
     };
@@ -42,10 +36,7 @@ const stressScreen = () => {
             <View style={styles.container}>
                 <Text style={styles.title}>스트레스를 측정해보세요🙂</Text>
                 <View style={styles.container}>
-                    <CharacterCAM
-                        onTakePicture={handleTakePicture}
-                        onNextPress={handleNextPress}
-                        camStyle={styles.characterCamContainer} />
+                    <StressBtn/>
                 </View>
                 <View style={styles.container}>
                     <StressLevelIndicator stressLevel={stressIndex} />

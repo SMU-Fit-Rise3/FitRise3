@@ -12,7 +12,7 @@ const ExerciseList = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  //운동리스트 정보 가져오기
+  // 운동리스트 정보 가져오기
   useEffect(() => {
     dispatch(modalVisibleActions.turnOnLoading())
     AsyncStorage.getItem('userId').then((userId) => {
