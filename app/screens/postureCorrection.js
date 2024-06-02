@@ -86,6 +86,9 @@ const PostureCorrection = () => {
                                 A jumping jack, also known as a star jump and called a side-straddle hop in the US military,
                                 is a physical jumping exercise performed by jumping to a position with the legs spread wide."
                     />
+                    <View style={styles.pointContainer}>
+                        <PointComponent points={30} />
+                    </View>
                     <View style={styles.btnContainer}>
                         <CustomBtn
                             buttonStyle={styles.homeButton}
@@ -147,11 +150,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     FinishBtn: {
-        width: 130,
+        width: 150,
         height: 50,
         padding: 10,
-        backgroundColor: "#8994D7",
-        marginBottom: 0,
+        backgroundColor: '#d9a1d5',
+        borderRadius: 10,
+        marginLeft: 10,
+        marginTop: 20,
     },
     infoButton: {
         position: 'absolute',
@@ -165,8 +170,8 @@ const styles = StyleSheet.create({
         marginTop: 50,
     },
     finishText: {
-        fontSize: 32,
-        fontFamily:"Jua"
+        fontWeight: "bold",
+        fontSize: 30
     }
 });
 
