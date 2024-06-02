@@ -8,7 +8,7 @@ import { ExpoWebGLRenderingContext } from 'expo-gl';
 import * as posedetection from '@tensorflow-models/pose-detection';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import '@tensorflow/tfjs-react-native';
-import * as blazeface from '@tensorflow-models/blazeface';
+import {  LoadingModal } from './UI'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../api';
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -44,10 +44,7 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
   const [cameraType, setCameraType] = useState<CameraType>(CameraType.front);
   const [rotation, setRotation] = useState<Rotation | undefined>(undefined);
   const [orientation, setOrientation] = useState<ScreenOrientation.Orientation | null>(null);
-  const [faceModel, setFaceModel] = useState<blazeface.BlazeFaceModel | undefined>();
-  const [facebox, setFacebox] = useState<blazeface.NormalizedFace[]>();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const [gChannel, setGChannel] = useState<number[]>([]);
   const isModalVisibleRef = useRef(isModalVisible);
   const rafId = useRef<number | null>(null);
   // 카메라 권한 요청 함수
@@ -80,8 +77,6 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
       );
       setModel(model);
 
-      const facemodel = await blazeface.load();
-      setFaceModel(facemodel);
       // Ready!
       setTfReady(true);
     }
@@ -132,19 +127,6 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
     };
   }, []);
 
-
-  useEffect(() => {
-    isModalVisibleRef.current = isModalVisible;
-    if (!isModalVisible) {
-      if (gChannel.length > 0) {
-        //스트레스 계산 요청
-        AsyncStorage.getItem('userId').then((userId) => {
-          API.updateStress(userId, gChannel);
-        })
-      }
-    }
-  }, [isModalVisible]);
-
   const handleCameraStream = async (
     images: IterableIterator<tf.Tensor3D>,
     updatePreview: () => void,
@@ -158,86 +140,13 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
 
       const startTs = Date.now();
 
-      if (isModalVisibleRef.current) {
-        // webview모달이 켜져있을때
-        // 얼굴감지 처리
-        const predictions = await faceModel!.estimateFaces(
-          imageTensor,
-          false, // 반환된 데이터 타입 (텐서:true /JSON:false)
-          false,// 웹캠 이미지가 미러 모드인 경우 true(미러모드 이미지가 좌우 반전되는 모드) 
-          true// 얼굴 경계 상자 true/false
-        );
-
-        if (predictions.length > 0) {
-          for (let i = 0; i < predictions.length; i++) {
-            const start = predictions[i].topLeft as [number, number];   //start[0]=x start[1]=y
-            const end = predictions[i].bottomRight as [number, number];  //end[0]=x end[1]=y
-            const size = [end[0] - start[0], end[1] - start[1]];
-
-            // 얼굴 경계 상자의 위치와 크기 정보를 사용합니다.
-            console.log(`Face ${i}: x=${start[0]}, y=${start[1]}, width=${size[0]}, height=${size[1]}`);
-            //얼굴상자가 화면 경계값일경우 전처리
-            const clampedY = Math.min(Math.round(start[1]), imageTensor.shape[0] - 1);
-            const clampedHeight = Math.min(Math.round(size[1]), imageTensor.shape[0] - clampedY);
-            const clampedX = Math.min(Math.round(start[0]), imageTensor.shape[1] - 1);
-            const clampedWidth = Math.min(Math.round(size[0]), imageTensor.shape[1] - clampedX);
-
-            tf.tidy(() => {// 함수 종료 시 slicedTensor는 자동으로 메모리에서 해제됩니다.
-
-              //얼굴영역만 자르기
-              const faceTensor = tf.slice(imageTensor, [clampedY, clampedX, 0], [clampedHeight, clampedWidth, 3]);
-              console.log("faceTensor:" + faceTensor);
-
-              // RGB 채널 분리
-              let [r, g, b] = tf.split(faceTensor, 3, 2);
-
-              // YCrCb 변환
-              let y = r.mul(0.299).add(g.mul(0.587)).add(b.mul(0.114));
-              let cb = b.sub(y).mul(0.564).add(128);
-              let cr = r.sub(y).mul(0.713).add(128);
-
-              // 피부 색상 범위 필터링
-              let skinMask = y.greaterEqual(0).logicalAnd(y.lessEqual(255))
-                .logicalAnd(cb.greaterEqual(85)).logicalAnd(cb.lessEqual(135))
-                .logicalAnd(cr.greaterEqual(135)).logicalAnd(cr.lessEqual(180));
-
-              // 피부 영역만 추출하여 G 채널만을 가져옵니다.
-              let skinGChannel = tf.where(skinMask, g, tf.zerosLike(g));
-              console.log("피부영역G채널 :" + skinGChannel);
-
-              // 0이 아닌 G 채널 값들의 평균 계산
-              //0이 아닌값 true false
-              let nonzeroSkinGChannel = skinGChannel.greater(0);
-              //true와 곱해서 의미있는 값들의 배열
-              let nonzeroValues = skinGChannel.mul(nonzeroSkinGChannel);
-              //true의 수
-              let nonzeroCount = nonzeroSkinGChannel.sum();
-
-              // 평균 계산
-              let meanValue = nonzeroValues.sum().div(nonzeroCount);
-              meanValue.data().then(data => {
-                gChannelMeans.push(data[0]);
-                setGChannel(gChannelMeans);
-              })
-            });
-          }
-        }
-        setFacebox(predictions);
-      } else {
-        //webview모달 꺼졌을때
-        //포즈 감지 처리
-        const poses = await model!.estimatePoses(
-          imageTensor,
-          undefined,
-          Date.now()
-        );
-        setPoses(poses);
-      }
-
-
-
-
-
+      //포즈 감지 처리
+      const poses = await model!.estimatePoses(
+        imageTensor,
+        undefined,
+        Date.now()
+      );
+      setPoses(poses);
       const latency = Date.now() - startTs;
       setFps(Math.floor(1000 / latency));
 
@@ -413,41 +322,10 @@ const CameraComponent = ({ isModalVisible }: { isModalVisible: boolean; }) => {
         return 0;
     }
   };
-  //얼굴 경계 상자 렌더링 사용:{renderFaceBoxes()}
-  const renderFaceBoxes = () => {
-    //텐서 x,y좌표와 화면좌표 차이조정
-    const scaleX = CAM_PREVIEW_WIDTH / OUTPUT_TENSOR_WIDTH;
-    const scaleY = CAM_PREVIEW_HEIGHT / OUTPUT_TENSOR_HEIGHT;
-
-    return facebox?.map((prediction, index) => {
-      const { topLeft, bottomRight } = prediction as { topLeft: [number, number], bottomRight: [number, number] };
-
-      // width, height, left, top을 계산할 때 숫자 타입이 확실히 보장되도록 합니다.
-      const width = (bottomRight[0] - topLeft[0]) * scaleX;
-      const height = (bottomRight[1] - topLeft[1]) * scaleY;
-      const left = topLeft[0] * scaleX;
-      const top = topLeft[1] * scaleY;
-      // 각 얼굴 경계 상자의 스타일을 계산합니다.
-      const boxStyle = {
-        position: 'absolute' as 'absolute', // 'absolute' 타입을 명시적으로 지정
-        left: left,
-        top: top,
-        width: width,
-        height: height,
-        borderWidth: 2,
-        borderColor: 'red',
-        zIndex: 20, // 확실한 시각화를 위해 zIndex를 설정합니다.
-      };
-
-      // 계산된 스타일로 View 컴포넌트를 반환합니다.
-      return <View key={`face-${index}`} style={boxStyle} />;
-    });
-  };
-
   if (!tfReady) {
     return (
       <View style={styles.loadingMsg}>
-        <Text>Loading...</Text>
+        <LoadingModal visible={true} />
       </View>
     );
   } else {

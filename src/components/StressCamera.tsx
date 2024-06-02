@@ -54,22 +54,25 @@ const StressCamera = () => {
 
   useEffect(() => {
     async function prepare() {
-      rafId.current = null;
+      try {
+        rafId.current = null;
 
-      // Camera permission.
-      await Camera.requestCameraPermissionsAsync();
+        // Camera permission.
+        await Camera.requestCameraPermissionsAsync();
 
-      // Wait for tfjs to initialize the backend.
-      await tf.ready();
+        // Wait for tfjs to initialize the backend.
+        await tf.ready();
 
-      const facemodel = await blazeface.load();
-      setFaceModel(facemodel);
-      // Ready!
-      setTfReady(true);
+        const facemodel = await blazeface.load();
+        setFaceModel(facemodel);
+        // Ready!
+        setTfReady(true);
+      } catch (error) {
+        console.error('Error during TensorFlow.js or Blazeface initialization:', error);
+      }
     }
-
-    prepare();
-  }, []);
+      prepare();
+    }, []);
 
   useEffect(() => {
     // Called when the app is unmounted.
@@ -126,10 +129,12 @@ const StressCamera = () => {
             if (gChannel.length > 0) {
               //스트레스 계산 요청
               AsyncStorage.getItem('userId').then((userId) => {
-                API.updateStress(userId, gChannel);
-              })
+                cleanupAndNavigate(() => {
+                API.updateStress(userId, gChannel)
+                  .then(() => { {router.push('/stressScreen')} });
+              });
+              });
             }
-            router.push('/stressScreen');
           }
           return prevTime + 1;
         });
@@ -141,7 +146,18 @@ const StressCamera = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [faceInBox, router]);
+  }, [faceInBox, router, gChannel]);
+
+  const cleanupAndNavigate = (callback: () => void) => {
+    if (rafId.current != null && rafId.current !== 0) {
+      cancelAnimationFrame(rafId.current);
+      rafId.current = 0;
+    }
+    tf.engine().disposeVariables();
+    callback();
+  };
+
+
   const handleCameraStream = async (
     images: IterableIterator<tf.Tensor3D>,
     updatePreview: () => void,
@@ -149,10 +165,10 @@ const StressCamera = () => {
   ) => {
     let gChannelMeans: number[] = [];
     const loop = async () => {
-
+      try {
       //고정프레임 0.250s == 4fps
-      await new Promise(resolve => setTimeout(resolve, 250));
-    
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       // Get the tensor and run pose detection.
       const imageTensor = images.next().value as tf.Tensor3D;
       const startTs = Date.now();
@@ -175,7 +191,7 @@ const StressCamera = () => {
             const start = predictions[i].topLeft as [number, number];   //start[0]=x start[1]=y
             const end = predictions[i].bottomRight as [number, number];  //end[0]=x end[1]=y
             const size = [end[0] - start[0], end[1] - start[1]];
-  
+
             // 얼굴 경계 상자의 위치와 크기 정보를 사용합니다.
             console.log(`Face ${i}: x=${start[0]}, y=${start[1]}, width=${size[0]}, height=${size[1]}`);
             //얼굴상자가 화면 경계값일경우 전처리
@@ -183,29 +199,29 @@ const StressCamera = () => {
             const clampedHeight = Math.min(Math.round(size[1]), imageTensor.shape[0] - clampedY);
             const clampedX = Math.min(Math.round(start[0]), imageTensor.shape[1] - 1);
             const clampedWidth = Math.min(Math.round(size[0]), imageTensor.shape[1] - clampedX);
-  
+
             tf.tidy(() => {// 함수 종료 시 slicedTensor는 자동으로 메모리에서 해제됩니다.
-  
+
               //얼굴영역만 자르기
               const faceTensor = tf.slice(imageTensor, [clampedY, clampedX, 0], [clampedHeight, clampedWidth, 3]);
-  
+
               // RGB 채널 분리
               let [r, g, b] = tf.split(faceTensor, 3, 2);
-  
+
               // YCrCb 변환
               let y = r.mul(0.299).add(g.mul(0.587)).add(b.mul(0.114));
               let cb = b.sub(y).mul(0.564).add(128);
               let cr = r.sub(y).mul(0.713).add(128);
-  
+
               // 피부 색상 범위 필터링
               let skinMask = y.greaterEqual(0).logicalAnd(y.lessEqual(255))
                 .logicalAnd(cb.greaterEqual(85)).logicalAnd(cb.lessEqual(135))
                 .logicalAnd(cr.greaterEqual(135)).logicalAnd(cr.lessEqual(180));
-  
+
               // 피부 영역만 추출하여 G 채널만을 가져옵니다.
               let skinGChannel = tf.where(skinMask, g, tf.zerosLike(g));
               // console.log("피부영역G채널 :" + skinGChannel);
-  
+
               // 0이 아닌 G 채널 값들의 평균 계산
               //0이 아닌값 true false
               let nonzeroSkinGChannel = skinGChannel.greater(0);
@@ -213,7 +229,7 @@ const StressCamera = () => {
               let nonzeroValues = skinGChannel.mul(nonzeroSkinGChannel);
               //true의 수
               let nonzeroCount = nonzeroSkinGChannel.sum();
-  
+
               // 평균 계산
               let meanValue = nonzeroValues.sum().div(nonzeroCount);
               meanValue.data().then(data => {
@@ -228,7 +244,7 @@ const StressCamera = () => {
         else {
           setFaceInBox(false);
           setFaceInBoxTime(0);
-          gChannelMeans=[];
+          gChannelMeans = [];
         }
       }
       setFacebox(predictions);
@@ -247,7 +263,10 @@ const StressCamera = () => {
       }
 
       rafId.current = requestAnimationFrame(loop);
-    };
+    }catch (error) {
+      console.error('Error during camera stream handling:', error);
+    }
+  };
     loop();
   };
 
@@ -272,7 +291,7 @@ const StressCamera = () => {
     const faceBottom = bottomRight[1] * CAM_PREVIEW_HEIGHT / OUTPUT_TENSOR_HEIGHT;
 
     //비슷한정도
-    const tolerance = 70;
+    const tolerance = 25 ;
 
     const isSimilarToStaticBoxLeft = Math.abs(faceLeft - staticBoxLeft) <= tolerance;
     const isSimilarToStaticBoxTop = Math.abs(faceTop - staticBoxTop) <= tolerance;
@@ -441,10 +460,10 @@ const StressCamera = () => {
         {renderStaticFaceBox()}
         {renderFaceBoxes()}
         {renderCameraTypeSwitcher()}
-          <View style={styles.progressBarContainer}>
+        <View style={styles.progressBarContainer}>
           <Progress.Bar progress={faceInBoxTime / 30} color='#99aff8' animated={true} />
-            <Text style={styles.progressText}>{faceInBoxTime}s / 30s</Text>
-          </View>
+          <Text style={styles.progressText}>{faceInBoxTime}s / 30s</Text>
+        </View>
         <Image
           source={require('../assets/images/faceimage5.png')}
           style={styles.overlayImage}
@@ -500,11 +519,11 @@ const styles = StyleSheet.create({
   },
   overlayImage: {
     position: 'absolute' as 'absolute',
-      left: (CAM_PREVIEW_WIDTH - 200) / 2,
-      top: (CAM_PREVIEW_HEIGHT - 300) / 2,
-      width: 200,
-      height: 350,
-      zIndex: 20,
+    left: (CAM_PREVIEW_WIDTH - 200) / 2,
+    top: (CAM_PREVIEW_HEIGHT - 300) / 2,
+    width: 200,
+    height: 350,
+    zIndex: 20,
   },
   progressBarContainer: {
     position: 'absolute',

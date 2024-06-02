@@ -70,14 +70,14 @@ const InfoInput = () => {
         };
 
         //빈칸검사 && 유저정보 DB생성 주석처리
-        if(true){// if (validateInputs()) {
-        //     setIsLoading(true);
-        //         API.createUser(userInfo)
-        //             .then((result) => {
-        //                 console.log('Response from server:', result);
-        //                 AsyncStorage.setItem('userId', result.id).then(console.log('AsyncStorage ID저장완료'));
-        //                 setIsLoading(false);
-        //             });
+        if (validateInputs()) {
+            setIsLoading(true);
+                API.createUser(userInfo)
+                    .then((result) => {
+                        console.log('Response from server:', result);
+                        AsyncStorage.setItem('userId', result.id).then(console.log('AsyncStorage ID저장완료'));
+                        setIsLoading(false);
+                    });
 
             router.push({
                 pathname: '/caloriesScreen',

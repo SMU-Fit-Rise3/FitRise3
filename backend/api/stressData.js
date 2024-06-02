@@ -5,6 +5,7 @@ const prisma = new PrismaClient({});
 exports.updateStressData = async function (req, res) {
     const userId = req.params.id;  // URL 파라미터에서 userId 가져오기
     const gValues = req.body.gValues;
+    console.log(gValues);
     const today = new Date().toISOString().split('T')[0];
     function calculateMagnitude(complex) {
         return Math.sqrt(complex.re * complex.re + complex.im * complex.im);
@@ -14,7 +15,8 @@ exports.updateStressData = async function (req, res) {
 
         //fft적용
         let fftArray = math.fft(math.complex(gValues));
-        let sampleRate = 4; //프레임
+        let sampleRate = gValues.length / 30; //프레임
+        console.log("sampleRate"+sampleRate);
         // 파워 스펙트럼 계산=복소수의 절대값의 제곱
         const powerSpectrum = fftArray.map(c => calculateMagnitude(c) ** 2);
 
@@ -31,22 +33,40 @@ exports.updateStressData = async function (req, res) {
         const hfPower = powerSpectrum.slice(Math.floor(hfRange[0]), Math.ceil(hfRange[1])).reduce((acc, val) => acc + val, 0);
 
         // 스트레스 비율 계산
+        // let stressRatio;
+        // if (hfPower >= 2 * lfPower) {
+        //     stressRatio = lfPower / hfPower;
+        // } else {
+        //     stressRatio = hfPower / lfPower;
+        // }
+
+        // console.log(`Stress Ratio: ${stressRatio}`);
+
+        // 주파수 2Hz 이상인지 확인
         let stressRatio;
-        if (hfPower >= 2 * lfPower) {
-            stressRatio = lfPower / hfPower;
-        } else {
-            stressRatio = hfPower / lfPower;
-        }
-
-        console.log(`Stress Ratio: ${stressRatio}`);
-
+        stressRatio = lfPower / hfPower;
+        console.log("stress ratio:"+stressRatio);
         //현재는 비율이 2이면 지수가 80정도로 설정
         let stressPercentage = 0;
-        if (stressRatio >= 2.5) {
-            stressPercentage = 100;
+        // 스트레스 수준 평가
+        if (stressRatio >= 0.5 && stressRatio <= 2.0) {
+            // 0.5에서 2.0 범위 내에서 1에 가까울수록 낮은 백분율 (0% ~ 70%)
+            if (stressRatio <= 1) {
+                stressPercentage = (1 - stressRatio) / 0.5 * 70;
+            } else {
+                stressPercentage = (stressRatio - 1) / 1.0 * 70;
+            }
+            console.log("스트레스 정상")
         } else {
-            stressPercentage = (stressRatio / 2) * 80;
+            // 그 외 범위에서 71% ~ 100% 백분율 할당
+            if (stressRatio < 0.5) {
+                stressPercentage = (0.5 - stressRatio) / 0.5 * 30 + 70;
+            } else {
+                stressPercentage = (stressRatio - 2.0) / (4.0 - 2.0) * 30 + 70;
+            }
+            console.log("스트레스 높음");
         }
+
         console.log(`Stress Percentage: ${stressPercentage}`);
 
         let calendarDay = await prisma.calendarDay.findFirst({
@@ -80,7 +100,7 @@ exports.getStressData = async function (req, res) {
     const userId = req.params.id;
     const today = new Date().toISOString().split('T')[0];
     try {
-        
+
         let calendarDay = await prisma.calendarDay.findFirst({
             where: {
                 day: today,

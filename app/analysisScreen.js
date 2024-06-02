@@ -117,10 +117,14 @@ const analysisScreen = () => {
                 API.updateWeight(userId, weight)
                     .then(data => {
                         if (data) {
-                            console.log(data);
+                            console.log("dd"+JSON.stringify(data));
                             setIsLoading(false);
-                            Alert.alert('몸무게 등록완료');
-                            router.push('/characterGAN');
+                            AsyncStorage.getItem('userId').then((userId) => {
+                                API.getAnalysis(userId)
+                                    .then((data) => {
+                                        processData(data);
+                                    })
+                            });
                         }
                     })
             })
