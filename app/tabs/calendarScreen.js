@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, ScrollView, StatusBar, Platform } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../../src/api';
@@ -134,8 +134,14 @@ export default class CalendarScreen extends Component {
         </ScrollView>
       </View>
     ) : (
-      <View style={[styles.viewContainer, {justifyContent:"center", alignContent:"center"}]}>
+      <View style={styles.emptyContainer}>
         <Text style={styles.infoText}> 먹은 게 없어요</Text>
+        <LottieView
+            style={styles.lottie}
+            source={lottie.hungry_lottie}
+            autoPlay
+            loop
+          />
       </View>
     );
   };
@@ -160,8 +166,14 @@ export default class CalendarScreen extends Component {
         </ScrollView>
       </View>
     ) : (
-      <View style={[styles.viewContainer, {justifyContent:"center", alignContent:"center"}]}>
+      <View style={styles.emptyContainer}>
         <Text style={styles.infoText}>운동 데이터가 없어요</Text>
+        <LottieView
+            style={styles.lottie}
+            source={lottie.lazy_lottie}
+            autoPlay
+            loop
+          />
       </View>
     );
   };
@@ -173,8 +185,8 @@ export default class CalendarScreen extends Component {
         <View style={styles.header}>
           <Text style={styles.headerText}>오늘의 몸무게</Text>
         </View>
-        <View style={[styles.infoContainer, {alignItems:"center"}]}>
-          <Text style={[styles.infoText, {fontSize:50,}]}>{weightInfo.weight} kg</Text>
+        <View style={[styles.infoContainer, { alignItems: "center" }]}>
+          <Text style={[styles.infoText, { fontSize: 50, }]}>{weightInfo.weight} kg</Text>
           <LottieView
             style={styles.lottie}
             source={lottie.scale_lottie}
@@ -184,8 +196,14 @@ export default class CalendarScreen extends Component {
         </View>
       </View>
     ) : (
-      <View style={[styles.viewContainer, {justifyContent:"center", alignContent:"center"}]}>
+      <View style={styles.emptyContainer}>
         <Text style={styles.infoText}> 몸무게 측정을 안했어요 </Text>
+        <LottieView
+            style={styles.lottie}
+            source={lottie.scale_lottie}
+            autoPlay
+            loop
+          />
       </View>
     );
   };
@@ -206,7 +224,6 @@ export default class CalendarScreen extends Component {
 
   render() {
     const { activeScreen } = this.state;
-    const { router } = this.props; // Use router from props
 
     const dietButtonStyle = activeScreen === 'diet' ? [styles.button, styles.activeButton, { borderColor: '#9C9CE8' }] : [styles.button, { borderColor: '#9C9CE8' }];
     const exerciseButtonStyle = activeScreen === 'exercise' ? [styles.button, styles.activeButton, { borderColor: '#8181F7' }] : [styles.button, { borderColor: '#8181F7' }];
@@ -214,8 +231,9 @@ export default class CalendarScreen extends Component {
 
     return (
       <SafeAreaView style={styles.mainContainer}>
+        {Platform.OS === 'android' && <StatusBar barStyle="dark-content" backgroundColor="#F5F6FB" />}
         <View style={styles.contentContainer}>
-          <View style={styles.viewContainer}>
+          <View style={styles.calendarContainer}>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={dietButtonStyle}
@@ -236,23 +254,24 @@ export default class CalendarScreen extends Component {
                 <Text style={styles.buttonText}>몸무게</Text>
               </TouchableOpacity>
             </View>
-            <Calendar
-              onDayPress={this.onDaySelect}
-              markedDates={this.getMarkedDates()}
-              markingType={'multi-dot'}
-              // The theme can be customized as per your app's design
-              theme={{
-                selectedDayBackgroundColor: '#D6DEFF',
-                todayTextColor: '#D6DEFF',
-                arrowColor: 'gray',
-                textDayFontFamily: 'Jua',
-                textMonthFontFamily: 'Jua',
-                textDayHeaderFontFamily: 'Jua',
-                textDayFontSize: 16,
-                textMonthFontSize: 18,
-                textDayHeaderFontSize: 16,
-              }}
-            />
+            <ScrollView>
+              <Calendar
+                onDayPress={this.onDaySelect}
+                markedDates={this.getMarkedDates()}
+                markingType={'multi-dot'}
+                theme={{
+                  selectedDayBackgroundColor: '#D6DEFF',
+                  todayTextColor: '#D6DEFF',
+                  arrowColor: 'gray',
+                  textDayFontFamily: 'Jua',
+                  textMonthFontFamily: 'Jua',
+                  textDayHeaderFontFamily: 'Jua',
+                  textDayFontSize: 16,
+                  textMonthFontSize: 18,
+                  textDayHeaderFontSize: 16,
+                }}
+              />
+            </ScrollView>
           </View>
           <View style={styles.dataContainer}>
             {this.renderData()}
@@ -266,13 +285,14 @@ export default class CalendarScreen extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: "#F5F6FB"
+    backgroundColor: "#F5F6FB",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   contentContainer: {
     flex: 1,
-    backgroundColor: "#F5F6FB"
+    backgroundColor: "#F5F6FB",
   },
-  viewContainer: {
+  calendarContainer: {
     flex: 1,
     backgroundColor: "#fff",
     padding: 10,
@@ -290,7 +310,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 10,
-    marginVertical: 20
+    marginVertical: 20,
   },
   button: {
     marginHorizontal: 10,
@@ -304,7 +324,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#555',
-    fontFamily: "Jua"
+    fontFamily: "Jua",
   },
   infoText: {
     fontSize: 18,
@@ -315,7 +335,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     height: 0.35 * height,
     padding: 10,
-    backgroundColor:"#fff"
+    backgroundColor: "#fff",
   },
   header: {
     marginVertical: 10,
@@ -326,7 +346,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
-    fontFamily: "Jua"
+    fontFamily: "Jua",
   },
   card: {
     backgroundColor: '#f9f9f9',
@@ -343,19 +363,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Jua",
     color: '#444',
-    marginBottom:6
+    marginBottom: 6,
   },
   cardDetail: {
     fontSize: 14,
     fontFamily: "Jua",
     color: '#666',
-    marginVertical:3
+    marginVertical: 3,
   },
   dataContainer: {
     justifyContent: 'center',
     flex: 1,
+    marginHorizontal: 20,
+    marginVertical: 10,
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
-  //운동
   detailRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -367,6 +396,11 @@ const styles = StyleSheet.create({
   },
   lottie: {
     width: width * 0.8,
-    height: height * 0.3
+    height: height * 0.2,
+  },
+  emptyContainer: {
+    justifyContent: 'flex-start', // 상단 정렬
+    alignItems: 'center', // 중앙 정렬
+    paddingTop: 20, // 상단 여백 추가
   },
 });

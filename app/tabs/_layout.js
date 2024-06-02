@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, Platform, Text } from 'react-native';
 import { icons } from '../../constants';
 
 const TabBarIcon = ({ focused, icon, selectedIcon }) => (
@@ -13,36 +13,67 @@ const Layout = () => {
         tabBarIcon: ({ focused }) => {
           let icon;
           let selectedIcon;
+          let label;
           switch (route.name) {
             case 'mainScreen':
               icon = icons.icon_home_w;
               selectedIcon = icons.icon_home_p;
+              label = '홈';
               break;
             case 'stressScreen':
               icon = icons.icon_stress_w;
               selectedIcon = icons.icon_stress_p;
+              label = '스트레스';
               break;
             case 'dietScreen':
               icon = icons.icon_rice_w;
               selectedIcon = icons.icon_rice_p;
+              label = '식단';
               break;
             case 'analysisScreen':
               icon = icons.icon_graph_w;
               selectedIcon = icons.icon_graph_p;
+              label = '분석';
               break;
             case 'calendarScreen':
               icon = icons.icon_calendar_w;
               selectedIcon = icons.icon_calendar_p;
+              label = '캘린더';
               break;
           }
           return <TabBarIcon focused={focused} icon={icon} selectedIcon={selectedIcon} />;
         },
         tabBarShowLabel: true,
+        tabBarLabel: ({ focused }) => {
+          let label;
+          switch (route.name) {
+            case 'mainScreen':
+              label = '홈';
+              break;
+            case 'stressScreen':
+              label = '스트레스';
+              break;
+            case 'dietScreen':
+              label = '식단';
+              break;
+            case 'analysisScreen':
+              label = '분석';
+              break;
+            case 'calendarScreen':
+              label = '캘린더';
+              break;
+          }
+          return <Text style={{ color: focused ? '#000' : '#aaa' }}>{label}</Text>;
+        },
         tabBarStyle: {
           backgroundColor: '#fff',
           borderTopWidth: 1,
           borderTopColor: '#ddd',
           paddingVertical: 10,
+          height: Platform.select({
+            ios: 80,
+            android: 70,
+          }),
         },
       })}
     >
@@ -72,8 +103,8 @@ const Layout = () => {
 
 const styles = StyleSheet.create({
   tabIcon: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
 });
 

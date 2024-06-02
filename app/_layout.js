@@ -19,7 +19,7 @@ const Layout = () => {
             }} 
           />
           <Stack.Screen name="screens/caloriesScreen" options={{ title: 'Calories Screen'}} />
-          <Stack.Screen name="screens/characterGAN" options={{ title: 'Character GAN', headerShown: true, }} />
+          <Stack.Screen name="screens/characterGAN" options={{ title: 'Character GAN'}} />
           <Stack.Screen name="screens/chatScreen" options={{ title: 'Chat Screen' }} />
           <Stack.Screen name="screens/dietInput" options={{ title: 'Diet Input' }} />
           <Stack.Screen name="screens/foodSearchScreen" options={{ title: 'Food Search Screen' }} />

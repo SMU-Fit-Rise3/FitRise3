@@ -143,6 +143,12 @@ const CaloriesScreen = () => {
                             <Text style={styles.highlightedText}> 추천 섭취량</Text>
                             을 계산했어요. {"\n"}목표량을 직접 입력할 수도 있어요.
                         </Text>
+                        <MacroCalculator 
+                            totalCalories={userCalories} 
+                            goal={goal} 
+                            minCalories={calorieInfo.minCalories} 
+                            maxCalories={calorieInfo.maxCalories}
+                        />
                         <View style={{alignItems: 'center'}}>
                             <CustomBtn 
                                 onPress={handleNextPress}
@@ -150,13 +156,6 @@ const CaloriesScreen = () => {
                                 buttonStyle={styles.finishBtn}
                             />
                         </View>
-                        <MacroCalculator 
-                            totalCalories={userCalories} 
-                            goal={goal} 
-                            minCalories={calorieInfo.minCalories} 
-                            maxCalories={calorieInfo.maxCalories}
-                        />
-                        
                     </View>
                 )}
         </SafeAreaView>

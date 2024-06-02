@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useRouter } from "expo-router";
-import { View, StyleSheet, SafeAreaView, Text, Animated } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Text, Animated, Platform, StatusBar } from 'react-native';
 import images from '../../constants/images.js';
 import { FloatingBtn, ExerciseList, PointDisplay, LoadingModal } from '../../src/components';
 import { useSelector } from 'react-redux';
@@ -50,8 +50,9 @@ const MainScreen = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <SafeAreaView style={styles.mainContainer}>
-        <View style={styles.mainContainer}>
+      <SafeAreaView style={styles.safeContainer}>
+        {Platform.OS === 'android' && <StatusBar barStyle="dark-content" />}
+        <View style={styles.contentContainer}>
           <Animated.Text style={[styles.title, animatedStyle]}>
             반가워요 ! {"\n"}오늘도 즐겁게 운동을 시작해요 🔥
           </Animated.Text>
@@ -63,10 +64,6 @@ const MainScreen = () => {
           <View style={styles.listContainer}>
             <ExerciseList />
           </View>
-          <FloatingBtn
-            imageSource={images.robot}
-            onPress={() => router.push('screens/chatScreen')}
-          />
           <LoadingModal visible={loadingVisible} />
         </View>
       </SafeAreaView>
@@ -80,10 +77,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F5F6FB",
   },
+  safeContainer: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, // Android 상태바 높이 추가
+  },
+  contentContainer: {
+    flex: 1,
+    backgroundColor: "#F5F6FB",
+    paddingHorizontal: 10,
+  },
   listContainer: {
     flex: 1.2,
     backgroundColor: "#F5F6FB",
-    marginTop:20,
+    marginTop: 20,
   },
   title: {
     fontFamily: "Bold",

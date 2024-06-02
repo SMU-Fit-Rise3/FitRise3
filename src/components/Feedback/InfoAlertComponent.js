@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons'; // For icons
 
 const InfoAlertComponent = ({ feedbackData }) => {
 
@@ -25,16 +26,20 @@ const InfoAlertComponent = ({ feedbackData }) => {
   return (
     <View style={styles.alertContainer}>
       <Text style={styles.titleText}>최근 7일 부족 영양소</Text>
-        {alertMessages.length > 0 ? (
+      {alertMessages.length > 0 ? (
         alertMessages.map((message, index) => (
-          <Text key={index} style={styles.alertText}>
-            {message} !!
-          </Text>
+          <View key={index} style={styles.messageContainer}>
+            <FontAwesome name="exclamation-circle" size={20} color="#d30430" />
+            <Text style={styles.alertText}>{message}</Text>
+          </View>
         ))
       ) : (
-        <Text style={styles.alertText}>
-          🎉 7일동안 목표 달성치를 달성했습니다!
-        </Text>
+        <View style={styles.messageContainer}>
+          <FontAwesome name="check-circle" size={20} color="#4CAF50" />
+          <Text style={[styles.alertText, styles.successText]}>
+            🎉 7일동안 목표 달성치를 달성했습니다!
+          </Text>
+        </View>
       )}
     </View>
   );
@@ -43,31 +48,41 @@ const InfoAlertComponent = ({ feedbackData }) => {
 // Add styles for the component
 const styles = StyleSheet.create({
   alertContainer: {
-    width:"90%",
+    width: "90%",
     padding: 15,
     marginHorizontal: 20,
     marginTop: 20,
-    marginBottom:20,
-    backgroundColor: '#FFE3E3', // Light red background for alert
-    borderRadius: 8,
+    marginBottom: 20,
+    backgroundColor: '#eeefff', // Lighter red background for alert
+    borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
     elevation: 3,
   },
   titleText: {
-    fontSize: 20,
+    fontFamily:"Jua",
+    fontSize: 18,
     fontWeight: "bold",
-    color: '#D8000C', // Dark red text color
+    color: '#d30430', // Dark red text color
     textAlign: 'center',
     marginBottom: 10,
   },
+  messageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
   alertText: {
-    fontSize: 18,
-    fontWeight:"bold",
-    color: '#D8000C', // Dark red text color
-    textAlign: 'center',
+    fontFamily:"Jua",
+    fontSize: 16,
+    color: '#d30430', // Dark red text color
+    marginLeft: 10,
+  },
+  successText: {
+    fontFamily:"Jua",
+    color: '#4CAF50', // Green color for success message
   },
 });
 

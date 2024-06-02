@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../../src/api';
 import lottie from '../../constants/lottie';
-import { View, StyleSheet, Text, Dimensions, SafeAreaView, Animated, FlatList } from 'react-native';
+import { View, StyleSheet, Text, Dimensions, SafeAreaView, Animated, FlatList, Platform, StatusBar } from 'react-native';
 import { CharacterCAM, StressLevelIndicator, Card } from '../../src/components';
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
@@ -15,11 +15,6 @@ const stressScreen = () => {
 
   const cards = [
     {
-      animationSource: lottie.sleep_lottie,
-      title: '숙면',
-      description: '숙면은 스트레스 해소에 중요한 역할을 합니다. 매일 충분한 수면을 취하세요.'
-    },
-    {
       animationSource: require('../../src/assets/lottie/run_lottie.json'),
       title: '유산소 운동',
       description: '유산소 운동은 스트레스를 줄이고 기분을 좋게 만듭니다. 규칙적으로 운동하세요.'
@@ -30,10 +25,15 @@ const stressScreen = () => {
       description: '스트레칭은 몸의 긴장을 풀어주고 스트레스를 완화합니다. 매일 스트레칭을 해보세요.'
     },
     {
-        animationSource: require('../../src/assets/lottie/meditate_lottie.json'),
-        title: '명상',
-        description: '스트레칭은 몸의 긴장을 풀어주고 스트레스를 완화합니다. 매일 스트레칭을 해보세요.'
-      }
+      animationSource: require('../../src/assets/lottie/meditate_lottie.json'),
+      title: '명상',
+      description: '스트레칭은 몸의 긴장을 풀어주고 스트레스를 완화합니다. 매일 스트레칭을 해보세요.'
+    },
+    {
+      animationSource: require('../../src/assets/lottie/cat.json'),
+      title: '숙면',
+      description: '숙면은 스트레스 해소에 중요한 역할을 합니다. 매일 충분한 수면을 취하세요.'
+    },
   ];
 
   useEffect(() => {
@@ -82,6 +82,7 @@ const stressScreen = () => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
+      {Platform.OS === 'android' && <StatusBar barStyle="dark-content" />}
       <View style={styles.contentContainer}>
         <View style={[styles.viewContainer, styles.borderRadius, { flex: 2 }]}>
           <Text style={[styles.title, styles.leftAlign]}>스트레스 측정</Text>
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: "#F5F6FB",
-    justifyContent: "space-evenly"
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, // Android 상태바 높이 추가
   },
   contentContainer: {
     flex: 1,

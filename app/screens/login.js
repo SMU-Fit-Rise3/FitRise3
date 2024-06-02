@@ -94,12 +94,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   quoteText: {
+    fontFamily:"Jua",
     fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
     color: '#000',
-    fontFamily:"Jua"
   },
   descriptionText: {
     fontSize: 20,

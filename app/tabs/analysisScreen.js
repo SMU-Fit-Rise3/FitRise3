@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from "expo-router";
-import { View, StyleSheet, ScrollView, Text, SafeAreaView, Dimensions, Alert } from 'react-native';
-import { BarChartComponent, LineChartComponent, SingleLineChart, CustomBtn, InputFields, InfoAlertComponent, LoadingModal } from '../../src/components'
-
+import { View, StyleSheet, ScrollView, Text, SafeAreaView, Dimensions, Alert, Platform, StatusBar } from 'react-native';
+import { BarChartComponent, LineChartComponent, SingleLineChart, CustomBtn, InputFields, InfoAlertComponent, LoadingModal } from '../../src/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from '../../src/api'
+import API from '../../src/api';
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -22,8 +21,8 @@ const analysisScreen = () => {
             API.getAnalysis(userId)
                 .then((data) => {
                     processData(data);
-                })
-        })
+                });
+        });
     }, []);
 
     const processData = (data) => {
@@ -39,7 +38,7 @@ const analysisScreen = () => {
         let totalProtein = 0;
         let totalFat = 0;
 
-        //전체데이터처리
+        // 전체 데이터 처리
         data[0].calendar.forEach(dayData => {
             const { day, weight, eatfood, stressIndex } = dayData;
             const bmiIndex = weight / ((data[0].height / 100) * (data[0].height / 100));
@@ -65,7 +64,7 @@ const analysisScreen = () => {
             }
         });
 
-        // 최근 7일데이터
+        // 최근 7일 데이터
         const recent7DaysData = data[0].calendar.slice(-7);
 
         recent7DaysData.forEach(dayData => {
@@ -79,7 +78,8 @@ const analysisScreen = () => {
                     totalFat += food.fat;
                 });
             }
-        })
+        });
+
         const numOfDays = recent7DaysData.length;
         const calorieDeficit = Math.max(0, data[0].calorie[0].calorie_goal * numOfDays - totalCalories);
         const carbsDeficit = Math.max(0, data[0].calorie[0].carbs * numOfDays - totalCarbs);
@@ -123,11 +123,11 @@ const analysisScreen = () => {
                                 API.getAnalysis(userId)
                                     .then((data) => {
                                         processData(data);
-                                    })
+                                    });
                             });
                         }
-                    })
-            })
+                    });
+            });
         } catch (error) {
             setIsLoading(false);
             console.error('Error handleNextPress:', error);
@@ -135,15 +135,16 @@ const analysisScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.mainContainer}>
+            {Platform.OS === 'android' && <StatusBar barStyle="dark-content" />}
             <ScrollView style={styles.scrollContainer}>
-                <View style={styles.centerContainer}>
-                    <View style={styles.contentContainer}>
-                        <Text style={styles.title}>스트레스 😖</Text>
+                <View style={styles.contentContainer}>
+                    <View style={[styles.viewContainer, styles.borderRadius]}>
+                        <Text style={[styles.title, styles.leftAlign]}>스트레스</Text>
                         <SingleLineChart stressData={stressData} />
                     </View>
-                    <View style={styles.contentContainer}>
-                        <Text style={styles.title}>몸무게 & BMI 변화량 ⚖️</Text>
+                    <View style={[styles.viewContainer, styles.borderRadius]}>
+                        <Text style={[styles.title, styles.leftAlign]}>몸무게 & BMI 변화량</Text>
                         <LineChartComponent weightData={weightData} />
                         <View style={styles.HorContainer}>
                             <InputFields
@@ -161,13 +162,14 @@ const analysisScreen = () => {
                             <CustomBtn
                                 onPress={handleNextPress}
                                 title=" 입력 "
-                                buttonStyle={styles.InputBtn}
+                                buttonStyle={styles.btn}
+                                textStyle={styles.btnText}
                             />
                         </View>
                     </View>
-                    <View style={styles.contentContainer}>
-                        <Text style={styles.title}>영양분 섭취량 🍴</Text>
-                        <BarChartComponent weeklyData={weeklyNutritionData} />
+                    <View style={[styles.viewContainer, styles.borderRadius]}>
+                        <Text style={[styles.title, styles.leftAlign]}>영양분 섭취량</Text>
+                            <BarChartComponent weeklyData={weeklyNutritionData} />
                         <InfoAlertComponent feedbackData={deficitData} />
                     </View>
                 </View>
@@ -177,48 +179,69 @@ const analysisScreen = () => {
     );
 };
 
+// 여기에 스타일을 정의합니다.
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: "#ddd",
-        flex: 1
-    },
-    scrollContainer: {
-        flex: 1
-    },
-    centerContainer: {
-        backgroundColor: "#fff",
-        alignItems: "center",
-        paddingHorizontal: 10
-    },
-    contentContainer: {
-        flex: 1,
-        width: width * 0.9,
-        alignItems: "flex-start",
-        marginBottom: 15,
-    },
-    HorContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: width * 0.6,
-    },
-    InputBtn: {
-        width: width * 0.3,
-        height: 50,
-        backgroundColor: '#d9a1d5',
-        borderRadius: 10,
-        alignItems: 'center',
-        marginLeft: 20,
-        marginTop: 30,
-        padding: 10
-    },
-    title: {
-        fontSize: width * 0.06,
-        fontWeight: 'bold',
-        marginTop: 40,
-    },
-    textField: {
-        width: width * 0.4,
-    }
+  mainContainer: {
+    flex: 1,
+    backgroundColor: "#F5F6FB",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, // Android 상태바 높이 추가
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
+    paddingHorizontal: 10,
+  },
+  viewContainer: {
+    flex: 1,
+    width: width * 0.9,
+    backgroundColor: "#fff",
+    marginHorizontal: 20,
+    marginVertical: 10,
+    padding: 20,
+  },
+  borderRadius: {
+    borderRadius: 15,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  HorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    width: width * 0.8,
+    marginTop: 20,
+  },
+  btn: {
+    width: 100,
+    height: 40,
+    padding: 10,
+    backgroundColor: "#8994D7",
+    marginBottom: 0,
+  },
+  btnText: {
+    fontSize: 14,
+  },
+  title: {
+    fontFamily: "Jua",
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom:10,
+  },
+  leftAlign: {
+    textAlign: 'left', // 왼쪽 정렬
+    alignSelf: 'flex-start', // 부모 컨테이너의 왼쪽 끝으로 정렬
+  },
+  textField: {
+    width: width * 0.4,
+  },
 });
 
 export default analysisScreen;

@@ -6,6 +6,7 @@ import { poseMatcher } from './PoseMatcher';
 
 
 const Squat = ({ exerciseData, poses, updateSets, updateCount, onFeedback, onExerciseComplete }) => {
+  console.log("들어왔음~~~~~~~~~~")
   
   const [count, setCount] = useState(0);
   const [sets, setSets] = useState(0);

@@ -60,7 +60,7 @@ const ExerciseList = () => {
         <CustomBtn
           buttonStyle={styles.btn}
           textStyle={styles.btnText}
-          title="운동하러 가기"
+          title="운동하기"
           onPress={() => {
             dispatch(modalVisibleActions.on());
             router.push({
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     fontFamily: "Jua"
   },
   btn: {
-    width: 130,
+    width: 100,
     height: 50,
     padding: 10,
     backgroundColor: "#8994D7",
