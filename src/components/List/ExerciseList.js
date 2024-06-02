@@ -39,7 +39,9 @@ const ExerciseList = () => {
             id : exercise.id,
             day: plan.day,
             title: exercise.exercise,
-            count: `Sets: ${exercise.sets}, Reps: ${exercise.reps}`
+            count: `Sets: ${exercise.sets}, Reps: ${exercise.reps}`,
+            sets: exercise.sets,
+            reps: exercise.reps
           });
         });
       });
@@ -58,12 +60,12 @@ const ExerciseList = () => {
         <CustomBtn
           buttonStyle={styles.btn}
           textStyle={styles.btnText}
-          title="운동하러 가기"
+          title="운동하기"
           onPress={() => {
             dispatch(modalVisibleActions.on());
             router.push({
               pathname: 'screens/postureCorrection',
-              params: { title: item.title, count: item.count, id: item.id }
+              params: { title: item.title, count: item.count, id: item.id, sets: item.sets, reps: item.reps }
             });
           }}
         />
@@ -84,7 +86,7 @@ const ExerciseList = () => {
 
 const styles = StyleSheet.create({
   flatList: {
-    marginBottom: 34,
+    marginBottom: 20,
   },
   contentContainer: {
     paddingBottom: 5,
@@ -92,19 +94,19 @@ const styles = StyleSheet.create({
   exContainer: {
     flexDirection: "column",
     height: 'auto',
-    width: 130
+    width:200
   },
   item: {
     backgroundColor: 'white',
     padding: 20,
-    marginVertical: 10,
-    marginHorizontal: 30,
-    borderRadius: 10,
+    marginVertical: 8,
+    marginHorizontal: 20,
+    borderRadius: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#D6DEFF',
-    shadowColor: '#000',
+    backgroundColor: '#fff',
+    shadowColor: '#555',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -114,24 +116,28 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   day: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#555', // 적당한 색상 선택
-    marginBottom: 4 // 간격 조정
+    marginBottom: 4, // 간격 조정
+    fontFamily: "Jua"
   },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
+    fontFamily: "Jua",
+    marginBottom: 4,
   },
   count: {
     fontSize: 14,
     color: 'gray',
+    fontFamily: "Jua"
   },
   btn: {
-    width: 130,
+    width: 100,
     height: 50,
     padding: 10,
-    backgroundColor: "#aaaccc",
+    backgroundColor: "#8994D7",
     marginBottom: 0,
   },
   btnText: {

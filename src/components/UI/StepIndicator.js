@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,Dimensions } from 'react-native';
+
+const { height } = Dimensions.get('window'); // Get the screen width
 
 const StepIndicator = ({ steps, currentStep }) => {
   return (
@@ -18,6 +20,8 @@ const StepIndicator = ({ steps, currentStep }) => {
 
 const styles = StyleSheet.create({
   container: {
+    padding:5,
+    marginTop: height * 0.03,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -42,6 +46,7 @@ const styles = StyleSheet.create({
   },
   stepText: {
     color: '#fff',
+    fontFamily:"Jua"
   }
 });
 

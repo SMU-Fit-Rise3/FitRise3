@@ -10,7 +10,7 @@ const CustomButton = ({ onPress,title, buttonStyle, textStyle}) => (
 const styles = StyleSheet.create({
   button: {
     width: '100%',
-    padding: 20,
+    padding: 15,
     backgroundColor: '#FFD700',
     borderRadius: 30,
     alignItems: 'center',
@@ -18,9 +18,10 @@ const styles = StyleSheet.create({
     justifyContent:"center",
   },
   buttonText: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#FFF',
+    fontFamily:"Jua"
   },
 });
 

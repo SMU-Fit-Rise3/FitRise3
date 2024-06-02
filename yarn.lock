@@ -2222,7 +2222,21 @@
 "@types/range-parser@*":
   version "1.2.7"
 
-"@types/react@^18.2.25", "@types/react@~18.2.45":
+"@types/react-native-global-props@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.npmjs.org/@types/react-native-global-props/-/react-native-global-props-1.1.6.tgz"
+  integrity sha512-przgaq6W9n/LBE2h4aB0giHdlJ+k34qbpUxM9w/3OLVbFowI5rW3+JBsjhuRHpiGYRJkTUJKOzLi+pYZz7FfFw==
+  dependencies:
+    "@types/react-native" "^0.70"
+
+"@types/react-native@^0.70":
+  version "0.70.19"
+  resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.70.19.tgz"
+  integrity sha512-c6WbyCgWTBgKKMESj/8b4w+zWcZSsCforson7UdXtXMecG3MxCinYi6ihhrHVPyUrVzORsvEzK8zg32z4pK6Sg==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@^18.2.25", "@types/react@~18.2.45":
   version "18.2.74"
   dependencies:
     "@types/prop-types" "*"
@@ -3692,6 +3706,7 @@ expo-file-system@~16.0.0, expo-file-system@~16.0.8, expo-file-system@~16.0.9:
   resolved "https://registry.npmjs.org/expo-file-system/-/expo-file-system-16.0.9.tgz"
   integrity sha512-3gRPvKVv7/Y7AdD9eHMIdfg5YbUn2zbwKofjsloTI5sEC57SLUFJtbLvUCz9Pk63DaSQ7WIE1JM0EASyvuPbuw==
 
+<<<<<<< HEAD
 expo-font@^12.0.5:
   version "12.0.6"
   resolved "https://registry.npmjs.org/expo-font/-/expo-font-12.0.6.tgz"
@@ -3699,6 +3714,8 @@ expo-font@^12.0.5:
   dependencies:
     fontfaceobserver "^2.1.0"
 
+=======
+>>>>>>> feature/#11
 expo-font@~11.10.3:
   version "11.10.3"
   resolved "https://registry.npmjs.org/expo-font/-/expo-font-11.10.3.tgz"
@@ -4879,6 +4896,16 @@ loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
+lottie-ios@3.2.3:
+  version "3.2.3"
+  resolved "https://registry.npmjs.org/lottie-ios/-/lottie-ios-3.2.3.tgz"
+  integrity sha512-mubYMN6+1HXa8z3EJKBvNBkl4UoVM4McjESeB2PgvRMSngmJtC5yUMRdhbbrIAn5Liu3hFGao/14s5hQIgtkRQ==
+
+lottie-react-native@6.5.1:
+  version "6.5.1"
+  resolved "https://registry.npmjs.org/lottie-react-native/-/lottie-react-native-6.5.1.tgz"
+  integrity sha512-pjih71P6qX6Ax5ucUBA+YJO7+fnveI581Bd8LmYeARm3spq3AnoGzEkrWaieM8odnK6WI4d5dwEJsxge/QjFPw==
+
 lower-case@^2.0.2:
   version "2.0.2"
   dependencies:
@@ -5970,6 +5997,11 @@ react-native-gifted-charts@^1.4.9:
   dependencies:
     gifted-charts-core "^0.1.4"
 
+react-native-global-props@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.npmjs.org/react-native-global-props/-/react-native-global-props-1.1.5.tgz"
+  integrity sha512-QDeAdRel6zyJfbgyFxZi9QXZe78OdlANxJae0rJn76uTqdt/A+iWBVjJy3NmaN/fpKy0uV0HhW6Hu4xM0QCisQ==
+
 react-native-linear-gradient@*, react-native-linear-gradient@^2.8.3:
   version "2.8.3"
 
@@ -6043,7 +6075,7 @@ react-native-youtube-iframe@^2.3.0:
   dependencies:
     events "^3.2.0"
 
-react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@>= 0.30.0", "react-native@>= 0.72.0", react-native@>=0.60, react-native@>=0.69, react-native@0.73.2:
+react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@>= 0.30.0", "react-native@>= 0.72.0", react-native@>=0.46, react-native@>=0.60, react-native@>=0.69, react-native@0.73.2:
   version "0.73.2"
   dependencies:
     "@jest/create-cache-key-function" "^29.6.3"

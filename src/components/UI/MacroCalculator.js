@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, Dimensions, Alert } from 'react-native';
+import CustomBtn from '../UI/CustomBtn';
 import InputFields from './InputFields.js';
 
 
@@ -151,7 +152,12 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories, onChan
       </View>
       <View style={styles.row}>
         <Text style={styles.kcalText}> 목표 섭취 열량🔥  = {totalCaloriesConsumed} Kcal</Text>
-        <Button title="Update" onPress={updateMacros} />
+        <CustomBtn 
+          onPress={updateMacros}
+          textStyle={{fontSize:18, color:"#1490FB"}}
+          title=" 변경 " 
+          buttonStyle={styles.label}
+        />
       </View>
     </View>
   );
@@ -177,7 +183,8 @@ const styles = StyleSheet.create({
   kcalText: {
     color: "#444",
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    fontFamily:"Jua"
   },
   inputfield: {
     marginTop: 10,
@@ -185,8 +192,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-start",
     width: width * 0.4,
-
-  }
+  },
+  label: {
+    backgroundColor: '#fff',
+    width: width * 0.2,
+    height:40,
+    padding: 0,
+    marginBottom:0,
+  },
 });
 
 export default MacroCalculator;

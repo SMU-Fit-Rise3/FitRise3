@@ -1,29 +1,52 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from "expo-router";
 import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
 import { images } from '../../constants';
-import { CustomBtn } from '../../src/components'
+import { CustomBtn } from '../../src/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from "../../src/api"
+import API from "../../src/api";
+import * as Font from "expo-font";
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
-const login = () => {
+const Login = () => {
   const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
 
-  // 이미 로그인된 유저일시 메인 스크린으로 이동
   useEffect(() => {
-    const checkStorageAndNavigate = async () => {
-      const userNickName = await AsyncStorage.getItem('key');
-      API.checkNickName(userNickName).then((res) => {
-        if (res.ok) {        
-          console.log("로그인 닉네임:" + userNickName)
-          router.push('tabs/mainScreen');
+    async function loadResourcesAndData() {
+      try {
+        // Pre-load fonts
+        await Font.loadAsync({
+          Bold: require('../../src/assets/font/Gaegu-Bold.ttf'),
+          Regular: require('../../src/assets/font/Gaegu-Regular.ttf'),
+          Light: require('../../src/assets/font/Gaegu-Light.ttf'),
+          Jua: require('../../src/assets/font/Jua-Regular.ttf'),
+        });
+
+        // Check if the user is already logged in
+        const userNickName = await AsyncStorage.getItem('key');
+        if (userNickName) {
+          const res = await API.checkNickName(userNickName);
+          if (res.ok) {
+            console.log("로그인 닉네임:" + userNickName);
+            router.push('tabs/mainScreen');
+            return; // Return early if user is logged in
+          }
         }
-      })
-    };
-    checkStorageAndNavigate();
+        
+        setIsReady(true); // Set ready state only if fonts are loaded and user is not logged in
+      } catch (error) {
+        console.error("Error loading resources and data", error);
+      }
+    }
+
+    loadResourcesAndData();
   }, []);
+
+  if (!isReady) {
+    return null; // 리소스 로딩 중에는 렌더링을 방지
+  }
 
   return (
     <View style={styles.container}>
@@ -34,13 +57,14 @@ const login = () => {
         />
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.quoteText}>“건강보다 나은 재산은 없다”</Text>
+        <Text style={styles.quoteText}>건강보다 나은 재산은 없다 💪🏼</Text>
         <Text style={styles.descriptionText}>
-          저희 FitRise가 볼 건강, 정신 건강까지 챙길 수 있도록 함께할게요. :)
+          저희 FitRise가 몸 건강, 정신 건강까지{"\n"} 챙길 수 있도록 함께할게요. :)
         </Text>
       </View>
       <CustomBtn
         title="가입으로 계속하기"
+        textStyle={{fontFamily:"Jua", fontSize:24}}
         onPress={() => router.push('screens/InfoInput')}
       />
     </View>
@@ -53,7 +77,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 20,
-    backgroundColor: '#FFFFFF', // 여기서 배경색을 원하는 색상으로 설정하세요.
   },
   imageContainer: {
     flex: 1,
@@ -61,8 +84,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: width, // 이미지 크기를 원하는 대로 조절하세요.
-    height: height, // 이미지 높이를 원하는 대로 조절하세요.
+    width: width,
+    height: height,
     resizeMode: 'contain',
   },
   textContainer: {
@@ -71,18 +94,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   quoteText: {
-    fontFamily: 'jua',
-    fontSize: 24,
+    fontFamily:"Jua",
+    fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10,
-    color: '#000', // 글씨 색상을 원하는 대로 조절하세요.
+    marginBottom: 20,
+    color: '#000',
   },
   descriptionText: {
-    fontSize: 18,
+    fontSize: 20,
     textAlign: 'center',
-    color: '#555', // 글씨 색상을 원하는 대로 조절하세요.
+    color: '#555',
+    fontFamily:"Bold"
   },
 });
 
-export default login;
+export default Login;

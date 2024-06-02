@@ -11,5 +11,6 @@ export { default as StepIndicator } from './StepIndicator';
 export { default as TabBar } from './TabBar';
 export { default as MacroCalculator } from './MacroCalculator';
 export { default as LoadingModal } from './LoadingModal';
-export { default as FoodCaloriePicker} from './FoodCaloriePicker'
 export { default as StressBtn} from './StressBtn'
+export { default as FoodCaloriePicker} from './FoodCaloriePicker';
+export { default as Card} from './Card';

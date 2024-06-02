@@ -110,7 +110,7 @@ const CharacterCAM = ({camStyle}) => {
             marginBottom:100,
             width: width * 0.8, // 이미지 컨테이너의 너비
             height: height * 0.5, // 이미지 컨테이너의 높이, 스크린 비율에 따라 조절 가능
-            backgroundColor: '#99aff8',
+            backgroundColor: '#eee',
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',

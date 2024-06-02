@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, ScrollView, StatusBar, Platform } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../../src/api';
+import LottieView from 'lottie-react-native';
+import lottie from '../../constants/lottie';
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
@@ -115,9 +117,9 @@ export default class CalendarScreen extends Component {
   renderDietData = (date) => {
     const dietInfo = this.state.dietData[date];
     return dietInfo ? (
-      <View style={styles.contentContainer}>
+      <View style={styles.viewContainer}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>오늘의 섭취 열량: {dietInfo.calories} Kcal</Text>
+          <Text style={styles.headerText}>오늘의 섭취 열량: <Text style={styles.highlightedText}>{dietInfo.calories}</Text> Kcal</Text>
         </View>
         <ScrollView style={styles.infoContainer}>
           {dietInfo.food.map((item, index) => (
@@ -129,50 +131,81 @@ export default class CalendarScreen extends Component {
               <Text style={styles.cardDetail}>지방: {item.fat} g</Text>
             </View>
           ))}
-      </ScrollView>
+        </ScrollView>
       </View>
-    ) : <Text style={styles.infoText}>No diet data for this date.</Text>;
+    ) : (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.infoText}> 먹은 게 없어요</Text>
+        <LottieView
+            style={styles.lottie}
+            source={lottie.hungry_lottie}
+            autoPlay
+            loop
+          />
+      </View>
+    );
   };
-  
+
   renderExerciseData = (date) => {
     const exerciseInfo = this.state.exerciseData[date];
     return exerciseInfo ? (
-      <View style={styles.contentContainer}>
+      <View style={styles.viewContainer}>
         <View style={styles.header}>
           <Text style={styles.headerText}>오늘의 운동량</Text>
         </View>
         <ScrollView style={styles.infoContainer}>
           {exerciseInfo.map((item, index) => (
             <View key={index} style={styles.card}>
-              <Text style={styles.exerciseTitle}>{item.exercise}</Text>
+              <Text style={styles.cardTitle}>{item.exercise}</Text>
               <View style={styles.detailRow}>
-                <Text style={styles.detailText}>Sets: {item.sets}</Text>
-                <Text style={styles.detailText}>Reps: {item.reps}</Text>
+                <Text style={styles.cardDetail}>세트 수: {item.sets}</Text>
+                <Text style={styles.cardDetail}>횟수: {item.reps}</Text>
               </View>
             </View>
           ))}
         </ScrollView>
       </View>
     ) : (
-      <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>No exercise data for this date.</Text>
+      <View style={styles.emptyContainer}>
+        <Text style={styles.infoText}>운동 데이터가 없어요</Text>
+        <LottieView
+            style={styles.lottie}
+            source={lottie.lazy_lottie}
+            autoPlay
+            loop
+          />
       </View>
     );
-  };  
+  };
 
   renderWeightData = (date) => {
     const weightInfo = this.state.weightData[date];
     return weightInfo ? (
-      <View style={styles.contentContainer}>
+      <View style={styles.viewContainer}>
         <View style={styles.header}>
           <Text style={styles.headerText}>오늘의 몸무게</Text>
         </View>
-        <View styles={{justifyContent:"center"}}>
-          <Text style={styles.infoText}>Weight: {weightInfo.weight} kg</Text>
+        <View style={[styles.infoContainer, { alignItems: "center" }]}>
+          <Text style={[styles.infoText, { fontSize: 50, }]}>{weightInfo.weight} kg</Text>
+          <LottieView
+            style={styles.lottie}
+            source={lottie.scale_lottie}
+            autoPlay
+            loop
+          />
         </View>
       </View>
-    ) : 
-    <Text style={styles.infoText}>No weight data for this date.</Text>;
+    ) : (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.infoText}> 몸무게 측정을 안했어요 </Text>
+        <LottieView
+            style={styles.lottie}
+            source={lottie.scale_lottie}
+            autoPlay
+            loop
+          />
+      </View>
+    );
   };
 
   renderData = () => {
@@ -191,46 +224,55 @@ export default class CalendarScreen extends Component {
 
   render() {
     const { activeScreen } = this.state;
-    const { router } = this.props; // Use router from props
 
     const dietButtonStyle = activeScreen === 'diet' ? [styles.button, styles.activeButton, { borderColor: '#9C9CE8' }] : [styles.button, { borderColor: '#9C9CE8' }];
     const exerciseButtonStyle = activeScreen === 'exercise' ? [styles.button, styles.activeButton, { borderColor: '#8181F7' }] : [styles.button, { borderColor: '#8181F7' }];
     const weightButtonStyle = activeScreen === 'weight' ? [styles.button, styles.activeButton, { borderColor: '#D0A9F5' }] : [styles.button, { borderColor: '#D0A9F5' }];
 
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.mainContainer}>
+        {Platform.OS === 'android' && <StatusBar barStyle="dark-content" backgroundColor="#F5F6FB" />}
         <View style={styles.contentContainer}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={dietButtonStyle}
-              onPress={() => this.setActiveScreen('diet')}
-            >
-              <Text style={styles.buttonText}>식단</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={exerciseButtonStyle}
-              onPress={() => this.setActiveScreen('exercise')}
-            >
-              <Text style={styles.buttonText}>운동</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={weightButtonStyle}
-              onPress={() => this.setActiveScreen('weight')}
-            >
-              <Text style={styles.buttonText}>몸무게</Text>
-            </TouchableOpacity>
+          <View style={styles.calendarContainer}>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={dietButtonStyle}
+                onPress={() => this.setActiveScreen('diet')}
+              >
+                <Text style={styles.buttonText}>식단</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={exerciseButtonStyle}
+                onPress={() => this.setActiveScreen('exercise')}
+              >
+                <Text style={styles.buttonText}>운동</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={weightButtonStyle}
+                onPress={() => this.setActiveScreen('weight')}
+              >
+                <Text style={styles.buttonText}>몸무게</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView>
+              <Calendar
+                onDayPress={this.onDaySelect}
+                markedDates={this.getMarkedDates()}
+                markingType={'multi-dot'}
+                theme={{
+                  selectedDayBackgroundColor: '#D6DEFF',
+                  todayTextColor: '#D6DEFF',
+                  arrowColor: 'gray',
+                  textDayFontFamily: 'Jua',
+                  textMonthFontFamily: 'Jua',
+                  textDayHeaderFontFamily: 'Jua',
+                  textDayFontSize: 16,
+                  textMonthFontSize: 18,
+                  textDayHeaderFontSize: 16,
+                }}
+              />
+            </ScrollView>
           </View>
-          <Calendar
-            onDayPress={this.onDaySelect}
-            markedDates={this.getMarkedDates()}
-            markingType={'multi-dot'}
-            // The theme can be customized as per your app's design
-            theme={{
-              selectedDayBackgroundColor: '#D6DEFF',
-              todayTextColor: '#D6DEFF',
-              arrowColor: 'gray',
-            }}
-          />
           <View style={styles.dataContainer}>
             {this.renderData()}
           </View>
@@ -241,20 +283,34 @@ export default class CalendarScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
-    backgroundColor: "#ddd"
+    backgroundColor: "#F5F6FB",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   contentContainer: {
     flex: 1,
+    backgroundColor: "#F5F6FB",
+  },
+  calendarContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
     padding: 10,
-    backgroundColor: "#fff"
+    marginHorizontal: 20,
+    marginVertical: 10,
+    borderRadius: 15,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 10,
-    marginVertical: 20
+    marginVertical: 20,
   },
   button: {
     marginHorizontal: 10,
@@ -268,76 +324,83 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#555',
-    fontWeight: "bold"
+    fontFamily: "Jua",
   },
   infoText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginVertical: 1,
-  },
-  timeText: {
-    fontSize: 20,
-    color: "#666",
-    marginVertical: 1
+    fontSize: 18,
+    fontFamily: "Jua",
+    marginVertical: 3,
+    color: '#333',
   },
   infoContainer: {
     height: 0.35 * height,
     padding: 10,
+    backgroundColor: "#fff",
   },
   header: {
-    marginBottom: 10,
-    flexDirection:"row",
+    marginVertical: 10,
+    flexDirection: "row",
     justifyContent: 'center',
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
+    fontFamily: "Jua",
   },
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f9f9f9',
     borderRadius: 8,
-    padding: 10,
+    padding: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    elevation: 3,
     marginBottom: 10,
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: "Jua",
     color: '#444',
+    marginBottom: 6,
   },
   cardDetail: {
     fontSize: 14,
+    fontFamily: "Jua",
     color: '#666',
+    marginVertical: 3,
   },
   dataContainer: {
     justifyContent: 'center',
-    flex:1
-  },
-  foodTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  foodDetail: {
-    fontSize: 16,
-    color: '#555',
-  },
-  //운동
-  exerciseTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#444',
-    marginBottom: 8,
+    flex: 1,
+    marginHorizontal: 20,
+    marginVertical: 10,
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
   detailRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  detailText: {
-    fontSize: 16,
-    color: '#666',
+  highlightedText: {
+    fontFamily: "Jua",
+    color: "#1490FB",
+    fontSize: 20,
+  },
+  lottie: {
+    width: width * 0.8,
+    height: height * 0.2,
+  },
+  emptyContainer: {
+    justifyContent: 'flex-start', // 상단 정렬
+    alignItems: 'center', // 중앙 정렬
+    paddingTop: 20, // 상단 여백 추가
   },
 });

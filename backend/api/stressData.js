@@ -66,6 +66,10 @@ exports.updateStressData = async function (req, res) {
             }
             console.log("스트레스 높음");
         }
+        
+        if (stressPercentage > 100) {
+            stressPercentage = 100;
+        }
 
         console.log(`Stress Percentage: ${stressPercentage}`);
 

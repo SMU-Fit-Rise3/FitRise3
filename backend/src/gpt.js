@@ -51,7 +51,7 @@ async function processUserInput(userProfile) {
                                                     name: {
                                                         type: "string",
                                                         enum: [
-                                                            "푸시 업", "앉아", "스쿼트", "덤벨 플라이",
+                                                            "팔 굽혀 펴기", "윗몸 일으키기", "스쿼트", "덤벨 플라이",
                                                             "덤벨 컬", "덤벨 숄더 프레스",
                                                             "레그 레이즈", "사이드 레터럴 레이즈", "덤벨 트라이셉스 익스텐션"
                                                         ],

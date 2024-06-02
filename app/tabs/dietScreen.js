@@ -81,8 +81,8 @@ const dietScreen = () => {
 
     return (
         <SafeAreaView style={styles.Vcontainer}>
-            <Button title="Clear AsyncStorage" onPress={clearAsyncStorage} />
             <View style={styles.contentContainer}>
+                <Button title="Clear AsyncStorage" onPress={clearAsyncStorage} style={{flex:1}}/>
                 <View style={styles.nutrientContainer}>
                     <Text style={styles.title}>오늘의 영양소 섭취량🙂</Text>
                     {nutrients.map((item) => (

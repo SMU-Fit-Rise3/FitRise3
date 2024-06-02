@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { useRouter } from "expo-router";
+import { View, StyleSheet, SafeAreaView, Text, Animated, Platform, StatusBar } from 'react-native';
 import images from '../../constants/images.js';
-import { View, StyleSheet, SafeAreaView, Animated } from 'react-native';
-import {  FloatingBtn, ExerciseList, CharacterImage, PointDisplay, LoadingModal } from '../../src/components'
+import { FloatingBtn, ExerciseList, PointDisplay, LoadingModal } from '../../src/components';
 import { useSelector } from 'react-redux';
 import CharacterGif from '../../backend/CharacterGif'; // CharacterGif 컴포넌트 가져오기
 
-// 메인 화면 컴포넌트
 const MainScreen = () => {
   const router = useRouter();
   const { loadingVisible } = useSelector(state => state.modalVisible);
@@ -48,27 +47,27 @@ const MainScreen = () => {
       outputRange: [1, 0.5, 1], // 텍스트의 투명도가 변하는 범위
     }),
   };
+
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      <View style={styles.container}>
-      <Animated.Text style={[styles.title, animatedStyle]}>
+    <View style={styles.mainContainer}>
+      <SafeAreaView style={styles.safeContainer}>
+        {Platform.OS === 'android' && <StatusBar barStyle="dark-content" />}
+        <View style={styles.contentContainer}>
+          <Animated.Text style={[styles.title, animatedStyle]}>
             반가워요 ! {"\n"}오늘도 즐겁게 운동을 시작해요 🔥
           </Animated.Text>
           {/* 운동 수행했을 때 바뀔 문장 */}
           {/* <Animated.Text style={[styles.title, animatedStyle]}>
             오늘 나는{"\n"}스쿼트의 달인✨
           </Animated.Text> */}
-        <CharacterImage />
-        <View style={styles.container}>
-          <ExerciseList />
+          <CharacterGif />
+          <View style={styles.listContainer}>
+            <ExerciseList />
+          </View>
+          <LoadingModal visible={loadingVisible} />
         </View>
-        <FloatingBtn
-          imageSource={images.robot}
-          onPress={() => router.push('/chatScreen')}
-        />
-        <LoadingModal visible={loadingVisible} />
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };
 
@@ -76,18 +75,29 @@ const MainScreen = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: "#ddd"
+    backgroundColor: "#F5F6FB",
   },
-  container: {
+  safeContainer: {
     flex: 1,
-    backgroundColor: "white",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, // Android 상태바 높이 추가
+  },
+  contentContainer: {
+    flex: 1,
+    backgroundColor: "#F5F6FB",
+    paddingHorizontal: 10,
+  },
+  listContainer: {
+    flex: 1.2,
+    backgroundColor: "#F5F6FB",
+    marginTop: 20,
   },
   title: {
+    fontFamily: "Bold",
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 20,
-  }
+  },
 });
 
 export default MainScreen;
