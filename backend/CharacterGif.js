@@ -28,9 +28,11 @@ const CharacterGif = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1, // 부모 컨테이너를 꽉 채우도록 설정
-        justifyContent: 'center', // 세로 방향 중앙 정렬
         alignItems: 'center', // 가로 방향 중앙 정렬
         backgroundColor: '#fff', // 배경색 설정
+        marginHorizontal: 20,
+        borderRadius: 15,
+        
     },
     image: {
         width: 300,

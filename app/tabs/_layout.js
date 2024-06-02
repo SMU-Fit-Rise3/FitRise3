@@ -37,7 +37,7 @@ const Layout = () => {
           }
           return <TabBarIcon focused={focused} icon={icon} selectedIcon={selectedIcon} />;
         },
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
         tabBarStyle: {
           backgroundColor: '#fff',
           borderTopWidth: 1,

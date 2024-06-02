@@ -1,64 +1,103 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import images from '../../../constants/images';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
+const { width } = Dimensions.get('window');
 
 const StressLevelIndicator = ({ stressLevel }) => {
+  const progressAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(progressAnim, {
+      toValue: stressLevel,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  }, [stressLevel]);
+
+  const progressWidth = progressAnim.interpolate({
+    inputRange: [0, 10],
+    outputRange: [0, width * 0.7], // Adjust the width as needed
+  });
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>스트레스 지수: {stressLevel}</Text>
-      <Image 
-        source={images.stress_bar} // Replace with your gauge image path
-        style={styles.gauge}
-      />
-      <View style={[styles.arrow, { left: `${(stressLevel / 10) * 100}%` }]} />
-      <Text style={styles.footer}>😄 행복한 상태 😄</Text>
+      <View style={styles.progressBarContainer}>
+        <LinearGradient
+          colors={['#D1F7E8', '#E1F8FE', '#C2C2C2']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.gradient}
+        >
+          <Animated.View style={[styles.progressBar, { width: progressWidth }]} />
+        </LinearGradient>
+        <Animated.View style={[styles.iconContainer, { left: progressWidth }]}>
+          <View style={styles.icon} />
+        </Animated.View>
+      </View>
+      <View style={styles.labelsContainer}>
+        <Text style={styles.label}>낮음</Text>
+        <Text style={styles.label}>높음</Text>
+      </View>
     </View>
   );
-};
-
-const getRotationForStressLevel = (level) => {
-  // Convert stress level to rotation in degrees
-  // This is a placeholder function, adjust as necessary for your gauge
-  const degreePerLevel = 180 / 10; // Example for a gauge that spans 180 degrees with 10 levels
-  return (level * degreePerLevel) - 90; // Adjusting for the initial rotation
 };
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    marginVertical: 20,
+    backgroundColor:"#fff"
   },
   header: {
+    fontFamily: "Jua",
     fontSize: 20,
     fontWeight: 'bold',
     color: '#555',
+    marginBottom: 50,
   },
-  gauge: {
-    width: "100%", // Set according to your image
-    height: 100, // Set according to your image
-    resizeMode: "contain",
+  progressBarContainer: {
+    width: width * 0.8,
+    height: 30,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 15,
+    overflow: 'hidden',
+    position: 'relative',
   },
-  arrow: {
+  gradient: {
+    flex: 1,
+    borderRadius: 10,
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: 'transparent', // Background color will be determined by gradient
+  },
+  iconContainer: {
     position: 'absolute',
-    bottom: 40, // Adjust this value as needed to place the arrow under the bar
-    width: 0,
-    height: 0,
-    borderLeftWidth: 10,
-    borderRightWidth: 10,
-    borderBottomWidth: 20,
-    borderStyle: 'solid',
-    backgroundColor: 'transparent',
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: '#555', // Adjust the color as needed
-    transform: [{ translateX: 75 }], // Adjust this value to center the arrow under the bar
+    top: -10,
+    width: 30,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  footer: {
-    fontSize: 20,
-    color: 'grey',
+  icon: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#777',
+  },
+  labelsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: width * 0.8,
     marginTop: 10,
-    fontWeight:"bold"
+  },
+  label: {
+    fontSize: 16,
+    color: '#555',
+    fontFamily:"Jua"
   },
 });
 

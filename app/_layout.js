@@ -1,4 +1,3 @@
-//SMU-FitRise/app/_layout.js
 import { Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import store from '../src/store';
@@ -10,16 +9,21 @@ const Layout = () => {
       <SafeAreaProvider>
         <Stack
           screenOptions={{
-            // Hide the header for all other routes.
-            headerShown: true,
+            headerShown: false, // 기본적으로 헤더를 보이게 설정
           }}>
-          <Stack.Screen name="screens/login" options={{ title: '로그인' }} />
-          <Stack.Screen name="screens/caloriesScreen" options={{ title: 'Calories Screen' }} />
-          <Stack.Screen name="screens/characterGAN" options={{ title: 'Character GAN' }} />
+          <Stack.Screen 
+            name="screens/login" 
+            options={{ 
+              title: '로그인',
+              headerShown: false, // 로그인 화면에서는 헤더 숨기기
+            }} 
+          />
+          <Stack.Screen name="screens/caloriesScreen" options={{ title: 'Calories Screen'}} />
+          <Stack.Screen name="screens/characterGAN" options={{ title: 'Character GAN', headerShown: true, }} />
           <Stack.Screen name="screens/chatScreen" options={{ title: 'Chat Screen' }} />
           <Stack.Screen name="screens/dietInput" options={{ title: 'Diet Input' }} />
           <Stack.Screen name="screens/foodSearchScreen" options={{ title: 'Food Search Screen' }} />
-          <Stack.Screen name="screens/InfoInput" options={{ title: 'Info Input' }} />
+          <Stack.Screen name="screens/InfoInput" options={{ title: '정보 입력'}} />
           <Stack.Screen name="screens/postureCorrection" options={{ title: 'Posture Correction' }} />
         </Stack>
       </SafeAreaProvider>
@@ -27,4 +31,4 @@ const Layout = () => {
   )
 }
 
-export default Layout
+export default Layout;

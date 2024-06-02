@@ -2784,7 +2784,21 @@
   resolved "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.7.tgz"
   integrity sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==
 
-"@types/react@^18.2.25", "@types/react@~18.2.45":
+"@types/react-native-global-props@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.npmjs.org/@types/react-native-global-props/-/react-native-global-props-1.1.6.tgz"
+  integrity sha512-przgaq6W9n/LBE2h4aB0giHdlJ+k34qbpUxM9w/3OLVbFowI5rW3+JBsjhuRHpiGYRJkTUJKOzLi+pYZz7FfFw==
+  dependencies:
+    "@types/react-native" "^0.70"
+
+"@types/react-native@^0.70":
+  version "0.70.19"
+  resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.70.19.tgz"
+  integrity sha512-c6WbyCgWTBgKKMESj/8b4w+zWcZSsCforson7UdXtXMecG3MxCinYi6ihhrHVPyUrVzORsvEzK8zg32z4pK6Sg==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@^18.2.25", "@types/react@~18.2.45":
   version "18.2.74"
   dependencies:
     "@types/prop-types" "*"
@@ -4818,13 +4832,6 @@ expo-file-system@~16.0.0, expo-file-system@~16.0.8, expo-file-system@~16.0.9:
   resolved "https://registry.npmjs.org/expo-file-system/-/expo-file-system-16.0.9.tgz"
   integrity sha512-3gRPvKVv7/Y7AdD9eHMIdfg5YbUn2zbwKofjsloTI5sEC57SLUFJtbLvUCz9Pk63DaSQ7WIE1JM0EASyvuPbuw==
 
-expo-font@^12.0.5:
-  version "12.0.5"
-  resolved "https://registry.npmjs.org/expo-font/-/expo-font-12.0.5.tgz"
-  integrity sha512-h/VkN4jlHYDJ6T6pPgOYTVoDEfBY0CTKQe4pxnPDGQiE6H+DFdDgk+qWVABGpRMH0+zXoHB+AEi3OoQjXIynFA==
-  dependencies:
-    fontfaceobserver "^2.1.0"
-
 expo-font@~11.10.3:
   version "11.10.3"
   resolved "https://registry.npmjs.org/expo-font/-/expo-font-11.10.3.tgz"
@@ -6437,6 +6444,16 @@ loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
+lottie-ios@3.2.3:
+  version "3.2.3"
+  resolved "https://registry.npmjs.org/lottie-ios/-/lottie-ios-3.2.3.tgz"
+  integrity sha512-mubYMN6+1HXa8z3EJKBvNBkl4UoVM4McjESeB2PgvRMSngmJtC5yUMRdhbbrIAn5Liu3hFGao/14s5hQIgtkRQ==
+
+lottie-react-native@6.5.1:
+  version "6.5.1"
+  resolved "https://registry.npmjs.org/lottie-react-native/-/lottie-react-native-6.5.1.tgz"
+  integrity sha512-pjih71P6qX6Ax5ucUBA+YJO7+fnveI581Bd8LmYeARm3spq3AnoGzEkrWaieM8odnK6WI4d5dwEJsxge/QjFPw==
+
 lower-case@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npmjs.org/lower-case/-/lower-case-2.0.2.tgz"
@@ -7928,6 +7945,11 @@ react-native-gifted-charts@^1.4.9:
   dependencies:
     gifted-charts-core "^0.1.4"
 
+react-native-global-props@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.npmjs.org/react-native-global-props/-/react-native-global-props-1.1.5.tgz"
+  integrity sha512-QDeAdRel6zyJfbgyFxZi9QXZe78OdlANxJae0rJn76uTqdt/A+iWBVjJy3NmaN/fpKy0uV0HhW6Hu4xM0QCisQ==
+
 react-native-linear-gradient@*, react-native-linear-gradient@^2.8.3:
   version "2.8.3"
   resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz"
@@ -8027,7 +8049,7 @@ react-native-youtube-iframe@^2.3.0:
   dependencies:
     events "^3.2.0"
 
-react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@>= 0.30.0", "react-native@>= 0.72.0", react-native@>=0.60, react-native@>=0.69, react-native@0.73.2:
+react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@>= 0.30.0", "react-native@>= 0.72.0", react-native@>=0.46, react-native@>=0.60, react-native@>=0.69, react-native@0.73.2:
   version "0.73.2"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.73.2.tgz"
   integrity sha512-7zj9tcUYpJUBdOdXY6cM8RcXYWkyql4kMyGZflW99E5EuFPoC7Ti+ZQSl7LP9ZPzGD0vMfslwyDW0I4tPWUCFw==
@@ -9308,7 +9330,7 @@ type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
-typescript@^5.3.0:
+typescript@^5.4.5:
   version "5.4.5"
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.4.5.tgz"
   integrity sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==

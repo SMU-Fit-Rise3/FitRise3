@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, View, StyleSheet, Text, Dimensions, Button, Image } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text, Dimensions, Image } from 'react-native';
 import { useRouter } from "expo-router";
-import { CustomBtn,StepIndicator } from '../../src/components'
+import { CustomBtn, StepIndicator } from '../../src/components'
 import * as tf from '@tensorflow/tfjs';
 import * as tfReactNative from '@tensorflow/tfjs-react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { fetch } from '@tensorflow/tfjs-react-native';
 import { images } from '../../constants';
 import * as FileSystem from 'expo-file-system';
 import { receiveImages, uploadImageToServer } from '../../backend/getGif';
@@ -13,7 +12,7 @@ import { Asset } from 'expo-asset';
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
-const characterGAN = () => {
+const CharacterGAN = () => {
   const router = useRouter();
   const [imag, setImages] = useState([]);
   const [imageUri, setImageUri] = useState(null);
@@ -127,42 +126,61 @@ const characterGAN = () => {
         .catch((error) => {
           console.error('이미지 업로드 중 에러 발생:', error);
           // 업로드 실패 처리
-        })
-        .finally(() => {
-          setUploading(false); // 업로드 종료
         });
     } catch (error) {
       console.error('이미지 로딩 중 에러 발생:', error);
-      setUploading(false); // 에러 발생 시에도 업로드 상태를 종료로 변경
     }
   };
 
-
   return (
-    <SafeAreaView style={styles.safeContainer}>
+    <SafeAreaView style={styles.mainContainer}>
       <StepIndicator
         steps={stepLabels}
         currentStep={3}
       />
-      <View style={styles.container}>
+      <View style={styles.contentContainer}>
         <Text style={styles.title}>나만의 캐릭터를 생성하세요🏃🏻</Text>
-        <View style={styles.buttonContainer}>
-          <Button title="갤러리에서 선택" onPress={selectImage} />
-          <Button title="사진 찍기" onPress={takePicture} />
-        </View>
+          <Text style={styles.description}>사진을 새로 찍거나 갤러리에서 선택하여{"\n"}
+            <Text style={styles.highlightedText}>나를 닮은</Text> 캐릭터를 생성하세요.
+        </Text>
         {characterImage && (
-          <View>
+          <View style={{ alignItems: 'center' }}>
             <Image source={characterImage} style={styles.image} />
-            <Button title="다시 선택" onPress={() => setImageUri(null)} />
+            <CustomBtn
+              onPress={() => setImageUri(null)}
+              title="다시 선택"
+              buttonStyle={styles.label}
+              textStyle={styles.highlightedText}
+            />
           </View>
         )}
         {!characterImage && imageUri && (
-          <View>
+          <View style={{ alignItems: 'center' }}>
             <Image source={{ uri: imageUri }} style={styles.image} />
-            <Button title="이미지 분류" onPress={classifyImage} />
+            <CustomBtn
+              onPress={classifyImage}
+              title="캐릭터 생성"
+              buttonStyle={styles.label}
+              textStyle={styles.highlightedText}
+            />
           </View>
         )}
-        {prediction && <Text style={styles.prediction}>{`Prediction: ${prediction}`}</Text>}
+      </View>
+      <View style={styles.buttonContainer}>
+        <CustomBtn
+          onPress={selectImage}
+          title="갤러리에서 선택"
+          buttonStyle={styles.label}
+          textStyle={styles.highlightedText}
+        />
+        <CustomBtn
+          onPress={takePicture}
+          title="사진 찍기"
+          buttonStyle={styles.label}
+          textStyle={styles.highlightedText}
+        />
+      </View>
+      <View style={{ alignItems: 'center', marginBottom: 20 }}>
         <CustomBtn
           buttonStyle={styles.Btn}
           title="다음"
@@ -174,43 +192,57 @@ const characterGAN = () => {
 };
 
 const styles = StyleSheet.create({
-  safeContainer: {
+  mainContainer: {
     flex: 1,
     backgroundColor: '#ffffff',
   },
-  container: {
+  contentContainer: {
     flex: 1,
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: '#FFFFFF', // 여기서 배경색을 원하는 색상으로 설정하세요.
+    padding: 10,
   },
   Btn: {
     backgroundColor: '#99aff8',
-    width: width * 0.8,
-    marginTop: 20,
+    width: width * 0.85,
+    marginTop: 30,
+  },
+  label: {
+    backgroundColor: '#fff',
+    width: width * 0.3,
+    height: 40,
+    padding: 0,
+    marginBottom: 0,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    marginVertical: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   image: {
-    width: width *0.3,
-    height: height *0.3,
+    width: width * 0.3,
+    height: height * 0.3,
     marginVertical: 20,
-    resizeMode:"contain"
+    resizeMode: "contain",
   },
   title: {
-    fontSize: 24,
+    fontFamily: "Jua",
+    fontSize: 32,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
-  prediction: {
-    marginTop: 20,
+  description: {
+    fontSize: 18,
+    marginBottom: 20,
+    fontWeight: "500",
+    color: "#555",
+    fontFamily: "Jua",
+  },
+  highlightedText: {
+    fontFamily: "Jua",
+    color: "#1490FB",
     fontSize: 18,
   },
 });
 
-export default characterGAN;
+export default CharacterGAN;

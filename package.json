@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/vector-icons": "^14.0.0",
     "@expo/webpack-config": "~19.0.1",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-picker/picker": "^2.7.6",
@@ -20,8 +21,8 @@
     "@types/react": "~18.2.45",
     "expo": "^50.0.1",
     "expo-camera": "^13.4.4",
-    "expo-font": "^12.0.5",
     "expo-file-system": "~16.0.9",
+    "expo-font": "~11.10.3",
     "expo-gl": "^13.6.0",
     "expo-image-picker": "~14.7.1",
     "expo-linear-gradient": "^12.7.2",
@@ -30,6 +31,8 @@
     "expo-screen-orientation": "^6.4.1",
     "expo-splash-screen": "~0.26.5",
     "expo-status-bar": "~1.11.1",
+    "lottie-ios": "3.2.3",
+    "lottie-react-native": "6.5.1",
     "md5": "^2.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -38,6 +41,7 @@
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-gifted-charts": "^1.4.9",
+    "react-native-global-props": "^1.1.5",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-paper": "^5.12.3",
     "react-native-picker-select": "^9.1.3",
@@ -54,7 +58,8 @@
     "typescript": "^5.4.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@types/react-native-global-props": "^1.1.6"
   },
   "private": true
 }

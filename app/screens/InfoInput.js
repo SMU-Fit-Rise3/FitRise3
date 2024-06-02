@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { View, StyleSheet, SafeAreaView, Dimensions, Alert, ScrollView } from "react-native";
+import { View, StyleSheet, SafeAreaView, Dimensions, Alert, ScrollView, Text, Pressable, Modal, TouchableOpacity,TouchableWithoutFeedback } from "react-native";
 import { InputFields, InputLabelView, Selector, CustomBtn, GoalSelector, StepIndicator, LoadingModal } from "../../src/components";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from "../../src/api";
+import { Ionicons } from '@expo/vector-icons'; // Import icon library
+import { setCustomText } from 'react-native-global-props';
+import * as Font from 'expo-font';
 
-
-const { width } = Dimensions.get('window'); // Get the screen width
+const { height,width } = Dimensions.get('window'); // Get the screen width
 
 const InfoInput = () => {
     const router = useRouter();
+    //step
     const stepLabels = ['Step 1', 'Step 2', 'Step 3', 'Step 4'];
+
+    //font
+    const [fontsLoaded, setFontsLoaded] = useState(false);
 
     const genderOptions = [
         { label: '여성', value: 'female', icon: '👩🏻' },
@@ -34,6 +40,7 @@ const InfoInput = () => {
     const [exerciseGoal, setExerciseGoal] = useState(null);
     const [namecheck, setNameCheck] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [tooltipVisible, setTooltipVisible] = useState(false); // Tooltip visibility state
 
     // 입력값 검증 함수
     const validateInputs = () => {
@@ -54,7 +61,6 @@ const InfoInput = () => {
         }
         return true;
     };
-
 
     // 다음 버튼 클릭 이벤트
     const handleNextPress = () => {
@@ -89,12 +95,12 @@ const InfoInput = () => {
                 }
             });
         } // This closing brace was missing
-    };    
+    };
 
     const NickcopyCheck = (nickname) => {
         setIsLoading(true);
         API.checkNickName(nickname).then((res) => {
-            if (res.status==404) {
+            if (res.status == 404) {
                 setNameCheck(true)
                 console.log("중복확인")
                 Alert.alert(
@@ -106,7 +112,7 @@ const InfoInput = () => {
                     .catch((error) => {
                         console.error('Failed to save the data to the storage', error);
                     });
-            } else if(res.status==200) {
+            } else if (res.status == 200) {
                 setNameCheck(false)
                 Alert.alert(
                     '이미 사용중인 닉네임입니다',
@@ -115,6 +121,60 @@ const InfoInput = () => {
             setIsLoading(false);
         })
     }
+
+    //font loading
+    useEffect(() => {
+        async function loadFonts() {
+          await Font.loadAsync({
+            Bold: require('../../src/assets/font/Gaegu-Bold.ttf'),
+            Regular: require('../../src/assets/font/Gaegu-Regular.ttf'),
+            Light: require('../../src/assets/font/Gaegu-Light.ttf'),
+            Jua: require('../../src/assets/font/Jua-Regular.ttf'),
+          });
+          setFontsLoaded(true);
+        }
+    
+        loadFonts();
+      }, []);
+    
+      if (!fontsLoaded) {
+        return null; // 폰트 로딩 중에는 렌더링을 방지
+      }
+    
+      const customTextProps = {
+        style: {
+          fontFamily: 'Jua',
+        },
+      };
+      setCustomText(customTextProps);
+
+    // Tooltip component
+    const renderTooltip = () => (
+        <Modal
+            animationType="fade"
+            transparent={true}
+            visible={tooltipVisible}
+            onRequestClose={() => setTooltipVisible(false)}
+        >
+            <TouchableWithoutFeedback onPress={() => setTooltipVisible(false)}>
+                <View style={[styles.tooltipContainer, styles.shadow]}>
+                    <TouchableWithoutFeedback>
+                        <View style={styles.tooltip}>
+                            <Text style={styles.tooltipTitle}>운동 수준 체크법</Text>
+                            <Text style={styles.boldText}>초급자</Text>
+                            <Text style={styles.tooltipText}>주로 앉아서 일하는 사무직이나 생활에서 움직임이 거의 없는 경우</Text>
+                            <Text style={styles.boldText}>중급자</Text>
+                            <Text style={styles.tooltipText}>매일 일상적으로 걷는 시간이 있거나 가벼운 운동을 병행하는 경우</Text>
+                            <Text style={styles.boldText}>고수</Text>
+                            <Text style={styles.tooltipText}>몸을 활발히 쓰는 일을 하거나 격한 운동을 하고 있는 경우</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
+            </TouchableWithoutFeedback>
+        </Modal>
+    );
+    
+
     return (
         <SafeAreaView style={styles.safeContainer}>
             <ScrollView style={styles.contentContainer}>
@@ -137,6 +197,7 @@ const InfoInput = () => {
                     <CustomBtn
                         onPress={() => NickcopyCheck(nickname)}
                         title=" 중복 확인 "
+                        textStyle={{fontSize:20}}
                         buttonStyle={styles.duplicateCheckBtn}
                     />
                 </View>
@@ -151,7 +212,7 @@ const InfoInput = () => {
                         }}
                     />
                     <InputFields
-                        label="운동횟수"
+                        label="주간 운동 횟수"
                         unit="회"
                         keyboardType="numeric"
                         textInputProps={{
@@ -183,6 +244,11 @@ const InfoInput = () => {
                         }}
                     />
                 </View>
+                <View style={styles.inlineLabel}>
+                    <Pressable onPress={() => setTooltipVisible(true)}>
+                        <Ionicons name="help-circle-outline" size={24} color="#888" />
+                    </Pressable>
+                </View>
                 <InputLabelView label="운동 수준">
                     <Selector options={exerciseLevelOptions} onSelectOption={(value) => setSelectedExerciseLevel(value)} />
                 </InputLabelView>
@@ -197,6 +263,7 @@ const InfoInput = () => {
                     />
                 </View>
                 <LoadingModal visible={isLoading} />
+                {renderTooltip()}
             </ScrollView>
         </SafeAreaView>
     );
@@ -233,7 +300,54 @@ const styles = StyleSheet.create({
     finishBtn: {
         backgroundColor: '#99aff8',
         width: width * 0.85,
-    }
+    },
+    inlineLabel: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        top:20,
+        left:80
+    },
+    labelText: {
+        marginRight: 8,
+    },
+    tooltipContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    tooltipTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    tooltip: {
+        position: 'absolute',
+        top: height * 0.35, // Adjust as necessary to position below the icon
+        left: width * 0.02, // Adjust as necessary to align with the icon
+        backgroundColor: 'white',
+        padding: 17,
+        borderRadius: 10,
+        alignItems: 'center',
+        width: width * 0.45,
+    },
+    tooltipText: {
+        marginBottom: 10,
+        fontSize:12
+    },
+    boldText: {
+        fontWeight: 'bold',
+        marginBottom:5
+    },
+    shadow: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
 });
 
 export default InfoInput;

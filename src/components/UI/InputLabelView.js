@@ -20,8 +20,9 @@ const styles = StyleSheet.create({
     margin: 10, // 라벨의 패딩을 조절할 수 있습니다.
     zIndex: 10, // 라벨을 다른 요소들 위에 띄우기 위함입니다.
     fontWeight: 'bold', // 라벨의 글씨 두께입니다.
-    fontSize: 16,
-    color:"#333"
+    fontSize: 20,
+    color:"#333",
+    fontFamily:"Jua"
   },
 });
 

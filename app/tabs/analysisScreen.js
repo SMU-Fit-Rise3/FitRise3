@@ -119,7 +119,12 @@ const analysisScreen = () => {
                         if (data) {
                             console.log(data);
                             setIsLoading(false);
-                            Alert.alert('몸무게 등록완료');
+                            AsyncStorage.getItem('userId').then((userId) => {
+                                API.getAnalysis(userId)
+                                    .then((data) => {
+                                        processData(data);
+                                    })
+                            });
                         }
                     })
             })

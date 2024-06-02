@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert,Dimensions } from 'react-native';
+import { SafeAreaView,View, Text, StyleSheet, Alert,Dimensions } from 'react-native';
 import { InputFields,StepIndicator,CustomBtn,MacroCalculator } from '../../src/components';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
@@ -88,14 +88,14 @@ const CaloriesScreen = () => {
     };
 
     return (
-        <View style={styles.mainContainer}>
+        <SafeAreaView style={styles.mainContainer}>
             <StepIndicator steps={['Step 1', 'Step 2', 'Step 3', 'Step 4']} currentStep={currentStep - 1}/>
                 {currentStep === 2 && (
                     <View style={styles.mainContainer}>
                         <View style={styles.container}>
                             <Text style={styles.title}>목표 칼로리를 {"\n"}계산해드렸어요 🔥</Text>
                             <Text style={styles.description}>
-                                일일 권장 섭취량은
+                                일일 권장 섭취량은{" "}
                                 <Text style={styles.highlightedText}>
                                     {calorieInfo.minCalories} ~ {calorieInfo.maxCalories} kcal {""}
                                 </Text>
@@ -118,6 +118,10 @@ const CaloriesScreen = () => {
                             />
                         </View>
                         <View style={styles.contentContainer}>
+                            <CustomBtn
+                                title="꿀팁!"
+                                textStyle={styles.highlightedText}
+                                buttonStyle={styles.label}/>
                             <Text style={styles.description}>일반적으로 권장 섭취량보다 {""}
                                 <Text style={styles.highlightedText}>500 kcal {""}</Text>
                                 정도 {"\n"}적게 먹으면 감량 효과를 기대할 수 있어요.
@@ -133,10 +137,10 @@ const CaloriesScreen = () => {
                     </View>
                 )}
                 {currentStep ===3 && (
-                    <View>
+                    <View style={styles.mainContainer}>
                         <Text style={styles.title}>목표 탄단지 정하기 {"\n"}이제 다 왔어요👏</Text>
-                        <Text>목표 열량과 식단에 맞는 
-                            <Text style={styles.highlightedText}>추천 섭취량</Text>
+                        <Text style={styles.description}>목표 열량과 식단에 맞는 
+                            <Text style={styles.highlightedText}> 추천 섭취량</Text>
                             을 계산했어요. {"\n"}목표량을 직접 입력할 수도 있어요.
                         </Text>
                         <MacroCalculator 
@@ -154,7 +158,7 @@ const CaloriesScreen = () => {
                         </View>
                     </View>
                 )}
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -174,16 +178,29 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         marginTop:50
     },
+    finishBtn: {
+        backgroundColor: '#99aff8',
+        width: width * 0.85,
+        marginTop:30
+    },
+    label: {
+        backgroundColor: '#E1F1FE',
+        width: width * 0.2,
+        height:40,
+        padding: 0
+    },
     title: {
-        fontSize: 30,
+        fontFamily:"Jua",
+        fontSize: 32,
         fontWeight: 'bold',
         marginBottom: 10,
     },
     description: {
-        fontSize: 16,
+        fontSize: 18,
         marginBottom: 20,
         fontWeight:"500",
-        color:"#333"
+        color:"#555",
+        fontFamily:"Jua"
     },
     input: {
         marginTop:10,
@@ -192,17 +209,16 @@ const styles = StyleSheet.create({
         alignItems:"flex-start",
         width:width*0.9,
     },
-    finishBtn: {
-        backgroundColor: '#99aff8',
-        width: width * 0.85,
-    },
     kcalText:{
+        fontFamily:"Jua",
         color:"#444",
         fontSize: 20,
         fontWeight:"bold"
     },
     highlightedText:{
-        color:"#2FADFF"
+        fontFamily:"Jua",
+        color:"#1490FB",
+        fontSize: 18
     }
 });
 
