@@ -94,7 +94,7 @@ const InfoInput = () => {
                     goal: userInfo.exerciseGoal
                 }
             });
-        } // This closing brace was missing
+        }
     };
 
     const NickcopyCheck = (nickname) => {

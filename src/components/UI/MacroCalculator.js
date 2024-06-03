@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, Dimensions, Alert } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Alert } from 'react-native';
 import CustomBtn from '../UI/CustomBtn';
 import InputFields from './InputFields.js';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import API from '../../api';
 
 const { width } = Dimensions.get('window'); // Get the screen width
 
@@ -22,29 +23,29 @@ const MacroCalculator = ({ totalCalories, goal, minCalories, maxCalories, onChan
     fat: ''
   });
 
-  // 초기 매크로 계산
-  const calculateInitialMacros = (calories, goal) => {
-    let ratios = { carbs: 0.5, protein: 0.3, fat: 0.2 };
-    if (goal === 'cut') {
-      ratios = { carbs: 0.65, protein: 0.25, fat: 0.1 };
-    } else if (goal === 'muscle') {
-      ratios = { carbs: 0.6, protein: 0.2, fat: 0.2 };
-    }
+ // 초기 매크로 계산
+ const calculateInitialMacros = (calories, goal) => {
+  let ratios = { carbs: 0.5, protein: 0.3, fat: 0.2 };
+  if (goal === 'cut') {
+    ratios = { carbs: 0.65, protein: 0.25, fat: 0.1 };
+  } else if (goal === 'muscle') {
+    ratios = { carbs: 0.6, protein: 0.2, fat: 0.2 };
+  }
 
-    const initialMacros = {
-      carbs: Math.round(calories * ratios.carbs),
-      protein: Math.round(calories * ratios.protein),
-      fat: Math.round(calories * ratios.fat)
-    };
-    setMacros(initialMacros);
-
-    onChange({
-      totalCalories:calories,
-      carbs:Math.floor(initialMacros.carbs/4),
-      protein:Math.floor(initialMacros.protein/4),
-      fat:Math.floor(initialMacros.fat/9)
-    });
+  const initialMacros = {
+    carbs: Math.round(calories * ratios.carbs),
+    protein: Math.round(calories * ratios.protein),
+    fat: Math.round(calories * ratios.fat)
   };
+  setMacros(initialMacros);
+
+  onChange({
+    totalCalories:calories,
+    carbs:Math.floor(initialMacros.carbs/4),
+    protein:Math.floor(initialMacros.protein/4),
+    fat:Math.floor(initialMacros.fat/9)
+  });
+};
 
   // 사용자 입력 처리
   const handleGramsChange = (nutrient, grams) => {
