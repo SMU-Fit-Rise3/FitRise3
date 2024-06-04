@@ -420,6 +420,7 @@ const CameraComponent = ({
         />
         {renderPose()}
         {renderSet()}
+        {renderFps()}
         {renderCount()}
         {exerciseData.title === 'dumbbell curl' && <Curl exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
         {exerciseData.title === 'dumbbell fly' && <Fly exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
@@ -490,7 +491,7 @@ const styles = StyleSheet.create({
   },
   fpsContainer: {
     position: 'absolute',
-    top: 10,
+    top: 40,
     left: 10,
     width: 100,
     alignItems: 'center',

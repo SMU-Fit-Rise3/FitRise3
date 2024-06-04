@@ -16,7 +16,7 @@ const StressLevelIndicator = ({ stressLevel }) => {
   }, [stressLevel]);
 
   const progressWidth = progressAnim.interpolate({
-    inputRange: [0, 10],
+    inputRange: [0, 100],
     outputRange: [0, width * 0.7], // Adjust the width as needed
   });
 
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 20,
-    backgroundColor:"#fff"
+    backgroundColor: "#fff",
   },
   header: {
     fontFamily: "Jua",
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     color: '#555',
-    fontFamily:"Jua"
+    fontFamily: "Jua"
   },
 });
 

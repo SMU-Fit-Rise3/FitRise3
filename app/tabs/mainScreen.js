@@ -1,16 +1,25 @@
 import React, { useEffect, useRef } from 'react';
 import { useRouter } from "expo-router";
-import { View, StyleSheet, SafeAreaView, Text, Animated, Platform, StatusBar } from 'react-native';
-import images from '../../constants/images.js';
-import { FloatingBtn, ExerciseList, PointDisplay, LoadingModal } from '../../src/components';
+import { View, StyleSheet, SafeAreaView, Animated, Platform, StatusBar } from 'react-native';
+import { ExerciseList, LoadingModal } from '../../src/components';
 import { useSelector } from 'react-redux';
 import CharacterGif from '../../backend/CharacterGif'; // CharacterGif 컴포넌트 가져오기
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import API from '../../src/api';
 
 const MainScreen = () => {
-  const router = useRouter();
   const { loadingVisible } = useSelector(state => state.modalVisible);
-
   const animatedValue = useRef(new Animated.Value(0)).current;
+  
+  useEffect(() => {
+    AsyncStorage.getItem('userId').then((userId) => {
+      console.log("다한 운동들")
+      API.getDoExercise(userId)
+          .then((result) => {
+              console.log('Response from server:', result);
+          });
+  })
+  }, []);
 
   useEffect(() => {
     const createAnimation = () => {

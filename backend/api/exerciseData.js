@@ -153,3 +153,30 @@ exports.completedExercise = async function (req, res) {
     res.status(500).send('Server error');
   }
 }
+
+//다한 운동
+exports.getDoExerciseData = async function (req, res) {
+  const userId = req.params.id;
+  const today = new Date().toISOString().split('T')[0];
+  try {
+    const calendarDay = await prisma.calendarDay.findFirst({
+      where: {
+        day: today,
+        userId: userId,
+      },
+      include: {
+        doexercises: true,
+      },
+    });
+    if (calendarDay) {
+      const exercises = calendarDay.doexercises.map((exercise) => exercise.exercise);
+      res.status(200).json(exercises);
+    } else {
+      res.status(200).json([]);
+    }
+  } catch (error) {
+    res.status(500).send('Server error');
+  } finally {
+    await prisma.$disconnect();
+  }
+}

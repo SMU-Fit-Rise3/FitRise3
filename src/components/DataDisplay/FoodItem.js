@@ -29,11 +29,13 @@ const styles = StyleSheet.create({
   foodName: {
     fontSize: 14,
     fontWeight: 'bold',
-    marginBottom:3
+    marginBottom:3,
+    fontFamily:"Jua"
   },
   calories: {
     fontSize: 12,
     color: '#666',
+    fontFamily:"Jua"
   }
 });
 

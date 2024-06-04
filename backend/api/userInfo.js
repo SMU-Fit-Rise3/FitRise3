@@ -49,6 +49,7 @@ exports.postUserData = async function (req, res) {
 
 exports.insertCalorieData = async function (req, res) {
     const userId = req.params.id;
+    console.log(userId)
     const { calorie_goal, carbs, protein, fat } = req.body;
     try {
         const existingCalorie = await prisma.calorie.findFirst({

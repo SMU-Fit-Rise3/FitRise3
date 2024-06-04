@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { View, FlatList, Text, StyleSheet, TouchableOpacity, 
+         Dimensions, ScrollView, Platform, StatusBar, SafeAreaView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import nutrientData from '../../src/assets/nutrientData.json';
 import { FoodItem, SearchInput, CustomBtn, NutrientModal, LoadingModal } from '../../src/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API from '../../src/api'
+import API from '../../src/api';
+
 const { width, height } = Dimensions.get('window');
 
 const DietInput = () => {
@@ -129,9 +131,9 @@ const DietInput = () => {
 
   const handleNext = () => {
     const selectedMealData = JSON.stringify(meals[type]);
-    console.log(selectedMealData)
-    console.log(type)
-    //여기서 요청
+    console.log(selectedMealData);
+    console.log(type);
+    // 여기서 요청
     setIsLoading(true);
     AsyncStorage.getItem('userId').then((userId) => {
       API.postEatFood(userId, type, selectedMealData)
@@ -140,8 +142,8 @@ const DietInput = () => {
             pathname: 'tabs/dietScreen'
           });
           setIsLoading(false);
-        })
-    })
+        });
+    });
   };
 
   const getBackgroundColor = (mealType) => {
@@ -160,51 +162,58 @@ const DietInput = () => {
   };
 
   return (
-    <View style={[styles.container, getBackgroundColor(type)]}>
-      <ScrollView horizontal={true} style={styles.scrollView}>
-        {savedNutrients.map((food, index) => (
-          <View key={index} style={styles.foodContainer}>
-            <Text style={styles.foodName}>{food.name}</Text>
-            <TouchableOpacity style={styles.deleteButton} onPress={() => deleteFood(index)}>
-              <Text style={{ fontWeight: "bold", fontSize: 10 }}>X</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
-      <SearchInput query={query} handleSearch={handleSearch} />
-      <View style={styles.flatListContainer}>
-        <FlatList
-          data={filteredData}
-          keyExtractor={item => item.Food_CD}
-          renderItem={({ item }) => (
-            <FoodItem item={item} onPress={() => openModal(item)} />
-          )}
-          contentContainerStyle={styles.flatListContentContainer}
+    <SafeAreaView style={styles.mainContainer}>
+      {Platform.OS === 'android' && <StatusBar barStyle="dark-content" />}
+      <View style={[styles.container, getBackgroundColor(type)]}>
+        <ScrollView horizontal={true} style={styles.scrollView}>
+          {savedNutrients.map((food, index) => (
+            <View key={index} style={styles.foodContainer}>
+              <Text style={styles.foodName}>{food.name}</Text>
+              <TouchableOpacity style={styles.deleteButton} onPress={() => deleteFood(index)}>
+                <Text style={{ fontWeight: "bold", fontSize: 10 }}>X</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
+        <SearchInput query={query} handleSearch={handleSearch} />
+        <View style={styles.flatListContainer}>
+          <FlatList
+            data={filteredData}
+            keyExtractor={item => item.Food_CD}
+            renderItem={({ item }) => (
+              <FoodItem item={item} onPress={() => openModal(item)} />
+            )}
+            contentContainerStyle={styles.flatListContentContainer}
+          />
+        </View>
+        <NutrientModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          selectedItem={selectedItem}
+          handleCalorieChange={handleCalorieChange}
+          handleSave={handleSave}
         />
+        <CustomBtn
+          onPress={handleNext}
+          title='다음'
+          textStyle={{ color: "#444" }}
+          buttonStyle={[styles.button, getBackgroundColor(type)]}
+        />
+        <LoadingModal visible={isLoading} />
       </View>
-      <NutrientModal
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        selectedItem={selectedItem}
-        handleCalorieChange={handleCalorieChange}
-        handleSave={handleSave}
-      />
-      <CustomBtn
-        onPress={handleNext}
-        title='다음'
-        textStyle={{ color: "#444" }}
-        buttonStyle={[styles.button, getBackgroundColor(type)]}
-      />
-      <LoadingModal visible={isLoading} />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, // Android 상태바 높이 추가
+    backgroundColor: "#ccdddf",
+  },
   container: {
     flex: 1,
     paddingHorizontal: 10,
-    backgroundColor: "#ccdddf"
   },
   scrollView: {
     flexDirection: 'row',
@@ -217,15 +226,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 20,
     padding: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   foodName: {
-    marginRight: 10
+    marginRight: 10,
+    fontFamily:"Jua"
   },
   deleteButton: {
     backgroundColor: '#eee',
     padding: 5,
-    borderRadius: 30
+    borderRadius: 30,
   },
   flatListContainer: {
     height: height * 0.65, // FlatList의 높이를 고정
@@ -247,8 +257,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     fontSize: 16,
-    color: '#999'
-  }
+    color: '#999',
+  },
 });
 
 export default DietInput;
