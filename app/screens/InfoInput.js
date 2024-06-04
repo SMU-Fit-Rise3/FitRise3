@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { View, StyleSheet, SafeAreaView, Dimensions, Alert, ScrollView, Text, Pressable, Modal, TouchableOpacity,TouchableWithoutFeedback } from "react-native";
+import { View, StyleSheet, SafeAreaView, Dimensions, Alert, ScrollView, Text, Pressable, Modal, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { InputFields, InputLabelView, Selector, CustomBtn, GoalSelector, StepIndicator, LoadingModal } from "../../src/components";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from "../../src/api";
@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons'; // Import icon library
 import { setCustomText } from 'react-native-global-props';
 import * as Font from 'expo-font';
 
-const { height,width } = Dimensions.get('window'); // Get the screen width
+const { height, width } = Dimensions.get('window'); // Get the screen width
 
 const InfoInput = () => {
     const router = useRouter();
@@ -78,22 +78,24 @@ const InfoInput = () => {
         //빈칸검사 && 유저정보 DB생성 주석처리
         if (validateInputs()) {
             setIsLoading(true);
-                API.createUser(userInfo)
-                    .then((result) => {
-                        console.log('Response from server:', result);
-                        AsyncStorage.setItem('userId', result.id).then(console.log('AsyncStorage ID저장완료'));
-                        setIsLoading(false);
+            API.createUser(userInfo)
+                .then((result) => {
+                    console.log('Response from server:', result);
+                    AsyncStorage.setItem('userId', result.id).then(console.log('AsyncStorage ID저장완료'));
+                    setIsLoading(false);
+                    router.push({
+                        pathname: 'screens/caloriesScreen',
+                        params: {
+                            gender: userInfo.selectedGender,
+                            height: userInfo.height,
+                            exerciseLevel: userInfo.selectedExerciseLevel,
+                            goal: userInfo.exerciseGoal
+                        }
                     });
-
-            router.push({
-                pathname: 'screens/caloriesScreen',
-                params: {
-                    gender: userInfo.selectedGender,
-                    height: userInfo.height,
-                    exerciseLevel: userInfo.selectedExerciseLevel,
-                    goal: userInfo.exerciseGoal
-                }
-            });
+                }).catch((error) => {
+                    console.error('Error creating user:', error);
+                    setIsLoading(false);
+                });
         }
     };
 
@@ -125,28 +127,28 @@ const InfoInput = () => {
     //font loading
     useEffect(() => {
         async function loadFonts() {
-          await Font.loadAsync({
-            Bold: require('../../src/assets/font/Gaegu-Bold.ttf'),
-            Regular: require('../../src/assets/font/Gaegu-Regular.ttf'),
-            Light: require('../../src/assets/font/Gaegu-Light.ttf'),
-            Jua: require('../../src/assets/font/Jua-Regular.ttf'),
-          });
-          setFontsLoaded(true);
+            await Font.loadAsync({
+                Bold: require('../../src/assets/font/Gaegu-Bold.ttf'),
+                Regular: require('../../src/assets/font/Gaegu-Regular.ttf'),
+                Light: require('../../src/assets/font/Gaegu-Light.ttf'),
+                Jua: require('../../src/assets/font/Jua-Regular.ttf'),
+            });
+            setFontsLoaded(true);
         }
-    
+
         loadFonts();
-      }, []);
-    
-      if (!fontsLoaded) {
+    }, []);
+
+    if (!fontsLoaded) {
         return null; // 폰트 로딩 중에는 렌더링을 방지
-      }
-    
-      const customTextProps = {
+    }
+
+    const customTextProps = {
         style: {
-          fontFamily: 'Jua',
+            fontFamily: 'Jua',
         },
-      };
-      setCustomText(customTextProps);
+    };
+    setCustomText(customTextProps);
 
     // Tooltip component
     const renderTooltip = () => (
@@ -173,7 +175,7 @@ const InfoInput = () => {
             </TouchableWithoutFeedback>
         </Modal>
     );
-    
+
 
     return (
         <SafeAreaView style={styles.safeContainer}>
@@ -197,7 +199,7 @@ const InfoInput = () => {
                     <CustomBtn
                         onPress={() => NickcopyCheck(nickname)}
                         title=" 중복 확인 "
-                        textStyle={{fontSize:20}}
+                        textStyle={{ fontSize: 20 }}
                         buttonStyle={styles.duplicateCheckBtn}
                     />
                 </View>
@@ -304,8 +306,8 @@ const styles = StyleSheet.create({
     inlineLabel: {
         flexDirection: 'row',
         alignItems: 'center',
-        top:20,
-        left:80
+        top: 20,
+        left: 80
     },
     labelText: {
         marginRight: 8,
@@ -332,11 +334,11 @@ const styles = StyleSheet.create({
     },
     tooltipText: {
         marginBottom: 10,
-        fontSize:12
+        fontSize: 12
     },
     boldText: {
         fontWeight: 'bold',
-        marginBottom:5
+        marginBottom: 5
     },
     shadow: {
         shadowColor: "#000",
