@@ -65,13 +65,13 @@ const PostureCorrection = () => {
                     />
                     <View style={styles.FeedBackContainer}>
                         <FeedBack text={feedback} />
-                        {/* <View style={styles.buttonWrapper}>
+                        <View style={styles.buttonWrapper}>
                             <CustomBtn
                                 buttonStyle={styles.FinishBtn}
                                 title="운동 완료"
                                 onPress={handleFinishExercise}
                             />
-                        </View> */}
+                        </View>
                     </View>
                 </>
             )}

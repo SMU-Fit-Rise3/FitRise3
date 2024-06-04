@@ -100,6 +100,7 @@ const CaloriesScreen = () => {
         // Send server
         AsyncStorage.getItem('userId').then((userId) => {
             console.log(userId);
+            console.log(userCalories);
             API.insertCalories(userId, resCalorieInfo.totalCaloriesConsumed, resCalorieInfo.carbs, resCalorieInfo.protein, resCalorieInfo.fat)
                 .then((result) => {
                     console.log('Response from server:', result);
