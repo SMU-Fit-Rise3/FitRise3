@@ -3706,16 +3706,6 @@ expo-file-system@~16.0.0, expo-file-system@~16.0.8, expo-file-system@~16.0.9:
   resolved "https://registry.npmjs.org/expo-file-system/-/expo-file-system-16.0.9.tgz"
   integrity sha512-3gRPvKVv7/Y7AdD9eHMIdfg5YbUn2zbwKofjsloTI5sEC57SLUFJtbLvUCz9Pk63DaSQ7WIE1JM0EASyvuPbuw==
 
-<<<<<<< HEAD
-expo-font@^12.0.5:
-  version "12.0.6"
-  resolved "https://registry.npmjs.org/expo-font/-/expo-font-12.0.6.tgz"
-  integrity sha512-eognUxmZi2urCdERA5KuZpXUJO9JomOG/5ZKw9fGUhDi86SQ/6UWw+nMGbtshjWdJ0Vt0zHAdaIYx8aHq2iRzA==
-  dependencies:
-    fontfaceobserver "^2.1.0"
-
-=======
->>>>>>> feature/#11
 expo-font@~11.10.3:
   version "11.10.3"
   resolved "https://registry.npmjs.org/expo-font/-/expo-font-11.10.3.tgz"
@@ -4799,9 +4789,6 @@ lighthouse-logger@^1.0.0:
   dependencies:
     debug "^2.6.9"
     marky "^1.2.2"
-
-lightningcss-win32-x64-msvc@1.19.0:
-  version "1.19.0"
 
 lightningcss@~1.19.0:
   version "1.19.0"

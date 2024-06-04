@@ -73,22 +73,19 @@ const stressScreen = () => {
             console.error('Error in useEffect:', error);
         }
     }, []);
-    const handleTakePicture = (photo) => {
-        console.log(photo);
-    };
 
   return (
     <SafeAreaView style={styles.mainContainer}>
       {Platform.OS === 'android' && <StatusBar barStyle="dark-content" />}
       <View style={styles.contentContainer}>
-        <View style={[styles.viewContainer, styles.borderRadius, { flex: 2 }]}>
+        <View style={[styles.viewContainer, { flex: 2 }]}>
           <Text style={[styles.title, styles.leftAlign]}>스트레스 측정</Text>
             <StressBtn/>
         </View>
-        <View style={[styles.viewContainer, styles.borderRadius]}>
+        <View style={styles.viewContainer}>
           <StressLevelIndicator stressLevel={stressIndex} />
         </View>
-        <View style={[styles.viewContainer, styles.borderRadius, { flex: 1.5 }]}>
+        <View style={[styles.viewContainer, { flex: 1.5 }]}>
           <Text style={[styles.title, styles.leftAlign]}>스트레스 해소 활동</Text>
           <Animated.FlatList
             ref={flatListRef}
@@ -129,8 +126,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginHorizontal: 20,
     marginVertical: 10,
-  },
-  borderRadius: {
     borderRadius: 15,
     overflow: 'hidden',
   },

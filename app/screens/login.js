@@ -16,6 +16,8 @@ const Login = () => {
   useEffect(() => {
     async function loadResourcesAndData() {
       try {
+        // await AsyncStorage.clear();
+        // console.log('AsyncStorage has been cleared.');
         // Pre-load fonts
         await Font.loadAsync({
           Bold: require('../../src/assets/font/Gaegu-Bold.ttf'),

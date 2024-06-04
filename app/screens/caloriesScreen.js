@@ -82,8 +82,6 @@ const CaloriesScreen = () => {
         setUserCalories(text.replace(/[^0-9]/g, ''));
     };
 
-
-
     //다음 단계
     const handleNextStep = () => {
         const numCalories = parseInt(userCalories, 10);
@@ -101,7 +99,7 @@ const CaloriesScreen = () => {
         AsyncStorage.getItem('userId').then((userId) => {
             console.log(userId);
             console.log(userCalories);
-            API.insertCalories(userId, resCalorieInfo.totalCaloriesConsumed, resCalorieInfo.carbs, resCalorieInfo.protein, resCalorieInfo.fat)
+            API.insertCalories(userId, parseInt(userCalories, 10), resCalorieInfo.carbs, resCalorieInfo.protein, resCalorieInfo.fat)
                 .then((result) => {
                     console.log('Response from server:', result);
                 });

@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop:100,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0)',
     },
     modalView: {
         width: '80%',
@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         color: '#444',
+        fontFamily:"Jua"
     },
     activityIndicator: {
         position: 'absolute',

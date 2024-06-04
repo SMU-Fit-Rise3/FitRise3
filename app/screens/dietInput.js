@@ -146,25 +146,10 @@ const DietInput = () => {
     });
   };
 
-  const getBackgroundColor = (mealType) => {
-    switch (mealType) {
-      case 'Breakfast':
-        return { backgroundColor: '#fce1e4' };
-      case 'Lunch':
-        return { backgroundColor: '#ecfcdc' };
-      case 'Dinner':
-        return { backgroundColor: '#dee4fa' };
-      case 'Snack':
-        return { backgroundColor: '#fcffd6' };
-      default:
-        return { backgroundColor: '#ccdddf' };
-    }
-  };
-
   return (
     <SafeAreaView style={styles.mainContainer}>
       {Platform.OS === 'android' && <StatusBar barStyle="dark-content" />}
-      <View style={[styles.container, getBackgroundColor(type)]}>
+      <View style={styles.container}>
         <ScrollView horizontal={true} style={styles.scrollView}>
           {savedNutrients.map((food, index) => (
             <View key={index} style={styles.foodContainer}>
@@ -193,12 +178,14 @@ const DietInput = () => {
           handleCalorieChange={handleCalorieChange}
           handleSave={handleSave}
         />
-        <CustomBtn
-          onPress={handleNext}
-          title='다음'
-          textStyle={{ color: "#444" }}
-          buttonStyle={[styles.button, getBackgroundColor(type)]}
-        />
+        <View style={{ alignItems: 'center', marginVertical:20 }}>
+          <CustomBtn
+            onPress={handleNext}
+            title='다음'
+            textStyle={styles.btnText}
+            buttonStyle={styles.btn}
+          />
+        </View>
         <LoadingModal visible={isLoading} />
       </View>
     </SafeAreaView>
@@ -209,7 +196,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, // Android 상태바 높이 추가
-    backgroundColor: "#ccdddf",
+    backgroundColor: "#F5F6FB",
   },
   container: {
     flex: 1,
@@ -244,14 +231,15 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
   },
-  button: {
-    width: '100%',
-    padding: 20,
-    backgroundColor: '#ccdddf',
-    borderRadius: 30,
-    alignItems: 'center',
-    marginBottom: 30,
-    justifyContent: "center",
+  btn: {
+    width: width * 0.5,
+    height: 50,
+    padding: 0,
+    backgroundColor: "#8994D7",
+    marginBottom: 0,
+  },
+  btnText: {
+    fontSize: 14,
   },
   noResultsText: {
     textAlign: 'center',

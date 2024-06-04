@@ -1,15 +1,17 @@
 // MealTypeSelector.js
 import React from 'react';
 import { useRouter } from "expo-router";
-import { View, FlatList, Text, Image, StyleSheet } from 'react-native';
-import { icons } from '../../../constants';
+import { View, FlatList, Text, StyleSheet,Dimensions } from 'react-native';
 import CustomBtn from '../UI/CustomBtn';
+import LottieView from 'lottie-react-native';
+
+const { width } = Dimensions.get('window');
 
 const mealTypesData = [
-  { type: 'Breakfast', image: icons.icon_breakfast},
-  { type: 'Lunch', image: icons.icon_lunch },
-  { type: 'Dinner', image: icons.icon_dinner },
-  { type: 'Snack', image: icons.icon_snack },
+  { type: 'Breakfast', image: require("../../assets/lottie/breakfast.json")},
+  { type: 'Lunch', image: require("../../assets/lottie/lunch.json") },
+  { type: 'Dinner', image: require("../../assets/lottie/dinner.json") },
+  { type: 'Snack', image: require("../../assets/lottie/snack.json") },
 ];
 
 const MealTypeSelector = ({ onMealTypeSelected }) => {
@@ -35,13 +37,18 @@ const MealTypeCard = ({ type, image}) => {
   const router = useRouter();
   return (
     <View style={styles.card}>
-      <Image source={image} style={styles.image} />
       <Text style={styles.type}>{type}</Text>
+      <LottieView
+        style={styles.lottie}
+        source={image}
+        autoPlay
+        loop
+      />
       <CustomBtn
         onPress={() => router.push({pathname:'screens/dietInput', params:{type}})}
         title = "추가하기"
-        buttonStyle = {styles.addBtn} 
-        textStyle = {styles.btnText}/>
+        buttonStyle={styles.btn}
+        textStyle={styles.btnText}/>
     </View>
   );
 };
@@ -52,9 +59,10 @@ const styles = StyleSheet.create({
   },
   card: {
     borderRadius: 20,
-    margin: 10,
+    marginVertical:5,
+    marginHorizontal:10,
     width: 150, // 카드의 너비를 조절하세요
-    height: 150, // 카드의 높이를 조절하세요
+    height: 120, // 카드의 높이를 조절하세요
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 5, // Android shadow
@@ -64,15 +72,15 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     backgroundColor: '#fff', // 카드 배경색
   },
-  image: {
-    width: 60,
-    height: 60,
-    borderRadius: 50,
-    marginBottom: 10,
+  lottie: {
+    width: width * 0.15,
+    height: width * 0.15,
   },
   type: {
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: 'bold',
+    fontFamily:"Jua",
+    marginTop:5,
   },
   count: {
     color: 'gray',
@@ -86,18 +94,16 @@ const styles = StyleSheet.create({
   selectText: {
     color: '#444',
   },
-  addBtn:{
-    backgroundColor: '#eee',
-    width:100,
-    height:35,
-    padding:0,
+  btn: {
+    width: 100,
+    height: 30,
+    padding: 0,
+    backgroundColor: "#8994D7",
     marginBottom: 0,
-    marginTop:5,
-    },
-    btnText: {
-        fontSize:14,
-        color:"#444"
-    }
+  },
+  btnText: {
+    fontSize: 14,
+  },
 });
 
 export default MealTypeSelector;

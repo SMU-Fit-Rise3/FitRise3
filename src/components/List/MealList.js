@@ -39,7 +39,7 @@ const MealItem = ({ meal }) => {
       <View style={styles.mealDetails}>
         <Text style={styles.mealname}>{meal.food}</Text>
       </View>
-      <Text>{meal.calories} kcal</Text>
+      <Text style={styles.kcalText}>{meal.calories} kcal</Text>
     </View>
   );
 };
@@ -47,7 +47,6 @@ const MealItem = ({ meal }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#fff',
   },
   header: {
@@ -68,7 +67,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginTop:10,
-    marginBottom:20
+    marginBottom:20,
+    fontFamily:"Jua"
   },
   list: {
     padding:10
@@ -93,10 +93,12 @@ const styles = StyleSheet.create({
   mealname: {
     fontWeight: 'bold',
     fontSize: 16,
+    fontFamily:"Jua"
   },
-  mealTime: {
+  kcalText: {
     fontSize: 14,
     color: 'grey',
+    fontFamily:"Jua"
   },
 });
 

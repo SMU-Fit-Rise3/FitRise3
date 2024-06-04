@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useLocalSearchParams } from "expo-router";
-import { View, StyleSheet, SafeAreaView, Text,Button } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Text,Platform,StatusBar } from 'react-native';
 import { NutrientBar, MealList, MealTypeSelector } from '../../src/components'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../../src/api'
 
 // 메인 화면 컴포넌트
 const dietScreen = () => {
-    const clearAsyncStorage = async () => {
-        try {
-          await AsyncStorage.clear();
-          console.log('AsyncStorage has been cleared.');
-        } catch (error) {
-          console.error('Failed to clear AsyncStorage:', error);
-        }
-    };
-
     const [nutrients, setNutrients] = useState([
         { id: 'calories', name: '칼로리', value: 0, totalValue: 2000, icon: "🔥" },
         { id: 'carbs', name: '탄수화물', value: 0, totalValue: 200, icon: "🌾" },
@@ -80,11 +71,11 @@ const dietScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.Vcontainer}>
+        <SafeAreaView style={styles.mainContainer}>
+            {Platform.OS === 'android' && <StatusBar barStyle="dark-content" />}
             <View style={styles.contentContainer}>
-                <Button title="Clear AsyncStorage" onPress={clearAsyncStorage} style={{flex:1}}/>
-                <View style={styles.nutrientContainer}>
-                    <Text style={styles.title}>오늘의 영양소 섭취량🙂</Text>
+                <View style={[styles.viewContainer, { flex: 1.5 }]}>
+                    <Text style={styles.title}>오늘의 영양소 섭취량</Text>
                     {nutrients.map((item) => (
                         <NutrientBar
                             key={item.id}
@@ -95,9 +86,11 @@ const dietScreen = () => {
                         />
                     ))}
                 </View>
-                <MealList mealData={mealData} />
-                <View style={styles.container}>
-                    <Text style={styles.title}>식단 추가하기🙂</Text>
+                <View style={styles.viewContainer}>
+                    <MealList mealData={mealData} />
+                </View>
+                <View style={styles.viewContainer}>
+                    <Text style={styles.title}>식단 추가하기</Text>
                     <MealTypeSelector />
                 </View>
             </View>
@@ -107,14 +100,23 @@ const dietScreen = () => {
 
 // 여기에 스타일을 정의합니다.
 const styles = StyleSheet.create({
-    Vcontainer: {
+    mainContainer: {
         flex: 1,
-        backgroundColor: "#ddd"
-    },
+        backgroundColor: "#F5F6FB",
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, // Android 상태바 높이 추가
+      },
     contentContainer: {
         flex: 1,
-        padding: 10,
-        backgroundColor: "white"
+        backgroundColor: "#F5F6FB",
+    },
+    viewContainer: {
+        flex: 1,
+        backgroundColor: "#fff",
+        marginHorizontal: 20,
+        marginVertical: 10,
+        borderRadius: 15,
+        overflow: 'hidden',
+        padding:20
     },
     nutrientContainer: {
         flex: 1.2,
@@ -131,8 +133,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginTop: 10,
-        marginBottom: 20
+        marginBottom: 10,
+        fontFamily:"Jua"
     },
 });
 

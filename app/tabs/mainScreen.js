@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from "expo-router";
 import { View, StyleSheet, SafeAreaView, Animated, Platform, StatusBar } from 'react-native';
 import { ExerciseList, LoadingModal } from '../../src/components';
@@ -10,15 +10,18 @@ import API from '../../src/api';
 const MainScreen = () => {
   const { loadingVisible } = useSelector(state => state.modalVisible);
   const animatedValue = useRef(new Animated.Value(0)).current;
+  const [doExercise, SetDoExercise] = useState([]);
   
   useEffect(() => {
     AsyncStorage.getItem('userId').then((userId) => {
-      console.log("다한 운동들")
+      console.log("다한 운동들");
       API.getDoExercise(userId)
-          .then((result) => {
-              console.log('Response from server:', result);
-          });
-  })
+        .then((result) => {
+          console.log('Response from server:', result);
+          SetDoExercise(result);
+          console.log("dd" + doExercise);
+        });
+    });
   }, []);
 
   useEffect(() => {
@@ -62,14 +65,27 @@ const MainScreen = () => {
       <SafeAreaView style={styles.safeContainer}>
         {Platform.OS === 'android' && <StatusBar barStyle="dark-content" />}
         <View style={styles.contentContainer}>
-          <Animated.Text style={[styles.title, animatedStyle]}>
-            반가워요 ! {"\n"}오늘도 즐겁게 운동을 시작해요 🔥
-          </Animated.Text>
-          {/* 운동 수행했을 때 바뀔 문장 */}
-          {/* <Animated.Text style={[styles.title, animatedStyle]}>
-            오늘 나는{"\n"}스쿼트의 달인✨
-          </Animated.Text> */}
-          <CharacterGif />
+          {doExercise.length <= 0 ? (
+            <>
+              <Animated.Text style={[styles.title, animatedStyle]}>
+                반가워요 ! {"\n"} 오늘도 즐겁게 운동을 시작해요🔥
+              </Animated.Text>
+              <CharacterGif doExercise={["춤"]} />
+            </>
+          ) : (
+            <>
+              <Animated.Text style={[styles.title, animatedStyle]}>
+                오늘 나는{" "}
+                {doExercise.map((exercise, index) => (
+                  <React.Fragment key={index}>
+                    {exercise}
+                    {index < doExercise.length - 1 && "\n"}
+                  </React.Fragment>
+                ))}의 달인✨
+              </Animated.Text>
+              <CharacterGif doExercise={doExercise} />
+            </>
+          )}
           <View style={styles.listContainer}>
             <ExerciseList />
           </View>

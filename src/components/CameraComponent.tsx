@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, Platform } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import * as tf from '@tensorflow/tfjs';
-import { bundleResourceIO, cameraWithTensors } from '@tensorflow/tfjs-react-native';
+import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
 import Svg, { Circle, Line } from 'react-native-svg';
 import { ExpoWebGLRenderingContext } from 'expo-gl';
 import * as posedetection from '@tensorflow-models/pose-detection';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import '@tensorflow/tfjs-react-native';
-import {  LoadingModal } from './UI'
+import { LoadingModal } from './UI'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../api';
 import Curl from '../../backend/posture/Curl';
@@ -21,9 +21,6 @@ import SitUp from '../../backend/posture/SitUp';
 import Squat from '../../backend/posture/Squat';
 import Triceps from '../../backend/posture/Triceps';
 
-
-
-//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 const TensorCamera = cameraWithTensors(Camera);
 
 const IS_ANDROID = Platform.OS === 'android';
@@ -38,7 +35,6 @@ const MIN_KEYPOINT_SCORE = 0.3;
 const OUTPUT_TENSOR_WIDTH = 180;
 const OUTPUT_TENSOR_HEIGHT = OUTPUT_TENSOR_WIDTH / (IS_IOS ? 9 / 16 : 3 / 4);
 
-
 // Whether to load model from app bundle (true) or through network (false).
 const LOAD_MODEL_FROM_BUNDLE = false;
 
@@ -50,7 +46,7 @@ type Rotation = 0 | 90 | 180 | 270;
 const CameraComponent = ({ 
   isModalVisible,
   exerciseData, 
-  onFeedback ,
+  onFeedback,
   onExerciseComplete
 }: {
   isModalVisible: boolean;
@@ -60,28 +56,24 @@ const CameraComponent = ({
     id: string;
     sets: number;
     reps: number;
-  
-};
-  onFeedback:(feedback: string) => void;
+  };
+  onFeedback: (feedback: string) => void;
   onExerciseComplete: boolean;
-
- }) => {
+}) => {
 
   const cameraRef = useRef(null);
   const [tfReady, setTfReady] = useState(false);
-  const [model, setModel] = useState<posedetection.PoseDetector>(); //포즈감지 모델
+  const [model, setModel] = useState<posedetection.PoseDetector>(); // 포즈 감지 모델
   const [poses, setPoses] = useState<posedetection.Pose[]>();
   const [fps, setFps] = useState(0);
   const [cameraType, setCameraType] = useState<CameraType>(CameraType.front);
   const [rotation, setRotation] = useState<Rotation | undefined>(undefined);
   const [orientation, setOrientation] = useState<ScreenOrientation.Orientation | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const isModalVisibleRef = useRef(isModalVisible);
   const rafId = useRef<number | null>(null);
   const [sets, setSets] = useState(0);
   const [count, setCount] = useState(0);
-  const [ExerciseComponent, setExerciseComponent] =  useState<React.ElementType | null>(null);
- 
+
   // 카메라 권한 요청 함수
   useEffect(() => {
     (async () => {
@@ -90,39 +82,35 @@ const CameraComponent = ({
     })();
   }, []);
 
-  
   const handleSetUpdate = (newSets: number) => {
     setSets(newSets);
   };
 
-  const renderSet = () =>{
+  const renderSet = () => {
     return (
       <View style={styles.setsContainer}>
-        <Text style={styles.text}>sets: {exerciseData.sets}/{sets}</Text>
+        <Text style={styles.text}>Sets: {exerciseData.sets}/{sets}</Text>
       </View>
     );
-  }
+  };
 
   const handleCountUpdate = (newCount: number) => {
     setCount(newCount);
   };
 
-  const renderCount = () =>{
+  const renderCount = () => {
     return (
       <View style={styles.countsContainer}>
-        <Text style={styles.text}>reps: {exerciseData.reps}/{count}</Text>
+        <Text style={styles.text}>Reps: {exerciseData.reps}/{count}</Text>
       </View>
     );
-  }
+  };
 
-  useEffect(()=>{
-    if(onExerciseComplete){
-      setExerciseComponent(null);
+  useEffect(() => {
+    if (onExerciseComplete) {
+      setPoses([]);
     }
-
-  },[onExerciseComplete])
-
-
+  }, [onExerciseComplete]);
 
   useEffect(() => {
     async function prepare() {
@@ -201,7 +189,6 @@ const CameraComponent = ({
     updatePreview: () => void,
     gl: ExpoWebGLRenderingContext
   ) => {
-    const gChannelMeans: number[] = [];
     const loop = async () => {
 
       // Get the tensor and run pose detection.
@@ -209,7 +196,7 @@ const CameraComponent = ({
 
       const startTs = Date.now();
 
-      //포즈 감지 처리
+      // 포즈 감지 처리
       const poses = await model!.estimatePoses(
         imageTensor,
         undefined,
@@ -238,7 +225,6 @@ const CameraComponent = ({
 
   const renderPose = () => {
     if (poses != null && poses.length > 0) {
-      //console.log(poses[0].keypoints);
       const keypoints = poses[0].keypoints
         .filter((k) => (k.score ?? 0) > MIN_KEYPOINT_SCORE)
         .map((k) => {
@@ -301,8 +287,6 @@ const CameraComponent = ({
         }
       });
 
-
-
       return (
         <Svg style={styles.svg}>
           {keypoints}
@@ -322,27 +306,21 @@ const CameraComponent = ({
     );
   };
 
-  
   const renderCameraTypeSwitcher = () => {
     return (
       <View
         style={styles.cameraTypeSwitcher}
         onTouchEnd={handleSwitchCameraType}
       >
-        <Text>
-          Switch to{' '}
-          {cameraType === CameraType.front ? 'back' : 'front'} camera
+        <Text style={styles.text}>
+          {cameraType === CameraType.front ? 'back' : 'front'} 카메라로 전환
         </Text>
       </View>
     );
   };
 
   const handleSwitchCameraType = () => {
-    if (cameraType === CameraType.front) {
-      setCameraType(CameraType.back);
-    } else {
-      setCameraType(CameraType.front);
-    }
+    setCameraType(prev => (prev === CameraType.front ? CameraType.back : CameraType.front));
   };
 
   const isPortrait = () => {
@@ -353,11 +331,6 @@ const CameraComponent = ({
   };
 
   const getOutputTensorWidth = () => {
-    // On iOS landscape mode, switch width and height of the output tensor to
-    // get better result. Without this, the image stored in the output tensor
-    // would be stretched too much.
-    //
-    // Same for getOutputTensorHeight below.
     return isPortrait() || IS_ANDROID
       ? OUTPUT_TENSOR_WIDTH
       : OUTPUT_TENSOR_HEIGHT;
@@ -370,18 +343,11 @@ const CameraComponent = ({
   };
 
   const getTextureRotationAngleInDegrees = async (cameraType: CameraType) => {
-    // On Android, the camera texture will rotate behind the scene as the phone
-    // changes orientation, so we don't need to rotate it in TensorCamera.
     if (IS_ANDROID) {
       return 0;
     }
 
-
-    // For iOS, the camera texture won't rotate automatically. Calculate the
-    // rotation angles here which will be passed to TensorCamera to rotate it
-    // internally.
     switch (orientation) {
-      // Not supported on iOS as of 11/2021, but add it here just in case.
       case ScreenOrientation.Orientation.PORTRAIT_DOWN:
         return 180;
       case ScreenOrientation.Orientation.LANDSCAPE_LEFT:
@@ -392,6 +358,7 @@ const CameraComponent = ({
         return 0;
     }
   };
+
   if (!tfReady) {
     return (
       <View style={styles.loadingMsg}>
@@ -400,15 +367,12 @@ const CameraComponent = ({
     );
   } else {
     return (
-      // Note that you don't need to specify `cameraTextureWidth` and
-      // `cameraTextureHeight` prop in `TensorCamera` below.
       <View style={styles.container}>
         <TensorCamera
           ref={cameraRef}
           style={styles.camera}
           autorender={AUTO_RENDER}
           type={cameraType}
-          // tensor related props 
           resizeWidth={getOutputTensorWidth()}
           resizeHeight={getOutputTensorHeight()}
           resizeDepth={3}
@@ -420,8 +384,8 @@ const CameraComponent = ({
         />
         {renderPose()}
         {renderSet()}
-        {renderFps()}
         {renderCount()}
+        {/* {renderFps()} */}
         {exerciseData.title === 'dumbbell curl' && <Curl exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
         {exerciseData.title === 'dumbbell fly' && <Fly exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
         {exerciseData.title === 'leg raise' && <LegRaise exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
@@ -432,7 +396,7 @@ const CameraComponent = ({
         {exerciseData.title === 'squat' && <Squat exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
         {exerciseData.title === 'dumbbell tricep extension' && <Triceps exerciseData={exerciseData} poses={poses} updateSets={handleSetUpdate} updateCount={handleCountUpdate} onFeedback={onFeedback} onExerciseComplete={onExerciseComplete} />}
         {(!exerciseData.title || exerciseData.title === '') && <Text>No exercise selected</Text>}
-
+        {renderCameraTypeSwitcher()}
       </View>
     );
   }
@@ -442,34 +406,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'gray',
-  },
-  cameraView: {
-    flex: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 36,
-  },
-  takePictureButton: {
-    alignSelf: 'center',
+    backgroundColor: 'black',
     alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-  takePictureText: {
-    fontSize: 30,
-    color: 'white',
-  },
-  containerPortrait: {
-    position: 'relative',
-    width: CAM_PREVIEW_WIDTH,
-    height: CAM_PREVIEW_HEIGHT,
-    marginTop: Dimensions.get('window').height / 2 - CAM_PREVIEW_HEIGHT / 2,
-  },
-  containerLandscape: {
-    position: 'relative',
-    width: CAM_PREVIEW_HEIGHT,
-    height: CAM_PREVIEW_WIDTH,
-    marginLeft: Dimensions.get('window').height / 2 - CAM_PREVIEW_HEIGHT / 2,
+    justifyContent: 'center',
   },
   loadingMsg: {
     position: 'absolute',
@@ -495,48 +434,43 @@ const styles = StyleSheet.create({
     left: 10,
     width: 100,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, .7)',
-    borderRadius: 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 5,
     padding: 8,
     zIndex: 20,
   },
   cameraTypeSwitcher: {
     position: 'absolute',
-    top: 10,
-    right: 10,
-    width: 180,
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, .7)',
-    borderRadius: 2,
-    padding: 8,
+    bottom: 20,
+    right: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 15,
+    padding: 10,
     zIndex: 20,
   },
-  setsContainer: { // sets 표시를 위한 새로운 스타일
+  setsContainer: {
     position: 'absolute',
-    top: 10, // fpsContainer 아래에 위치하도록 top 조정
+    top: 50,
     left: 10,
-    width: 130, // 너비 증가
-    alignItems: 'center',
-    backgroundColor:'rgba(255, 255, 255, .7)', // 배경색 변경
-    borderRadius: 2,
-    padding: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 15,
+    padding: 10,
     zIndex: 20,
   },
-  countsContainer: { // counts 표시를 위한 새로운 스타일
+  countsContainer: {
     position: 'absolute',
-    top: 60, // setsContainer 아래에 위치하도록 top 조정
+    top: 100,
     left: 10,
-    width: 130, // 너비 증가
-    alignItems: 'center',
-    backgroundColor:'rgba(255, 255, 255, .7)', // 배경색 변경
-    borderRadius: 2,
-    padding: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 15,
+    padding: 10,
     zIndex: 20,
   },
   text: {
     color: 'black',
-    fontSize: 18 // 텍스트 크기 설정
-  }
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
 });
 
 export default CameraComponent;

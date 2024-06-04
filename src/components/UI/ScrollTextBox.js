@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
 const ScrollTextBox = ({ message }) => (
     <View style={styles.container}>
-      <Text style={styles.titleText}>FeedBack</Text>
+      <Text style={styles.titleText}>Feedback</Text>
       <ScrollView style={styles.scrollContainer}>
         <Text style={styles.descriptionText}>{message}</Text>
       </ScrollView>
@@ -12,27 +12,36 @@ const ScrollTextBox = ({ message }) => (
 
 const styles = StyleSheet.create({
     container: {
-        flex:1,
-        padding: 30,
-        margin: 30,
-        marginHorizontal: 50,
-        borderRadius: 30,
-        backgroundColor: '#F1EFFF',
-        justifyContent: 'center',
+        height: 320, // 전체 컨테이너 높이를 줄이기 위해 고정된 높이 설정
+        padding: 20,
+        margin: 20,
+        borderRadius: 15,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 3,
     },
     scrollContainer: {
-        marginTop:10,
+        maxHeight: 260, // 스크롤 컨테이너 높이 제한
+        marginTop: 10,
+        padding: 10,
         borderRadius: 10,
-        backgroundColor: '#F1EFFF',
+        backgroundColor: '#fff',
     },
     descriptionText: {
-        fontSize: 18,
-        color: '#666',
+        fontSize: 16,
+        color: '#495057',
+        fontFamily: "Jua",
+        lineHeight: 24,
     },
     titleText: {
         fontSize: 24,
-        color: '#000',
-        fontWeight:"bold",        
+        color: '#212529',
+        fontWeight: "bold",
+        fontFamily: "Jua",
+        marginBottom: 10,
     },
 });
 

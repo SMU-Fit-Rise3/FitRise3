@@ -57,7 +57,6 @@ const PostureCorrection = () => {
                         onExerciseComplete={handleFinishExercise}
                     />
 
-
                     <FloatingBtn
                         imageSource={icons.icon_calendar_p}
                         onPress={() => setModalVisible(true)}
@@ -67,7 +66,8 @@ const PostureCorrection = () => {
                         <FeedBack text={feedback} />
                         <View style={styles.buttonWrapper}>
                             <CustomBtn
-                                buttonStyle={styles.FinishBtn}
+                                buttonStyle={[styles.btn, {width:150, height:50, marginBottom:20}]}
+                                textStyle={styles.btnText}
                                 title="운동 완료"
                                 onPress={handleFinishExercise}
                             />
@@ -77,21 +77,14 @@ const PostureCorrection = () => {
             )}
             {exerciseFinished && (
                 <View style={styles.exerciseFinishedContainer}>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.finishText}>운동을 완료했어요🔥</Text>
-                    </View>
+                    <Text style={styles.finishText}>운동을 완료했어요🔥</Text>
                     <ScrollTextBox
-                        message="A jumping jack, also known as a star jump and called a side-straddle hop in the US military, 
-                                is a physical jumping exercise performed by jumping to a position with the legs spread wide 
-                                A jumping jack, also known as a star jump and called a side-straddle hop in the US military,
-                                is a physical jumping exercise performed by jumping to a position with the legs spread wide."
+                        message="운동을 잘 수행하셨습니다. 스쿼트는 하체 근육과 코어 근육 강화에 좋은 운동으로 매일 꾸준히 수행하시면 좋습니다."
                     />
-                    <View style={styles.pointContainer}>
-                        <PointComponent points={30} />
-                    </View>
                     <View style={styles.btnContainer}>
                         <CustomBtn
-                            buttonStyle={styles.homeButton}
+                            buttonStyle={styles.btn}
+                            textStyle={styles.btnText}
                             title="홈으로"
                             onPress={() => router.push('tabs/mainScreen')}
                         />
@@ -131,13 +124,10 @@ const styles = StyleSheet.create({
     },
     exerciseFinishedContainer: {
         flex: 1,
-        backgroundColor: "white",
-        alignItems: "center"
-    },
-    textContainer: {
-        flex: 1,
+        padding:20,
+        backgroundColor: "#F5F6FB",
         alignItems: "center",
-        paddingTop: 100,
+        justifyContent:"center"
     },
     pointContainer: {
         width: "100%",
@@ -148,6 +138,7 @@ const styles = StyleSheet.create({
     buttonWrapper: {
         width: "100%",
         alignItems: "center",
+        backgroundColor:"#F5F6FB"
     },
     FinishBtn: {
         width: 150,
@@ -160,19 +151,28 @@ const styles = StyleSheet.create({
     },
     infoButton: {
         position: 'absolute',
-        top: 10, // 상단 여백
+        top: 40, // 상단 여백
         right: 10, // 오른쪽 여백
         zIndex: 10, // 다른 요소들 위에 겹쳐지도록 z-index 지정
-    },
-    homeButton: {
-        width: "100%",
-        backgroundColor: "#99aff8",
-        marginTop: 50,
+        backgroundColor:"#fff"
     },
     finishText: {
         fontWeight: "bold",
-        fontSize: 30
-    }
+        fontSize: 30,
+        fontFamily:"Jua",
+        marginTop:50
+    },
+    btn: {
+        width: "100%",
+        height: 60,
+        padding: 10,
+        backgroundColor: "#8994D7",
+        marginBottom: 0,
+      },
+      btnText: {
+        fontSize: 18,
+        fontFamily:"Jua"
+      }
 });
 
 export default PostureCorrection;

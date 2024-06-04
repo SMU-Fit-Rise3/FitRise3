@@ -132,6 +132,7 @@ const analysisScreen = () => {
             setIsLoading(false);
             console.error('Error handleNextPress:', error);
         }
+        setWeight(' ');
     };
 
     return (

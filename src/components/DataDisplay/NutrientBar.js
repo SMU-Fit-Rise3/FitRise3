@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   nutrientName: {
     fontSize: 17,
     fontWeight: "bold",
+    fontFamily:"Jua"
   },
 });
 
