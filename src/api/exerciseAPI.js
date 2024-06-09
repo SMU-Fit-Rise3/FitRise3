@@ -3,6 +3,7 @@ PORT = process.env.EXPO_PUBLIC_PORT;
 
 //운동루틴 가져오기 (List/ExerciseList.js)
 export const getExercise = async (userId) => {
+    console.log(IP_URL)
     try {
         const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/exercise`, {
             method: 'GET',

@@ -4,11 +4,12 @@ import { WebView } from 'react-native-webview';
 import { useSelector, useDispatch } from 'react-redux';
 import { modalVisibleActions } from '../../store/modalVisible';
 
-const ModalWebView = () => {
+const ModalWebView = ({ modelPath }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const modal3dVisible = useSelector(state => state.modalVisible.modal3dVisible);
     const dispatch = useDispatch();
+
     return (
         <Modal
             visible={modal3dVisible}
@@ -33,12 +34,12 @@ const ModalWebView = () => {
                     )}
                     <Text style={styles.boldText}>Preview</Text>
                     <WebView
-                        source={{ uri: 'https://glb-web-2.vercel.app/' }}
+                        source={{ uri: `https://glb-rho.vercel.app/?model=${modelPath}` }}
                         onLoad={() => setLoading(false)}
                         onError={(e) => setError(e.nativeEvent.description)}
                         style={styles.webView}
-                        scalesPageToFit={true} // Android에서 페이지 스케일 조정
-                        automaticallyAdjustContentInsets={true} // iOS에서 콘텐츠 인셋 자동 조정
+                        scalesPageToFit={true}
+                        automaticallyAdjustContentInsets={true}
                     />
                     {error && (
                         <Text style={styles.errorText}>Error loading page: {error}</Text>
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop:100,
+        marginTop: 100,
         backgroundColor: 'rgba(0, 0, 0, 0)',
     },
     modalView: {
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         color: '#444',
-        fontFamily:"Jua"
+        fontFamily: "Jua"
     },
     activityIndicator: {
         position: 'absolute',
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
     },
     webView: {
         flex: 1,
-        width: '100%', // 웹뷰 너비 전체 사용
+        width: '100%',
     },
     errorText: {
         color: 'red',
