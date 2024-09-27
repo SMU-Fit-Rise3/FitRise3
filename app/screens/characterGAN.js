@@ -7,24 +7,19 @@ import * as tfReactNative from '@tensorflow/tfjs-react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { images } from '../../constants';
 import * as FileSystem from 'expo-file-system';
-import { receiveImages, uploadImageToServer } from '../../backend/getGif';
+import { receiveImages, uploadImageToServer } from '../../src/api/getGif';
 import { Asset } from 'expo-asset';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
 
 const CharacterGAN = () => {
   const router = useRouter();
-  const [imag, setImages] = useState([]);
   const [imageUri, setImageUri] = useState(null);
   const [prediction, setPrediction] = useState(null);
   const [characterImage, setCharacterImage] = useState(null);
   const [photoUri, setPhotoUri] = useState(null); //handleNextPress에서 사용하기위해
   const stepLabels = ['Step 1', 'Step 2', 'Step 3', 'Step 4'];
-
-  useEffect(() => {
-    const unsubscribe = receiveImages(setImages); // 이미지 수신 기능을 getGif에서 가져옴.
-    return () => unsubscribe();
-  }, []);
 
   // 갤러리에서 이미지를 선택하는 함수
   const selectImage = async () => {
@@ -115,10 +110,10 @@ const CharacterGAN = () => {
   const handleNextPress = async () => {
     // 먼저 다음 화면으로 이동
     router.push('tabs/mainScreen');
-
     try {
-      console.log(photoUri);
-      uploadImageToServer(photoUri,1) // 캐릭터 이미지를 서버로보내는 함수
+      AsyncStorage.getItem('userId').then((userId) => {
+        console.log(userId);
+        uploadImageToServer(photoUri, 1, userId) // 캐릭터 이미지를 서버로보내는 함수
         .then(() => {
           console.log('업로드 성공');
           // 업로드 성공 처리
@@ -127,6 +122,8 @@ const CharacterGAN = () => {
           console.error('이미지 업로드 중 에러 발생:', error);
           // 업로드 실패 처리
         });
+      })
+
     } catch (error) {
       console.error('이미지 로딩 중 에러 발생:', error);
     }
@@ -140,8 +137,8 @@ const CharacterGAN = () => {
       />
       <View style={styles.contentContainer}>
         <Text style={styles.title}>나만의 캐릭터를 생성하세요🏃🏻</Text>
-          <Text style={styles.description}>사진을 새로 찍거나 갤러리에서 선택하여{"\n"}
-            <Text style={styles.highlightedText}>나를 닮은</Text> 캐릭터를 생성하세요.
+        <Text style={styles.description}>사진을 새로 찍거나 갤러리에서 선택하여{"\n"}
+          <Text style={styles.highlightedText}>나를 닮은</Text> 캐릭터를 생성하세요.
         </Text>
         {characterImage && (
           <View style={{ alignItems: 'center' }}>

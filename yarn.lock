@@ -4808,6 +4808,9 @@ lighthouse-logger@^1.0.0:
     debug "^2.6.9"
     marky "^1.2.2"
 
+lightningcss-win32-x64-msvc@1.19.0:
+  version "1.19.0"
+
 lightningcss@~1.19.0:
   version "1.19.0"
   dependencies:

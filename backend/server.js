@@ -48,3 +48,7 @@ app.get('/users/:id/todayMeal',mealAPI.getTodayMealData); //오늘의 식단 데
 //분석 화면 관련 api
 const analysisAPI = require('./api/analysisData');
 app.get('/users/:id/analysis',analysisAPI.getAnalysisData);
+
+//사용자 Gif 관련 api
+const gifAPI = require('./api/gifData');
+app.patch('/users/:id/gif',gifAPI.patchGifUrl); //gif url 저장

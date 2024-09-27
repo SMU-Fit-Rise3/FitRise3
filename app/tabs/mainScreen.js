@@ -4,6 +4,7 @@ import { View, StyleSheet, SafeAreaView, Animated, Platform, StatusBar } from 'r
 import { ExerciseList, LoadingModal } from '../../src/components';
 import { useSelector } from 'react-redux';
 import CharacterGif from '../../backend/CharacterGif'; // CharacterGif 컴포넌트 가져오기
+import { receiveImages } from '../../src/api/getGif';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API from '../../src/api';
 
@@ -11,7 +12,13 @@ const MainScreen = () => {
   const { loadingVisible } = useSelector(state => state.modalVisible);
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [doExercise, SetDoExercise] = useState([]);
+  const [gifUrl, setGifUrl] = useState([]);
   
+  useEffect(() => {
+    const unsubscribe = receiveImages(setGifUrl); // 이미지 수신 기능을 getGif에서 가져옴.
+    return () => unsubscribe();
+  }, []);
+
   useEffect(() => {
     AsyncStorage.getItem('userId').then((userId) => {
       console.log("다한 운동들");
@@ -19,7 +26,7 @@ const MainScreen = () => {
         .then((result) => {
           console.log('Response from server:', result);
           SetDoExercise(result);
-          console.log("dd" + doExercise);
+          console.log("완료한 운동" + doExercise);
         });
     });
   }, []);
@@ -70,7 +77,7 @@ const MainScreen = () => {
               <Animated.Text style={[styles.title, animatedStyle]}>
                 반가워요 ! {"\n"} 오늘도 즐겁게 운동을 시작해요🔥
               </Animated.Text>
-              <CharacterGif doExercise={["춤"]} />
+              <CharacterGif doExercise={["춤"]} gifUrl={gifUrl} />
             </>
           ) : (
             <>
@@ -83,7 +90,7 @@ const MainScreen = () => {
                   </React.Fragment>
                 ))}의 달인✨
               </Animated.Text>
-              <CharacterGif doExercise={doExercise} />
+              <CharacterGif doExercise={doExercise} gifUrl={gifUrl} />
             </>
           )}
           <View style={styles.listContainer}>
