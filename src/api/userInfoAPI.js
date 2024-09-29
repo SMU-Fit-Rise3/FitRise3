@@ -4,7 +4,7 @@ PORT = process.env.EXPO_PUBLIC_PORT;
 //유저생성(app/InfoInput.js)
 export const createUser = async (userData) => {
   try {
-    const response = await fetch(`${IP_URL}:${PORT}/users`, {
+    const response = await fetch(`http://${IP_URL}:${PORT}/users`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ export const createUser = async (userData) => {
 //목표 칼로리 생성(UI/MacroCalculator.js)
 export const insertCalories = async (userId, totalCalories, carbs, protein, fat) => {
   try {
-    const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/calories`, {
+    const response = await fetch(`http://${IP_URL}:${PORT}/users/${userId}/calories`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export const insertCalories = async (userId, totalCalories, carbs, protein, fat)
 //닉네임 중복 체크 (app/InfoInput.js, app/login.js)
 export const checkNickName = async (name) => {
   try {
-    const response = await fetch(`${IP_URL}:${PORT}/namecheck/${name}`, {
+    const response = await fetch(`http://${IP_URL}:${PORT}/namecheck/${name}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

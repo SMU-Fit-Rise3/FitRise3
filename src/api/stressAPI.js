@@ -3,7 +3,7 @@ PORT=process.env.EXPO_PUBLIC_PORT;
 //스트레스 업데이트 (components/CameraComponent.tsx)
 export const updateStress = async (userId, gMeanValues) => {
     try {
-    const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/stress/calculate`, {
+    const response = await fetch(`http://${IP_URL}:${PORT}/users/${userId}/stress/calculate`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -22,7 +22,7 @@ export const updateStress = async (userId, gMeanValues) => {
 //스트레스 데이터 가져오기 (app/stressScreen.js)
 export const getStress = async (userId) => {
     try {
-    const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/stress`, {
+    const response = await fetch(`http://${IP_URL}:${PORT}/users/${userId}/stress`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

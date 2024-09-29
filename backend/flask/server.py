@@ -213,7 +213,7 @@ def upload_image():
             IP_URL = os.environ.get('NODE_IP_URL')
             PORT = os.environ.get('NODE_PORT')
             response = requests.patch(
-                f"{IP_URL}:{PORT}/users/{userId}/gif", 
+                f"http://{IP_URL}:{PORT}/users/{userId}/gif", 
                 json = {
                     "characterUrl" : character_url,
                     "gifUrls" : gif_urls

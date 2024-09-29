@@ -5,7 +5,7 @@ PORT = process.env.EXPO_PUBLIC_PORT;
 export const getExercise = async (userId) => {
     console.log(IP_URL)
     try {
-        const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/exercise`, {
+        const response = await fetch(`http://${IP_URL}:${PORT}/users/${userId}/exercise`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -22,7 +22,7 @@ export const getExercise = async (userId) => {
 //운동 완료 클릭시 로직 (app/postureCorrection.js)
 export const completedExercise = async (userId, exerciseId) => {
     try {
-        const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/exercise/${exerciseId}/complete`, {
+        const response = await fetch(`http://${IP_URL}:${PORT}/users/${userId}/exercise/${exerciseId}/complete`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ export const completedExercise = async (userId, exerciseId) => {
 //다한 운동 가져오기 (List/ExerciseList.js)
 export const getDoExercise = async (userId) => {
     try {
-        const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/doExercise`, {
+        const response = await fetch(`http://${IP_URL}:${PORT}/users/${userId}/doExercise`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

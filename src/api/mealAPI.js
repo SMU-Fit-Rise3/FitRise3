@@ -4,7 +4,7 @@ PORT = process.env.EXPO_PUBLIC_PORT;
 //오늘의 식단 데이터 가져오기 (app/dietScreen.js)
 export const getTodayMeal = async (userId) => {
     try {
-    const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/todayMeal`, {
+    const response = await fetch(`http://${IP_URL}:${PORT}/users/${userId}/todayMeal`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

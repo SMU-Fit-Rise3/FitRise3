@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { Asset } from 'expo-asset';
 
 // Socket.IO 서버 주소
-const socket = io(`${process.env.EXPO_PUBLIC_FLASK_IP_URL}:${process.env.EXPO_PUBLIC_SOCKET_PORT}`);
+const socket = io(`http://${process.env.EXPO_PUBLIC_FLASK_IP_URL}:${process.env.EXPO_PUBLIC_SOCKET_PORT}`);
 
 // 이미지를 서버에서 받아오는 기능
 export const receiveImages = (setGifUrl) => {
@@ -46,7 +46,7 @@ export const uploadImageToServer = async (photoUri, gender, userId) => {
     console.log('bodyImageUri:', bodyImageUri);
     console.log('photoUri:', photoUri);
     //flask 요청
-    const response = await fetch(`${process.env.EXPO_PUBLIC_FLASK_IP_URL}:${process.env.EXPO_PUBLIC_SOCKET_PORT}/upload-image`, {
+    const response = await fetch(`http://${process.env.EXPO_PUBLIC_FLASK_IP_URL}:${process.env.EXPO_PUBLIC_SOCKET_PORT}/upload-image`, {
         method: 'POST',
         headers: {
             'Content-Type': 'multipart/form-data',
