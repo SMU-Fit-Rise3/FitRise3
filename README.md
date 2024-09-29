@@ -35,8 +35,7 @@ GAN 모델(FreezG 기반)을 활용하여 사용자의 사진을 2D 캐릭터로
 ### 생성된 캐릭터 움직임 부여(Checklist through AI)
 Rokoko를 사용하여 모션캡처 데이터를 추출하고 이를 Animated Drawings 오픈프로젝트를 활용하여 완료한 운동 움직임을 캐릭터 부여
 
-<img src="/src/assets/images/캐릭터-움직임-부여.gif" width="200" height="300"/>
-<img src="/src/assets/images/캐릭터-한-운동-움직임-부여.gif" width="200" height="300"/>
+<img src="/src/assets/images/캐릭터-움직임-부여.gif" width="200" height="300"/> <img src="/src/assets/images/캐릭터-한-운동-움직임-부여.gif" width="200" height="300"/>
 
 
 ### 운동 자세 실시간 피드백(Character growth through checklist)
