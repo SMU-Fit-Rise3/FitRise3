@@ -26,34 +26,34 @@ https://www.youtube.com/watch?v=WapTDf8Xljw
 
 <h1 id="features"> :iphone: 1. 기능 설명 (detail of fuction) </h1>
 
-### AI를 통한 나만의 캐릭터 생성(Checklist through AI)
+### AI를 통한 나만의 캐릭터 생성(Create your own character using AI)
 GAN 모델(FreezG 기반)을 활용하여 사용자의 사진을 2D 캐릭터로 변환
 생성된 캐릭터 얼굴을 Haar-cascade 알고리즘을 사용하여 깔끔하게 추출하여 몸 템플릿과 합성하여 캐릭터 완성
 
 <img src="/src/assets/images/사용자-캐릭터-생성.gif" width="200" height="300"/>
 
-### 생성된 캐릭터 움직임 부여(Checklist through AI)
+### 생성된 캐릭터 움직임 부여(Granting created character movement)
 Rokoko를 사용하여 모션캡처 데이터를 추출하고 이를 Animated Drawings 오픈프로젝트를 활용하여 완료한 운동 움직임을 캐릭터 부여
 
 <img src="/src/assets/images/캐릭터-움직임-부여.gif" width="200" height="300"/> <img src="/src/assets/images/캐릭터-한-운동-움직임-부여.gif" width="200" height="300"/>
 
 
-### 운동 자세 실시간 피드백(Character growth through checklist)
+### 운동 자세 실시간 피드백(Real-time feedback on exercise posture)
 MoveNet Pose Detection 모델을 활용하여 사용자 관절 인식 및 추적
 개발한 운동 자세 관절 각도를 계산하는 알고리즘을 사용하여 자세 피드백 제공 (텍스트, 음성)
 운동 갯수 측정
 
 <img src="/src/assets/images/운동자세-피드백.gif" width="200" height="300"/>
 
-### 얼굴 분석을 통한 스트레스 측정
+### 얼굴 분석을 통한 스트레스 측정(Stress measurement through facial analysis)
 Blaze face모델 얼굴인식을 통한 원격 광혈류측정 기술(RPPG)을 사용하여 심박 측정 및 스트레스 수치로 변환하여 제공  
 <img src="/src/assets/images/스트레스-측정.gif" width="200" height="300"/>
 
-### AI를 통한 맞춤 운동루틴
+### AI를 통한 맞춤 운동루틴(Customized exercise routine through AI)
 Open AI APi를 사용하여 사용자 정보에 따른 운동루틴 생성 후 리스트로 제공  
 <img src="/src/assets/images/맞춤형-운동루틴-추천.gif" width="200" height="300"/>
 
-### 식단 관리,등록,분석
+### 식단 관리,등록,분석 (diet management, registration, analysis)
 사용자의 신체 정보를 기반으로 계산된 하루 권장 섭취량에 맞는 탄단지 비율 제공
 영양성분 API를 활용하여 구성된 음식 리스트에서 섭취한 음식 골라서 등록 가능
 선택한 음식의 상세 영양성분 확인 가능  
@@ -61,7 +61,7 @@ Open AI APi를 사용하여 사용자 정보에 따른 운동루틴 생성 후 �
 <img src="/src/assets/images/식단분석.gif" width="200" height="300"/>
 <img src="/src/assets/images/탄단지추천.gif" width="200" height="300"/>
 
-### 운동, 식단, 몸무게 캘린더 기록 및 그래프화
+### 운동, 식단, 몸무게 캘린더 기록 및 그래프화 (Calendar Record and graph exercise, diet, and weight)
 그래프를 통해 사용자가 측정한 스트레스 수치를 월 단위로 확인 가능  
 사용자가 입력하는 몸무게 정보를 기반으로 BMI 지수 계산 및 그래프에 시각화  
 사용자가 일주일 동안 섭취한 음식의 영양성분을 평균 내어 그 주의 부족한 영양성분 정보 제공  
@@ -74,7 +74,7 @@ Open AI APi를 사용하여 사용자 정보에 따른 운동루틴 생성 후 �
 
 <h1 id="stacks"> :hammer_and_wrench: 2. 시스템 아키텍처 (System Architecture)</h1>
 
-<img src="/src/assets/images/fitrise아키텍처.png" height="400" width="100%">
+<img src="/src/assets/images/fitrise아키텍처.png" height="450" width="100%">
 
 ## 기술스택
 - **Frontend**: ⚛️ React Native, 🎉 Expo, 🧠 TensorFlow.js, 🎨 Lottie
