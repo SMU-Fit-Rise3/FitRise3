@@ -1,6 +1,6 @@
 # FitRise-Plus
 ### :즐거움을 추구하는 건강관리 어플리케이션
-<img src="/src/assets/images/FitRise_Plus-Logo.png" height="350" width="100%">
+<img src="/src/assets/images/FitRise_Plus-Logo.png" height="400" width="100%">
 
 ### 시연 영상 (App demo video)
 [Youtube]
