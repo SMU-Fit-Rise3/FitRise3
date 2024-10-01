@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView,View, Text, StyleSheet, Alert,Dimensions } from 'react-native';
+import { SafeAreaView,View, Text, StyleSheet, Alert,Dimensions, ScrollView } from 'react-native';
 import { InputFields,StepIndicator,CustomBtn,MacroCalculator } from '../../src/components';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -158,7 +158,7 @@ const CaloriesScreen = () => {
                     </View>
                 )}
                 {currentStep ===3 && (
-                    <View style={styles.mainContainer}>
+                    <ScrollView style={styles.mainContainer}>
                         <Text style={styles.title}>목표 탄단지 정하기 {"\n"}이제 다 왔어요👏</Text>
                         <Text style={styles.description}>목표 열량과 식단에 맞는 
                             <Text style={styles.highlightedText}> 추천 섭취량</Text>
@@ -178,7 +178,7 @@ const CaloriesScreen = () => {
                                 buttonStyle={styles.finishBtn}
                             />
                         </View>
-                    </View>
+                    </ScrollView>
                 )}
         </SafeAreaView>
     );

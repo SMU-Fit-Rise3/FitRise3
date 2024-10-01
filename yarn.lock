@@ -2573,6 +2573,9 @@ astral-regex@^1.0.0:
 async-limiter@~1.0.0:
   version "1.0.1"
 
+async@~0.1.9:
+  version "0.1.9"
+
 asynckit@^0.4.0:
   version "0.4.0"
 
@@ -3044,6 +3047,11 @@ combined-stream@^1.0.8:
   dependencies:
     delayed-stream "~1.0.0"
 
+combined-stream@0.0.3:
+  version "0.0.3"
+  dependencies:
+    delayed-stream "0.0.5"
+
 command-exists@^1.2.4, command-exists@^1.2.8:
   version "1.2.9"
 
@@ -3403,6 +3411,9 @@ del@^6.0.0:
 
 delayed-stream@~1.0.0:
   version "1.0.0"
+
+delayed-stream@0.0.5:
+  version "0.0.5"
 
 denodeify@^1.2.1:
   version "1.2.1"
@@ -4021,6 +4032,13 @@ form-data@^4.0.0:
     asynckit "^0.4.0"
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
+
+form-data@~0.0.3:
+  version "0.0.3"
+  dependencies:
+    async "~0.1.9"
+    combined-stream "0.0.3"
+    mime "~1.2.2"
 
 forwarded@0.2.0:
   version "0.2.0"
@@ -4790,6 +4808,9 @@ lighthouse-logger@^1.0.0:
     debug "^2.6.9"
     marky "^1.2.2"
 
+lightningcss-win32-x64-msvc@1.19.0:
+  version "1.19.0"
+
 lightningcss@~1.19.0:
   version "1.19.0"
   dependencies:
@@ -5160,6 +5181,9 @@ mime-types@^2.1.12, mime-types@^2.1.27, mime-types@^2.1.31, mime-types@~2.1.17, 
 
 mime@^2.4.1, mime@^2.4.4:
   version "2.6.0"
+
+mime@~1.2.2, mime@~1.2.7:
+  version "1.2.7"
 
 mime@1.6.0:
   version "1.6.0"
@@ -6051,8 +6075,10 @@ react-native-web@*, react-native-web@~0.19.6:
     postcss-value-parser "^4.2.0"
     styleq "^0.1.3"
 
-react-native-webview@^13.8.6, react-native-webview@>=7.0.0:
-  version "13.8.6"
+react-native-webview@^13.6.4, react-native-webview@>=7.0.0:
+  version "13.6.4"
+  resolved "https://registry.npmjs.org/react-native-webview/-/react-native-webview-13.6.4.tgz"
+  integrity sha512-AdgmaMBHPcyERTvng9eSGgHX6AleyUlSusWAxngSOSdiYGgHW81T6C5A8j/ImJAF9oZg0bQDxp43Hu56tzENZQ==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
@@ -6236,6 +6262,14 @@ renderkid@^3.0.0:
     htmlparser2 "^6.1.0"
     lodash "^4.17.21"
     strip-ansi "^6.0.1"
+
+request@2.12.0:
+  version "2.12.0"
+  resolved "https://registry.npmjs.org/request/-/request-2.12.0.tgz"
+  integrity sha512-GcOI9NyUw2lRke4kdbrjQFxu+cLugShENHvcb9QCSLLc/yH3lP7I/7RESxVbYS+AxC/r9rwzks52MRHVoZdb5w==
+  dependencies:
+    form-data "~0.0.3"
+    mime "~1.2.7"
 
 require-directory@^2.1.1:
   version "2.1.1"
@@ -7102,6 +7136,13 @@ validate-npm-package-name@^3.0.0:
 
 vary@~1.1.2:
   version "1.1.2"
+
+version@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.npmjs.org/version/-/version-0.1.2.tgz"
+  integrity sha512-pU32BxnlMpDnyR8SsRR8amiAmhBZQdTevjYFAMZ9W3eT2wWIJzfjKOH39O1eiCAW4brhyaXe3NpZNFpBAJR56Q==
+  dependencies:
+    request "2.12.0"
 
 vlq@^1.0.0:
   version "1.0.1"

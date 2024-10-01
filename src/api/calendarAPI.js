@@ -4,7 +4,7 @@ PORT = process.env.EXPO_PUBLIC_PORT;
 //달력 정보 가져오기 (app/calendarScreen.js)
 export const getCalendar = async (userId) => {
     try {
-        const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/calendar`, {
+        const response = await fetch(`http://${IP_URL}:${PORT}/users/${userId}/calendar`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -21,7 +21,7 @@ export const getCalendar = async (userId) => {
 //몸무게 저장 (app/analysisScreen.js)
 export const updateWeight = async (userId, inputWeight) => {
     try {
-    const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/weight`, {
+    const response = await fetch(`http://${IP_URL}:${PORT}/users/${userId}/weight`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -41,7 +41,7 @@ export const updateWeight = async (userId, inputWeight) => {
 //유저 식단 데이터 생성 (app/dietInput.js)
 export const postEatFood = async (userId, m_type, selectMeal) => {
   try {
-      const response = await fetch(`${IP_URL}:${PORT}/users/${userId}/eatFood`, {
+      const response = await fetch(`http://${IP_URL}:${PORT}/users/${userId}/eatFood`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'

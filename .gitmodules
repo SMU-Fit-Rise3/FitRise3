@@ -1,0 +1,3 @@
+[submodule "backend/flask/AnimatedDrawings"]
+	path = backend/flask/AnimatedDrawings
+	url = https://github.com/SMU-Fit-Rise/AnimatedDrawings.git
