@@ -128,6 +128,11 @@ EXPO_PUBLIC_SOCKET_PORT = "5000" #Flask Server PORT
 #Node server .env(/backend/.env) 
 DATABASE_URL="MongoDB URL"
 OPENAI_API_KEY="OPENAI API KEY"
+# compose 사용시 설정
+GUNICORN_IMAGE_NAME="gunicorn server image name"
+TORCH_IMAGE_NAME="torch server image name"
+NODE_IMAGE_NAME="node server image name"
+
 ```
 
 ```
