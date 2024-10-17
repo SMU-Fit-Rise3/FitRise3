@@ -195,7 +195,7 @@ $ docker build -t docker_torchserve .
 $ torchserve % docker run -d --name torchserver -p 8080:8080 -p 8081:8081 --network my_network docker_torchserve
 ```
 
-#### Docker Compose use 
+#### Docker Compose use (Docker compose Install)
 ```console
 $ cd ./backend 
 $ docker build -t nodeserver .
