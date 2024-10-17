@@ -29,7 +29,6 @@ const AUTO_RENDER = false;
 type Rotation = 0 | 90 | 180 | 270;
 
 const StressCamera = () => {
-  const cameraRef = useRef(null);
   const [tfReady, setTfReady] = useState(false);
   const [fps, setFps] = useState(0);
   const [cameraType, setCameraType] = useState<CameraType>(CameraType.front);
@@ -152,17 +151,15 @@ const StressCamera = () => {
     let gChannelMeans: number[] = [];
     const loop = async () => {
       try {
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        const imageTensor = images.next().value as tf.Tensor3D;
         const startTs = Date.now();
-
+        const imageTensor = images.next().value as tf.Tensor3D;
         const predictions = await faceModel!.estimateFaces(
           imageTensor,
           false,
           false,
           true
         );
+
         if (predictions.length > 0) {
           const faceDetectedInBox = isFaceInStaticBox(predictions[0]);
 
@@ -213,14 +210,16 @@ const StressCamera = () => {
           }
         }
         setFacebox(predictions);
-        const latency = Date.now() - startTs;
-        setFps(Math.floor(1000 / latency));
-
+        
         tf.dispose([imageTensor]);
         if (rafId.current === 0) {
           return;
         }
-
+        const latency = Date.now() - startTs;
+        setFps(Math.floor(1000 / latency));
+        const waitTime = Math.max(0, 50 - latency); // 남은 시간 계산
+        await new Promise(resolve => setTimeout(resolve, waitTime)); // 남은 시간 대기
+        
         if (!AUTO_RENDER) {
           updatePreview();
           gl.endFrameEXP();
@@ -263,13 +262,13 @@ const StressCamera = () => {
       isSimilarToStaticBoxRight && isSimilarToStaticBoxBottom;
   };
 
-  // const renderFps = () => {
-  //   return (
-  //     <View style={styles.fpsContainer}>
-  //       <Text style={styles.fpsText}>FPS: {fps}</Text>
-  //     </View>
-  //   );
-  // };
+  const renderFps = () => {
+    return (
+      <View style={styles.fpsContainer}>
+        <Text style={styles.fpsText}>FPS: {fps}</Text>
+      </View>
+    );
+  };
 
   const renderCameraTypeSwitcher = () => {
     return (
@@ -385,7 +384,6 @@ const StressCamera = () => {
       <View style={styles.container}>
         {Platform.OS === 'android' && <StatusBar barStyle="dark-content" />}
         <TensorCamera
-          ref={cameraRef}
           style={styles.camera}
           autorender={AUTO_RENDER}
           type={cameraType}
@@ -398,7 +396,7 @@ const StressCamera = () => {
           cameraTextureHeight={CAM_PREVIEW_HEIGHT}
           onReady={handleCameraStream}
         />
-        {/* {renderFps()} */}
+        {renderFps()}
         {renderStaticFaceBox()}
         {renderFaceBoxes()}
         {renderCameraTypeSwitcher()}

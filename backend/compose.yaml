@@ -1,0 +1,32 @@
+services:
+  gunicorn-server:
+    container_name: gunicornserver
+    image: ${GUNICORN_IMAGE_NAME}
+    ports:
+      - "5000:5000"
+    networks:
+      - my-network
+    restart: always
+
+  node-server:
+    container_name: nodeserver
+    image: ${NODE_IMAGE_NAME}
+    ports:
+      - "8083:8083"                          
+    networks:
+      - my-network
+    restart: always
+
+  torch-server:
+    container_name: torchserver
+    image: ${TORCH_IMAGE_NAME}  
+    ports:
+      - "8080:8080"  
+      - "8081:8081"
+    networks:
+      - my-network
+    restart: always
+
+networks:
+  my-network:
+    driver: bridge
