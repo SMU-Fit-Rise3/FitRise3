@@ -128,6 +128,7 @@ EXPO_PUBLIC_SOCKET_PORT = "5000" #Flask Server PORT
 #Node server .env(/backend/.env) 
 DATABASE_URL="MongoDB URL"
 OPENAI_API_KEY="OPENAI API KEY"
+
 # compose 사용시 설정
 GUNICORN_IMAGE_NAME="gunicorn server image name"
 TORCH_IMAGE_NAME="torch server image name"
@@ -192,6 +193,18 @@ $ docker run -d --name nodeserver -p 8083:8083  --network my_network nodeserver
 $ cd ./backend/flask/AnimatedDrawings
 $ docker build -t docker_torchserve .
 $ torchserve % docker run -d --name torchserver -p 8080:8080 -p 8081:8081 --network my_network docker_torchserve
+```
+
+#### Docker Compose use 
+```console
+$ cd ./backend 
+$ docker build -t nodeserver .
+$ cd ./flask
+$ docker build -t gunicornserver .
+$ cd ./AnimatedDrawings
+$ docker build -t docker_torchserve .
+$ cd ../..
+$ docker compose up
 ```
 
 ## Local로 서버실행
