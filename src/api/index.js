@@ -4,6 +4,7 @@ import * as exerciseApi from './exerciseAPI'
 import * as calendarApi from './calendarAPI'
 import * as mealApi from './mealAPI'
 import * as analysisApi from './analysisAPI'
+import * as musicApi from './getMusic'
 
 // 여러 API 파일에서 함수들을 가져와 하나의 객체로 export
 export default {
@@ -12,5 +13,6 @@ export default {
   ...exerciseApi,
   ...calendarApi,
   ...mealApi,
-  ...analysisApi
+  ...analysisApi,
+  ...musicApi
 };

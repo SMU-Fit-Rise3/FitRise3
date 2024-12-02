@@ -52,3 +52,8 @@ app.get('/users/:id/analysis',analysisAPI.getAnalysisData);
 //사용자 Gif 관련 api
 const gifAPI = require('./api/gifData');
 app.patch('/users/:id/gif',gifAPI.patchGifUrl); //gif url 저장
+
+//사용자 Music 관련 api
+const musicAPI = require('./api/musicData');
+app.get('/users/:id/music',musicAPI.getMusicData);
+app.post('/users/:id/music',musicAPI.postMusicData);

@@ -17,6 +17,10 @@ from dotenv import load_dotenv
 import requests
 import shutil
 
+#audiocraft
+from audiocraft.models import MusicGen
+from audiocraft.data.audio import audio_write
+
 app = Flask(__name__, static_url_path='/output', static_folder='instance/output')
 CORS(app)
 socketio = SocketIO(app)
@@ -238,6 +242,60 @@ def upload_image():
             print(f"An error occurred: {e}")
     return 'Upload Failed', 400
 
+@app.route('/generate-audio',methods=['POST'])
+def generate():
+    data = request.json
+    userId = data.get("userId")
+    stressLevel = data.get("stressLevel")
+
+    model = MusicGen.get_pretrained("small")
+    model.set_generation_params(duration=4)  # 길이 4초
+    # 스트레스 수준에 따라 음악 스타일 결정
+    if 0 <= stressLevel <=50:
+        descriptions = ["calm piano", "soft ambient"]
+    else:  # high stress
+        descriptions = ["energetic rock", "uplifting EDM"]
+    wav = model.generate(descriptions)  # 2개 셈플 생성
+
+    wav_urls=[]
+    for idx, one_wav in enumerate(wav):
+        audio_write(f'{idx}', one_wav.cpu(), model.sample_rate, strategy="loudness")
+        
+        try:
+            s3_client.upload_file(
+                f'{idx}.wav',
+                os.environ.get('S3_BUCKET'),
+                f'{userId}/wav/{idx}.wav',
+                ExtraArgs={
+                    "ContentType": 'audio/wav',
+                    "ACL": 'public-read'
+                }
+            )
+            os.remove(f'{idx}.wav')
+            # S3에 업로드한 후 파일 URL을 가져옵니다.
+            wav_url = f"https://{os.environ.get('S3_BUCKET')}.s3.amazonaws.com/{userId}/wav/{idx}.wav"
+            wav_urls.append({"name": f"{idx}.wav", "url": wav_url})
+
+        except ClientError as e:
+            logging.error(e)
+            return jsonify({"error": "Failed to upload to S3"}), 500
+    
+    #Node.js 서버로 url 전송
+    try:
+        IP_URL = os.environ.get('NODE_IP_URL')
+        PORT = os.environ.get('NODE_PORT')
+        response = requests.post(
+            f"http://{IP_URL}:{PORT}/users/{userId}/music", 
+            json = {
+                "musicUrls" : wav_urls
+            })
+        if response.status_code == 201:
+            return {"message": "Audio generated and sent successfully", "urls": wav_urls}, 201
+        else:
+            return {"error": "Failed to send data to Node.js server"}, 500
+    except Exception as e:
+        return {"error": str(e)}, 500
+    
 if __name__ == '__main__':
     instance_dir = Path(app.instance_path)
     instance_dir.mkdir(exist_ok=True, parents=True)
